@@ -3,7 +3,6 @@
 Alpaga's developers
 ====================
 
-patate
 
 Main contributor:
 -----------------
