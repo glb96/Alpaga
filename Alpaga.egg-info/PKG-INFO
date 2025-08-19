@@ -1,0 +1,13 @@
+Metadata-Version: 2.1
+Name: Alpaga
+Version: 1.2
+Summary: AnaLyse en PolArisation de la Generation de second hArmonique
+Home-page: https://doi.org/10.5281/zenodo.5639393
+Author: Guillaume Le Breton, Fabien Rondepierre, Maxime Fery, Oriane Bonhomme
+Author-email: guillaume.le-breton@ens-lyon.fr, fabien.rondepierre@univ-lyon1.fr, maxime.fery@univ-lyon1.fr, oriane.bonhomme@univ-lyon1.fr
+License: Lesser GPL v2.1
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: GNU Lesser General Public v2.1.
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+License-File: LICENSE.txt
