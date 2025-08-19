@@ -47,10 +47,11 @@ From this formula and the a, b ,c parameters, we can calculate three experimenta
     
 
 
-(ref papier/ thèse )
+(GLB : ref papier/ thèse, nos theses ?  )
 
 
-To compute uncertainties for Zeta and D, we first propagate the uncertainties from the Gaussian fit : for that we use « weight » in the Ishs fit procedure (fonction python). From this fitting procedure, standard deviations on a, b ,c  are obtained as the diagonal of the covariance matrix (ref):
+To compute uncertainties for Zeta and D, we first propagate the uncertainties from the Gaussian fit : for that we use « weight » in the Ishs fit procedure (fonction python). From this fitting procedure, standard deviations on a, b ,c  are obtained as the diagonal of the covariance matrix (GLB :ref : Leo, W. R. (1994). Techniques for Nuclear and Particle Physics Experiments. A How-to
+Approach. Springer Berlin, Heidelberg.):
 
 
 
@@ -63,7 +64,7 @@ To compute uncertainties for Zeta and D, we first propagate the uncertainties fr
     .         & .          & \sigma_c^2
     \end{pmatrix}\\\\
 
-Then we calculate uncertainties on the observables using (RAJOUTER LE NOM DE CETTE METHODE, TAYLOR ? --> A DEMANDER A CEDRIC):
+Then we calculate uncertainties on the observables using gaussian error propagation formula (GLB : ref :Page 60 THESE RF):
 
 |
 

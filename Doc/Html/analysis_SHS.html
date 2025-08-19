@@ -61,15 +61,16 @@
 </ul>
 <div class="math notranslate nohighlight">
 \[\begin{split}\zeta^V = \frac{b^V - a^V - c^V}{b^V} ~~~~~~~~~~~~~~~~~~~~~~~~ \zeta^H = \frac{a^H - c^H}{a^H + c^H}\\\end{split}\]</div>
-<p>(ref papier/ thèse )</p>
-<p>To compute uncertainties for Zeta and D, we first propagate the uncertainties from the Gaussian fit : for that we use « weight » in the Ishs fit procedure (fonction python). From this fitting procedure, standard deviations on a, b ,c  are obtained as the diagonal of the covariance matrix (ref):</p>
+<p>(GLB : ref papier/ thèse, nos theses ?  )</p>
+<p>To compute uncertainties for Zeta and D, we first propagate the uncertainties from the Gaussian fit : for that we use « weight » in the Ishs fit procedure (fonction python). From this fitting procedure, standard deviations on a, b ,c  are obtained as the diagonal of the covariance matrix (GLB :ref : Leo, W. R. (1994). Techniques for Nuclear and Particle Physics Experiments. A How-to
+Approach. Springer Berlin, Heidelberg.):</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{pmatrix}
 \sigma_a^2 &amp; cov(a,b)  &amp; cov(a,c) \\
 .         &amp; \sigma_b^2 &amp; cov(b,c) \\
 .         &amp; .          &amp; \sigma_c^2
 \end{pmatrix}\\\\\end{split}\]</div>
-<p>Then we calculate uncertainties on the observables using (RAJOUTER LE NOM DE CETTE METHODE, TAYLOR ? –&gt; A DEMANDER A CEDRIC):</p>
+<p>Then we calculate uncertainties on the observables using gaussian error propagation formula (GLB : ref :Page 60 THESE RF):</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
