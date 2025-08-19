@@ -30,7 +30,7 @@ setuptools.setup(
     url="https://doi.org/10.5281/zenodo.5639393",
     zip_safe=False,
     packages=setuptools.find_packages(),
-    package_data={'': ['Data_tutorial/SHS/Eau_polar_V/*.dat', 'Data_tutorial/SHS/Single_acquisition/*.dat', 'Data_tutorial/SSHG/*.p', 'Data_tutorial/SHS/*.p']},
+    package_data={'': ['Data_tutorial/SHS/Eau_polar_V/*.dat', 'Data_tutorial/SHS/Single_acquisition/*.dat', 'Data_tutorial/SSHG/*.p', 'Data_tutorial/SHS/*.p', 'Data_tutorial/Exclu_zone/*.p', 'Data_tutorial/Exclu_zone/HighlyConcentrated_NaBr_V_Spectres/*.dat']},
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU Lesser General Public v2.1.",
