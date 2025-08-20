@@ -26,7 +26,7 @@ At Institut Lumière Matière (ILM), we use the code to analyse the results obta
    :align: left
 
 
-The installation procedure is straightforward and is explained in the :ref:`installation_page` section. This section also provides some general guidance regarding Git (for developers).
+The installation procedure is straightforward and is explained in the :ref:`installation_page` section. Section :ref:`for_developpers_page` provides some general guidance regarding Git and how to update the code or wiki.
 
 
 Finally, this wiki proposes some numerical (:ref:`python_advice_page`) and experimental (:ref:`experimental_advice_page`) advice. These are not typically found in articles, but perhaps in books or deep on the Internet. You may be able to find some (or all) from experienced scientists or our directors. If you want to expand these lists, please do not hesitate to contact us.
@@ -71,6 +71,7 @@ The references are shown in the :ref:`reference` page.
    ./analysis_SSHG
    ./python_advice
    ./experimental_advice
+   ./for_developpers
    ./alpaga
    ./devs_page
    ./reference

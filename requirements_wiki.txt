@@ -1,0 +1,4 @@
+sphinx>=6.0
+recommonmark
+sphinx-rtd-theme
+sphinxcontrib-bibtex

@@ -1,0 +1,62 @@
+name: Build Alpaga Package and Wiki
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) Checkout du dépôt
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2) Set up Python
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.7
+
+      # 3) Install dependencies for building Alpaga
+      - name: Install package dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 4) Build the Alpaga package
+      - name: Build Alpaga package
+        run: |
+          rm -rf build dist *.egg-info
+          python setup.py sdist
+          mv dist/*.tar.gz alpaga.tar.gz
+          rm -rf build dist *.egg-info
+
+      # 5) Install the built package
+      - name: Install Alpaga package
+        run: |
+          python -m pip install alpaga.tar.gz
+
+      # 6) Install dependencies for wiki
+      - name: Install Sphinx dependencies for wiki
+        run: |
+          pip install -r requirements_wiki.txt
+
+      # 7) Build the wiki
+      - name: Build Sphinx wiki
+        run: |
+          rm -rf docs
+          mkdir -p docs
+          python -m sphinx -b html Wiki_raw docs
+          touch docs/.nojekyll
+
+      # 8) Optionally: deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+

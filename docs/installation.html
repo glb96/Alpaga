@@ -39,16 +39,22 @@
 <div class="section" id="installation">
 <span id="installation-page"></span><h1><span class="section-number">1. </span>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h1>
 <a class="reference internal image-reference" href="_images/alpaga_22.jpg"><img alt="_images/alpaga_22.jpg" class="align-right" src="_images/alpaga_22.jpg" style="width: 200px;" /></a>
+<p>The <a class="reference external" href="https://github.com/glb96/Alpaga/">github page</a> provides the latest version. You can download the directory but clicking on the green [&lt;&gt; code ] and then chosing either the git way (clone) or via an archive (.zip).</p>
 <div class="section" id="installation-using-pip">
 <h2><span class="section-number">1.1. </span>Installation using pip<a class="headerlink" href="#installation-using-pip" title="Permalink to this heading">¶</a></h2>
-<p>Alpaga is a python module which can be installed using pip once the <em>Alpaga-version.tar.gz</em> file download. Use:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">Alpaga</span><span class="o">-</span><span class="mf">1.0.0</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<p>Alpaga is a python module which can be installed using pip. The package is compiled in the <em>alpaga.tar.gz</em> file. Use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">alpaga</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
 </pre></div>
 </div>
+<p>to install the package in your default python version, or</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mypython3</span><span class="o">.</span><span class="n">X</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">alpaga</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+</pre></div>
+</div>
+<p>to use a particular mypython3.X python version.</p>
 </div>
 <div class="section" id="installation-using-conda">
 <h2><span class="section-number">1.2. </span>Installation using conda<a class="headerlink" href="#installation-using-conda" title="Permalink to this heading">¶</a></h2>
-<p>To install using graphical Anaconda, open the Anaconda shell and run the above pip line. Make sure to call the right <em>Alpaga-1.0.0.tar.gz</em> file – <em>i.e</em> with the correct file location in your computer.</p>
+<p>To install using graphical Anaconda, open the Anaconda shell and run the above pip line. Make sure to call the right <em>alpaga.tar.gz</em> file – <em>i.e</em> with the correct file location in your computer.</p>
 <a class="reference internal image-reference" href="_images/anaconda_install_alpaga_visualization.png"><img alt="_images/anaconda_install_alpaga_visualization.png" class="align-center" src="_images/anaconda_install_alpaga_visualization.png" style="width: 500px;" /></a>
 </div>
 <div class="section" id="check-the-installation">
@@ -86,83 +92,14 @@
 <span class="n">Dir_tuto_file</span> <span class="o">=</span>  <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Dir_code_alpaga</span><span class="p">,</span> <span class="s1">&#39;Data_tutorial&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="for-developpers">
-<h2><span class="section-number">1.5. </span>For Developpers<a class="headerlink" href="#for-developpers" title="Permalink to this heading">¶</a></h2>
-<div class="section" id="to-compile-your-code">
-<h3><span class="section-number">1.5.1. </span>To compile your code :<a class="headerlink" href="#to-compile-your-code" title="Permalink to this heading">¶</a></h3>
-<p>If you want to develop new functions or modules in Alpaga module, make sure to compile your code into <em>.tar.gz</em> file. To do so, one can use the bash script <em>to_creat_package.sh</em>.
-For windows users, you just have to open a terminal, then go to the folder where <em>to_creat_package.sh</em> is and execute it like that :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">:</span>\<span class="n">your_path_to_alpaga_folder</span>\<span class="n">Alpaga</span><span class="o">&gt;</span> <span class="o">.</span>\<span class="n">to_creat_package</span><span class="o">.</span><span class="n">sh</span>
-</pre></div>
-</div>
-<p>When it’s done, your code is compiled and compressed into a <em>.tar.gz</em> file. The bash script will also do a clean install of the new Alpaga module.</p>
-</div>
-<div class="section" id="to-compile-the-wiki">
-<h3><span class="section-number">1.5.2. </span>To compile the wiki :<a class="headerlink" href="#to-compile-the-wiki" title="Permalink to this heading">¶</a></h3>
-<p>After changing <em>.rst</em> file to add the information you want in the wiki, make sure to compile your changes to make it appears in HTML files. To do so, there are some python packages to add before compilation : Sphinx - Sphinxcontrib-bibtex - Recommonmark.</p>
-<p>For windows users, you can use :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">sphinx</span>
-<span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">sphinxcontrib</span><span class="o">-</span><span class="n">bibtex</span>
-<span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">recommonmark</span>
-</pre></div>
-</div>
-<p>You can then compile your wiki with :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">:</span>\<span class="n">your_path_to_alpaga_folder</span>\<span class="n">Alpaga</span>\<span class="n">Doc</span>\<span class="n">Rst</span><span class="o">&gt;</span> <span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">sphinx</span> <span class="o">-</span><span class="n">b</span> <span class="n">html</span> <span class="o">.</span> <span class="o">../</span><span class="n">Html</span><span class="o">/.</span>
-</pre></div>
-</div>
-<p>Your changes should now appear in HTML files.</p>
-</div>
-<div class="section" id="using-of-git">
-<h3><span class="section-number">1.5.3. </span>Using of git :<a class="headerlink" href="#using-of-git" title="Permalink to this heading">¶</a></h3>
-<p>This code is developed using git because of these multiple contributors. In this section, we will see how we can use git to implement new functions, fix some bugs or edit wiki.</p>
-<p><strong>Installation :</strong></p>
-<p>First of all, we need git on our computer. Most of us are used to use Graphical User Interface (GUI) of git SCM so we are presenting this tool, but feel free to use other software if you’re used to. You can have it here :</p>
-<a class="reference internal image-reference" href="_images/download_page.PNG"><img alt="_images/download_page.PNG" class="align-center" src="_images/download_page.PNG" style="width: 500px;" /></a>
-<p>Choose your version of the soft and install it. Once it’s done, you can open git GUI. The first step is to link Alpaga gitlab with a new work repertory. To do so, click <em>clone existing repertory</em> and then copy the clone as shown in the picture, then choose a directory where to put your working version of Alpaga.</p>
-<a class="reference internal image-reference" href="_images/procedure_git.jpg"><img alt="_images/procedure_git.jpg" class="align-center" src="_images/procedure_git.jpg" style="width: 700px;" /></a>
-<p>Now we have to import the working branch (usualy Beta branch) into the directory. To do so, click branch / create / then choose option like in the following :</p>
-<a class="reference internal image-reference" href="_images/create_branch.PNG"><img alt="_images/create_branch.PNG" class="align-center" src="_images/create_branch.PNG" style="width: 500px;" /></a>
-<div class="line-block">
-<div class="line"><br /></div>
-</div>
-<p>Well done, you can now contribute to this project !</p>
-<div class="line-block">
-<div class="line"><br /></div>
-</div>
-<a class="reference internal image-reference" href="_images/alpaga_25.jpg"><img alt="_images/alpaga_25.jpg" class="align-center" src="_images/alpaga_25.jpg" style="width: 200px;" /></a>
-<div class="line-block">
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-</div>
-<p><strong>How to work together : Pull, Push, Fetch, Flush and other lovely stuff</strong></p>
-<p>We recommand to always be sure to have the latest version of the code before doing some modification. This procedure is called Pull and is separated in two :</p>
-<ul class="simple">
-<li><p>First called <strong>fetch</strong> where you download the latest version of the code from gitlab. This ‘download’ is not directly visible on your computer. To do so : [ Remote <strong>-&gt;</strong> Fetch from <strong>-&gt;</strong> origin ].</p></li>
-</ul>
-<a class="reference internal image-reference" href="_images/fetch.JPG"><img alt="_images/fetch.JPG" class="align-center" src="_images/fetch.JPG" style="width: 700px;" /></a>
-<ul class="simple">
-<li><p>Second called <strong>merge</strong>. It will <strong>merge</strong> the version of Alpaga from gitlab with the version that you have modified. It should conserve your change and implement changes from gitlab. To do so : [ Merge <strong>-&gt;</strong> Local merge ]. For exemple, if you want to merge the tracking branch Beta with your own Beta branch, select [ Tracking branch <strong>-&gt;</strong> origin/beta ] .</p></li>
-</ul>
-<a class="reference internal image-reference" href="_images/merge.JPG"><img alt="_images/merge.JPG" class="align-center" src="_images/merge.JPG" style="width: 700px;" /></a>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>You may have some merging issue if you work on a file which is not the latest version. There will be a conflict between your version of the file and the one in gitlab. If you can’t solve this conflict, as a last resort, you should try to save the file in an other folder, redownload the file from gitlab, and then implement your change by hand. We called this process the <strong>Flush</strong>.</p>
-</div>
-<p>When you have finished your job, in order to add your contribution to the Gitlab, you have to <strong>Pull</strong>.</p>
-<ul class="simple">
-<li><p>First of all, you will scan our change from gitlab with [ Rescan ]. You should now see all your changes in the GUI.</p></li>
-</ul>
-<a class="reference internal image-reference" href="_images/scan.JPG"><img alt="_images/scan.JPG" class="align-center" src="_images/scan.JPG" style="width: 700px;" /></a>
-<ul class="simple">
-<li><p>Then you have to valid those changes with [ Stage changed ].</p></li>
-</ul>
-<a class="reference internal image-reference" href="_images/stage.JPG"><img alt="_images/stage.JPG" class="align-center" src="_images/stage.JPG" style="width: 700px;" /></a>
-<ul class="simple">
-<li><p>You will commit those changes with [ Commit ]. Don’t forget to put a little message describing what is the purpose of this commit.</p></li>
-<li><p>Finaly, you can push your commits on gitlab. After that, everyone pulling Alpaga will have your contrubtion !</p></li>
-</ul>
-</div>
+<dl class="field-list simple">
+<dt class="field-odd">Release</dt>
+<dd class="field-odd"><p>1.2</p>
+</dd>
+<dt class="field-even">Date</dt>
+<dd class="field-even"><p>Aug 20, 2025</p>
+</dd>
+</dl>
 </div>
 </div>
 
@@ -192,12 +129,6 @@ For windows users, you just have to open a terminal, then go to the folder where
 <li class="toctree-l2"><a class="reference internal" href="#installation-using-conda">1.2. Installation using conda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#check-the-installation">1.3. Check the installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#custom-installation">1.4. Custom Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#for-developpers">1.5. For Developpers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#to-compile-your-code">1.5.1. To compile your code :</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#to-compile-the-wiki">1.5.2. To compile the wiki :</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#using-of-git">1.5.3. Using of git :</a></li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="file_management.html">2. File management</a></li>
@@ -208,9 +139,10 @@ For windows users, you just have to open a terminal, then go to the folder where
 <li class="toctree-l1"><a class="reference internal" href="analysis_SSHG.html">7. SSHG analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="python_advice.html">8. Python advice</a></li>
 <li class="toctree-l1"><a class="reference internal" href="experimental_advice.html">9. Experimental and procedure advice</a></li>
-<li class="toctree-l1"><a class="reference internal" href="alpaga.html">10. Source code</a></li>
-<li class="toctree-l1"><a class="reference internal" href="devs_page.html">11. Alpaga’s developers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">12. Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="for_developpers.html">10. For Developpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="alpaga.html">11. Source code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devs_page.html">12. Alpaga’s developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">13. Reference</a></li>
 </ul>
 
 
