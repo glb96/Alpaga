@@ -22,7 +22,7 @@ a, b ,c formalism
 .. _SHS_analysis:
 
 
-One can show that the expression of the Second Harmonic Scattering (SHS) intensity resolved in polarization is:
+One can show that the expression of the Second Harmonic Scattering (SHS) intensity resolved in polarization is (see for instance :cite:p:`le2022second` Chp V or :cite:p:`rondepierre2025correlations`  Chp XXX):
 
 .. math::
     
@@ -50,11 +50,7 @@ From this formula and the a, b ,c parameters, we can calculate three experimenta
 (GLB : ref papier/ thèse, nos theses ?  )
 
 
-To compute uncertainties for Zeta and D, we first propagate the uncertainties from the Gaussian fit : for that we use « weight » in the Ishs fit procedure (fonction python). From this fitting procedure, standard deviations on a, b ,c  are obtained as the diagonal of the covariance matrix (GLB :ref : Leo, W. R. (1994). Techniques for Nuclear and Particle Physics Experiments. A How-to
-Approach. Springer Berlin, Heidelberg.):
-
-
-
+To compute uncertainties for Zeta and D, we first propagate the uncertainties from the Gaussian fit : for that we use « weight » in the Ishs fit procedure (fonction python). From this fitting procedure, standard deviations on a, b ,c  are obtained as the diagonal of the covariance matrix :cite:p:`leo1994techniques`:
 
 .. math::
 
@@ -64,7 +60,7 @@ Approach. Springer Berlin, Heidelberg.):
     .         & .          & \sigma_c^2
     \end{pmatrix}\\\\
 
-Then we calculate uncertainties on the observables using gaussian error propagation formula (GLB : ref :Page 60 THESE RF):
+Then we calculate uncertainties on the observables using gaussian error propagation formula (see :cite:p:`rondepierre2025correlations` page 60:
 
 |
 
@@ -173,7 +169,7 @@ All of these calculations are numericaly implemented in shs_module.analyse_polar
 .. autofunction:: shs_module.analyse_polarization_SHS_H
    :noindex:
 
-:cite:p:`rondepierre2025correlations`.
+
 
 
 :Release: |release|

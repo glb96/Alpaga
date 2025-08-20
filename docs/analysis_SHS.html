@@ -46,11 +46,11 @@
 <h2><span class="section-number">6.1. </span>Theoritical stuff<a class="headerlink" href="#theoritical-stuff" title="Permalink to this heading">¶</a></h2>
 <div class="section" id="a-b-c-formalism">
 <h3><span class="section-number">6.1.1. </span>a, b ,c formalism<a class="headerlink" href="#a-b-c-formalism" title="Permalink to this heading">¶</a></h3>
-<p id="id1">One can show that the expression of the Second Harmonic Scattering (SHS) intensity resolved in polarization is:</p>
+<p id="id1">One can show that the expression of the Second Harmonic Scattering (SHS) intensity resolved in polarization is (see for instance <span id="id2">[<a class="reference internal" href="reference.html#id4" title="Guillaume Le Breton. Second harmonic generation of non-resonant liquid: from the molecular response to the experimental measurement. PhD thesis, Université Claude Bernard-Lyon I, 2022.">5</a>]</span> Chp V or <span id="id3">[<a class="reference internal" href="reference.html#id2" title="Fabien Rondepierre. Corrélations orientationnelles des liquides explorées par diffusion de second harmonique. PhD thesis, Université Claude Bernard Lyon I, 2025.">7</a>]</span>  Chp XXX):</p>
 <div class="math notranslate nohighlight">
 \[I^{\Gamma}_{SHS}(\gamma) = a^{\Gamma}cos^4(\gamma) + b^{\Gamma} cos^2(\gamma)sin^2(\gamma) + c^{\Gamma}sin^4(\gamma)\]</div>
 <p>with a, b ,c coefficients depending of hyperpolarizabylity (ref papier), <span class="math notranslate nohighlight">\(\gamma\)</span> the polarization’s state of the incomming light and <span class="math notranslate nohighlight">\(\Gamma\)</span> the  polarization’s state of the scattered light ( Vertical or Horizontal ).</p>
-<p>From this formula and the a, b ,c parameters, we can calculate three experimental observables, see <span id="id2">[<a class="reference internal" href="reference.html#id11" title="SJ Cyvin, JE Rauch, and JC Decius. Theory of hyper-raman effects (nonlinear inelastic light scattering): selection rules and depolarization ratios for the second-order polarizability. The Journal of Chemical Physics, 43(11):4083–4095, 1965.">9</a>]</span> or <span id="id3">[<a class="reference internal" href="reference.html#id10" title="Sophie Brasselet and Joseph Zyss. Multipolar molecules and multipolar fields: probing and controlling the tensorial nature of nonlinear molecular media. Journal of the optical Society of America B, 15(1):257–288, 1998.">10</a>]</span> :</p>
+<p>From this formula and the a, b ,c parameters, we can calculate three experimental observables, see <span id="id4">[<a class="reference internal" href="reference.html#id11" title="SJ Cyvin, JE Rauch, and JC Decius. Theory of hyper-raman effects (nonlinear inelastic light scattering): selection rules and depolarization ratios for the second-order polarizability. The Journal of Chemical Physics, 43(11):4083–4095, 1965.">9</a>]</span> or <span id="id5">[<a class="reference internal" href="reference.html#id10" title="Sophie Brasselet and Joseph Zyss. Multipolar molecules and multipolar fields: probing and controlling the tensorial nature of nonlinear molecular media. Journal of the optical Society of America B, 15(1):257–288, 1998.">10</a>]</span> :</p>
 <ul class="simple">
 <li><p>D : The depolarization ratio</p></li>
 </ul>
@@ -62,15 +62,14 @@
 <div class="math notranslate nohighlight">
 \[\begin{split}\zeta^V = \frac{b^V - a^V - c^V}{b^V} ~~~~~~~~~~~~~~~~~~~~~~~~ \zeta^H = \frac{a^H - c^H}{a^H + c^H}\\\end{split}\]</div>
 <p>(GLB : ref papier/ thèse, nos theses ?  )</p>
-<p>To compute uncertainties for Zeta and D, we first propagate the uncertainties from the Gaussian fit : for that we use « weight » in the Ishs fit procedure (fonction python). From this fitting procedure, standard deviations on a, b ,c  are obtained as the diagonal of the covariance matrix (GLB :ref : Leo, W. R. (1994). Techniques for Nuclear and Particle Physics Experiments. A How-to
-Approach. Springer Berlin, Heidelberg.):</p>
+<p>To compute uncertainties for Zeta and D, we first propagate the uncertainties from the Gaussian fit : for that we use « weight » in the Ishs fit procedure (fonction python). From this fitting procedure, standard deviations on a, b ,c  are obtained as the diagonal of the covariance matrix <span id="id6">[<a class="reference internal" href="reference.html#id12" title="William R Leo. Techniques for nuclear and particle physics experiments: a how-to approach. Springer Science &amp; Business Media, 1994.">11</a>]</span>:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{pmatrix}
 \sigma_a^2 &amp; cov(a,b)  &amp; cov(a,c) \\
 .         &amp; \sigma_b^2 &amp; cov(b,c) \\
 .         &amp; .          &amp; \sigma_c^2
 \end{pmatrix}\\\\\end{split}\]</div>
-<p>Then we calculate uncertainties on the observables using gaussian error propagation formula (GLB : ref :Page 60 THESE RF):</p>
+<p>Then we calculate uncertainties on the observables using gaussian error propagation formula (see <span id="id7">[<a class="reference internal" href="reference.html#id2" title="Fabien Rondepierre. Corrélations orientationnelles des liquides explorées par diffusion de second harmonique. PhD thesis, Université Claude Bernard Lyon I, 2025.">7</a>]</span> page 60:</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
@@ -184,7 +183,6 @@ Approach. Springer Berlin, Heidelberg.):</p>
 </dl>
 </dd></dl>
 
-<p><span id="id4">[<a class="reference internal" href="reference.html#id2" title="Fabien Rondepierre. Corrélations orientationnelles des liquides explorées par diffusion de second harmonique. PhD thesis, Université Claude Bernard Lyon I, 2025.">7</a>]</span>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Release</dt>
 <dd class="field-odd"><p>1.2</p>
