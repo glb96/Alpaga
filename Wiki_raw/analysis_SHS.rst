@@ -46,10 +46,6 @@ From this formula and the a, b ,c parameters, we can calculate three experimenta
     \zeta^V = \frac{b^V - a^V - c^V}{b^V} ~~~~~~~~~~~~~~~~~~~~~~~~ \zeta^H = \frac{a^H - c^H}{a^H + c^H}\\
     
 
-
-(GLB : ref papier/ thèse, nos theses ?  )
-
-
 To compute uncertainties for Zeta and D, we first propagate the uncertainties from the Gaussian fit : for that we use « weight » in the Ishs fit procedure (fonction python). From this fitting procedure, standard deviations on a, b ,c  are obtained as the diagonal of the covariance matrix :cite:p:`leo1994techniques`:
 
 .. math::
@@ -60,7 +56,7 @@ To compute uncertainties for Zeta and D, we first propagate the uncertainties fr
     .         & .          & \sigma_c^2
     \end{pmatrix}\\\\
 
-Then we calculate uncertainties on the observables using gaussian error propagation formula (see :cite:p:`rondepierre2025correlations` page 60:
+Then we calculate uncertainties on the observables using gaussian error propagation formula, see :cite:p:`rondepierre2025correlations` page 60:
 
 |
 
@@ -80,9 +76,6 @@ Finally, the uncertainties on D, zetaV and zetaH are calculated in Alpaga as fol
     \sigma^2(\zeta^H) &=~  \frac{4}{(a+c)^2} 
     
 |
-
-
-
 
 
 i0, i2, i4 formalism
