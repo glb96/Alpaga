@@ -46,7 +46,7 @@
 <h2><span class="section-number">6.1. </span>Theoritical stuff<a class="headerlink" href="#theoritical-stuff" title="Link to this heading">¶</a></h2>
 <section id="a-b-c-formalism">
 <h3><span class="section-number">6.1.1. </span>a, b ,c formalism<a class="headerlink" href="#a-b-c-formalism" title="Link to this heading">¶</a></h3>
-<p id="id1">One can show that the expression of the Second Harmonic Scattering (SHS) intensity resolved in polarization is (see for instance <span id="id2">[<a class="reference internal" href="reference.html#id4" title="Guillaume Le Breton. Second harmonic generation of non-resonant liquid: from the molecular response to the experimental measurement. PhD thesis, Université Claude Bernard-Lyon I, 2022.">5</a>]</span> Chp V or <span id="id3">[<a class="reference internal" href="reference.html#id2" title="Fabien Rondepierre. Corrélations orientationnelles des liquides explorées par diffusion de second harmonique. PhD thesis, Université Claude Bernard Lyon I, 2025.">7</a>]</span>  Chp XXX):</p>
+<p id="id1">One can show that the expression of the Second Harmonic Scattering (SHS) intensity resolved in polarization is (see for instance <span id="id2">[<a class="reference internal" href="reference.html#id4" title="Guillaume Le Breton. Second harmonic generation of non-resonant liquid: from the molecular response to the experimental measurement. PhD thesis, Université Claude Bernard-Lyon I, 2022.">5</a>]</span> Chp V or <span id="id3">[<a class="reference internal" href="reference.html#id2" title="Fabien Rondepierre. Corrélations orientationnelles des liquides explorées par diffusion de second harmonique. PhD thesis, Université Claude Bernard Lyon I, 2025.">7</a>]</span>  Chp II):</p>
 <div class="math notranslate nohighlight">
 \[I^{\Gamma}_{SHS}(\gamma) = a^{\Gamma}cos^4(\gamma) + b^{\Gamma} cos^2(\gamma)sin^2(\gamma) + c^{\Gamma}sin^4(\gamma)\]</div>
 <p>with a, b ,c coefficients depending of hyperpolarizabylity (ref papier), <span class="math notranslate nohighlight">\(\gamma\)</span> the polarization’s state of the incomming light and <span class="math notranslate nohighlight">\(\Gamma\)</span> the  polarization’s state of the scattered light ( Vertical or Horizontal ).</p>
@@ -61,7 +61,7 @@
 </ul>
 <div class="math notranslate nohighlight">
 \[\begin{split}\zeta^V = \frac{b^V - a^V - c^V}{b^V} ~~~~~~~~~~~~~~~~~~~~~~~~ \zeta^H = \frac{a^H - c^H}{a^H + c^H}\\\end{split}\]</div>
-<p>To compute uncertainties for Zeta and D, we first propagate the uncertainties from the Gaussian fit : for that we use « weight » in the Ishs fit procedure (fonction python). From this fitting procedure, standard deviations on a, b ,c  are obtained as the diagonal of the covariance matrix <span id="id6">[<a class="reference internal" href="reference.html#id12" title="William R Leo. Techniques for nuclear and particle physics experiments: a how-to approach. Springer Science &amp; Business Media, 1994.">11</a>]</span>:</p>
+<p>To compute uncertainties for Zeta and D, we first propagate the uncertainties from the Gaussian fit : for that we use « weight » in the Ishs fit procedure (Python function). From this fitting procedure, standard deviations on a, b ,c  are obtained as the diagonal of the covariance matrix <span id="id6">[<a class="reference internal" href="reference.html#id12" title="William R Leo. Techniques for nuclear and particle physics experiments: a how-to approach. Springer Science &amp; Business Media, 1994.">11</a>]</span>:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{pmatrix}
 \sigma_a^2 &amp; cov(a,b)  &amp; cov(a,c) \\
@@ -86,7 +86,7 @@
 </section>
 <section id="i0-i2-i4-formalism">
 <h3><span class="section-number">6.1.2. </span>i0, i2, i4 formalism<a class="headerlink" href="#i0-i2-i4-formalism" title="Link to this heading">¶</a></h3>
-<p>Polarized-SHS resolved experiments can also be analyzed with Fourier series developments:</p>
+<p>Polarized-SHS resolved experiments can also be analyzed with Fourier series developments  see <span id="id8">[<a class="reference internal" href="reference.html#id9" title="Julien Duboisset and Pierre-François Brevet. Salt-induced long-to-short range orientational transition in water. Phys. Rev. Lett., 120:263001, Jun 2018. URL: https://link.aps.org/doi/10.1103/PhysRevLett.120.263001, doi:10.1103/PhysRevLett.120.263001.">12</a>]</span> :</p>
 <div class="math notranslate nohighlight">
 \[I^{\Gamma}_{SHS}(\gamma) = i_0^{\Gamma} + i_2^{\Gamma} cos(2\gamma) + i_4^{\Gamma}cos(4\gamma)\]</div>
 <p>Then coefficients can be estimated as Fourrier series:</p>
