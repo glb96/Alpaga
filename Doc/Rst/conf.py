@@ -22,7 +22,7 @@ copyright = 'L-GPL'
 author = 'Guillaume Le Breton, Fabien Rondepierre, Maxime Fery and Oriane Bonhomme'
 
 # The full version, including alpha/beta/rc tags
-release = '1.1'
+release = '1.2'
 
 
 # -- General configuration ---------------------------------------------------

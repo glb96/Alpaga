@@ -3,7 +3,7 @@
 SHS analysis
 =============
 
-Once the spectrum analysis for all the angles has been performed, see ref:`polarisation_procedure_page`, several observables can be extracted from the angle-dependent intensity data. Many possible analyses can be made depending on what you are looking for. We are detailling the 2 that are commonly used in the ONLI team of ILM.
+Once the spectrum analysis for all the angles has been performed, see ref:`polarisation_procedure_page`, several observables can be extracted from the angle-dependent intensity data. Many possible analyses can be made depending on what you are looking for. We are detailling the two that are commonly used at your lab, ILM.
 
 .. image:: _static/alpaga_18.jpg
    :width: 200
@@ -31,7 +31,7 @@ One can show that the expression of the Second Harmonic Scattering (SHS) intensi
     
 with a, b ,c coefficients depending of hyperpolarizabylity (ref papier), :math:`\gamma` the polarization's state of the incomming light and :math:`\Gamma` the  polarization's state of the scattered light ( Vertical or Horizontal ).
 
-From this formula and the a, b ,c parameters, we can calculate three experimental observables ( Zyss / Cyvin ):
+From this formula and the a, b ,c parameters, we can calculate three experimental observables, see :cite:p:`cyvin1965theory` or :cite:p:`brasselet1998multipolar` :
 
 - D : The depolarization ratio 
 
@@ -172,6 +172,12 @@ All of these calculations are numericaly implemented in shs_module.analyse_polar
    
 .. autofunction:: shs_module.analyse_polarization_SHS_H
    :noindex:
+
+:cite:p:`rondepierre2025correlations`.
+
+
+.. bibliography::
+
 
 :Release: |release|
 :Date: |today|

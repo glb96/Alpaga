@@ -55,10 +55,10 @@ To cite Alpaga, use the DOI: |alpaga_DOI|.
 
 
 
-Here are the list of some usefull references to understand the Second Harmonic Generation in general: :cite:p:`brevet1997surface`, :cite:p:`bruyere2016generation`, :cite:p:`sanchez2018generation`, :cite:p:`pardon2021sonder`
+Here are the list of some usefull references to understand the Second Harmonic Generation in general: :cite:p:`brevet1997surface`, :cite:p:`bruyere2016generation`, :cite:p:`sanchez2018generation`, :cite:p:`pardon2021sonder`, :cite:p:`le2022second`, :cite:p:`fery2025sonder`, and, :cite:p:`rondepierre2025correlations`.
 
 
-And here the list of the scientific commuinications which have used Alpaga so far: TODO
+And here the list of the scientific commuinications which have used Alpaga so far: :cite:p:`le2022second`,  :cite:p:`le2023liquid`, :cite:p:`fery2025sonder`, and, :cite:p:`rondepierre2025correlations`.
 
 
 .. bibliography::
