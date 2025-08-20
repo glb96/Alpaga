@@ -11,9 +11,9 @@ How to install?
 Alpaga is distributed as a Python module, provided in the file alpaga.tar.gz.  
 You can download the full repository by clicking on the green [<> Code] button and choosing either the Git method (clone) or downloading an archive (.zip). 
 
-Like any Python package, Alpaga can be easily installed in your environment using pip: ::
+Like any Python package, Alpaga can be easily installed in your environment using pip: 
 
-    pip install alpaga.tar.gz
+pip install alpaga.tar.gz
     
 This will install the package with your default Python version.  
 For more details, see the installation page in the wiki.
