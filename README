@@ -6,7 +6,7 @@ The software is written in Python and should be used within Python environments.
 
 
 How to install?
------------------------
+===============
 
 Alpaga is distributed as a Python module, provided in the file *alpaga.tar.gz*.  
 You can download the full repository by clicking on the green **[<> Code]** button and choosing either the Git method (clone) or downloading an archive (.zip). 
@@ -20,7 +20,7 @@ For more details, see the installation page in the wiki.
 
 
 Where is the Wiki?
------------------------
+==================
 
 The wiki is available here: https://glb96.github.io/Alpaga  
 It is also included in the `Documentation` directory of this GitHub repository.  
@@ -28,21 +28,21 @@ To browse the wiki locally, open the `index.html` page in your preferred web bro
 
 
 Are there tutorials?
------------------------
+====================
 
 Yes. Tutorials are provided in the `Tutorials` directory as Jupyter notebook files (for use in any Python environment).  
 You do not need to worry about the data, as it is already included. 
 
 
 I still need help...
------------------------
+====================
 
 If you encounter any problems, please open an Issue in this GitHub project.  
 This is free of charge, and we will do our best to assist you. 
 
 
 How to cite this code?
------------------------
+======================
 
 At the moment, no article has yet been published describing Alpaga in detail.  
 Please contact us if you need specific citation guidance.  
