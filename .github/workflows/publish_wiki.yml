@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - master  # ou la branche que le bot met à jour
-    # on peut filtrer par author:
-    # (mais github n’offre pas directement author filtering, donc on le fait dans un if)
 
 jobs:
   publish:
