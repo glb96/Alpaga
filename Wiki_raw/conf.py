@@ -34,7 +34,7 @@ release = '1.2'
 # root_doc = 'index'
 master_doc = 'index'
 
-extensions = ['recommonmark','sphinx.ext.todo', 'sphinx.ext.viewcode', 'sphinx.ext.autodoc', 'sphinx.ext.autosectionlabel', 'sphinx.ext.extlinks', 'sphinx.ext.napoleon', 'sphinxcontrib.bibtex']
+extensions = ['recommonmark','sphinx.ext.todo', 'sphinx.ext.viewcode', 'sphinx.ext.autodoc', 'sphinx.ext.autosectionlabel', 'sphinx.ext.extlinks', 'sphinx.ext.napoleon', 'sphinxcontrib.bibtex', 'sphinx.ext.githubpages']
 
 bibtex_bibfiles = ['biblio.bib']
 bibtex_default_style = 'unsrt'
