@@ -83,7 +83,8 @@ rst_prolog = """
 """
 
 extlinks = {
-    'alpaga_zenodo': ('https://zenodo.org/record/5639393#.Yw8A5fc6-ds/%s', None)
+    'alpaga_zenodo': ('https://zenodo.org/record/5639393#.Yw8A5fc6-ds/%s', None),
+    'alpaga_github': ('https://github.com/glb96/Alpaga/%s', None)
            }
 
 

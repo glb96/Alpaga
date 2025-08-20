@@ -36,9 +36,9 @@ Finally, this wiki proposes some numerical (:ref:`python_advice_page`) and exper
 Contact Us
 =============
 
-You can contact us using the :alpaga_zenodo:`Zenodo page<>` or by e-mail at:
+You can contact us using the :alpaga_github:`github page<>` or by e-mail at:
 
-    + guillaume.le-breton@ens-lyon.fr
+    + guillaume_le_breton@live.fr
     + oriane.bonhomme@univ-lyon1.fr
 
 Licence
