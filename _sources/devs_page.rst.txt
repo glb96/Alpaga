@@ -4,7 +4,6 @@ Alpaga's developers
 ====================
 
 
-
 Main contributor:
 -----------------
 
@@ -29,7 +28,7 @@ Friend with the penguins may have trouble understanding Windows users -- or wors
 
 **Fabien Rondepierre:**
 
-PhD 2020-2025
+PhD: 2020-2025
 
 This creature is kinda rare. 
 One can find him in the deepest cave, or darkest lab room trying to convert red photons into blue ones. 
@@ -38,7 +37,7 @@ Eager to help and friendly with living beings like alpagas, pythons, pandas, and
    
 **Maxime Fery:**
 
-PhD 2021-2025
+PhD: 2021-2025
 
 This one comes from the south; he enjoys hot weather, the sea, and ice cream. 
 He is also an amateur guitarist, photographer, and enjoys playing all kinds of games. 
