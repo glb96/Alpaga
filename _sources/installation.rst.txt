@@ -8,25 +8,28 @@ Installation
    :align: right
    
 
-The :alpaga_github:`github page<>` provides the latest version. You can download the directory but clicking on the green [<> code ] and then chosing either the git way (clone) or via an archive (.zip). 
+The :alpaga_github:`github page<>` provides the latest version.  
+You can download the repository by clicking on the green **[<> Code]** button and then choosing either the Git method (clone) or downloading an archive (.zip). 
 
 Installation using pip
 -----------------------
-Alpaga is a python module which can be installed using pip. The package is compiled in the *alpaga.tar.gz* file. Use: ::
+
+Alpaga is a Python module that can be installed using pip.  
+The package is provided as *alpaga.tar.gz*. Use: ::
 
     pip install alpaga.tar.gz
     
-to install the package in your default python version, or ::
-
+to install the package with your default Python version, or: ::
 
     mypython3.X -m pip install alpaga.tar.gz
 
-to use a particular mypython3.X python version. 
+to specify a particular Python version (*mypython3.X*).
 
 Installation using conda
 ------------------------
 
-To install using graphical Anaconda, open the Anaconda shell and run the above pip line. Make sure to call the right *alpaga.tar.gz* file -- *i.e* with the correct file location in your computer.
+To install with the graphical Anaconda interface, open the Anaconda shell and run the same pip command.  
+Make sure to use the correct *alpaga.tar.gz* file — *i.e.* check that the path corresponds to its actual location on your computer.
 
 .. image:: _static/anaconda_install_alpaga_visualization.png
    :width: 500
@@ -35,17 +38,20 @@ To install using graphical Anaconda, open the Anaconda shell and run the above p
 
 Check the installation
 ----------------------
-To use Alpaga. You can call Alpaga within a python environment using the classical import function: ::
+
+To use Alpaga, import it in a Python environment with: ::
     
     import Alpaga
     import Alpaga.alpaga as alpaga
     
-Make sure to be out of the directory where the source code is located to ensure that it is indeed the package that is called. 
+Make sure you are not in the source code directory when importing, to ensure the installed package is used. 
 
-.. note:: You can use `print(alpaga)` to see where python import the package.
+.. note:: You can run ``print(alpaga)`` to check from where Python is importing the package.
 
 
-The *alpaga* module is the one where the core functions are contained. Other files are available in this package, contained in the directory *Data_tutorial*. The directory where is contained these files is accessible using: ::
+The *alpaga* module contains the core functions.  
+Other files are available in the package, in the directory *Data_tutorial*.  
+This directory can be accessed with: ::
     
     import os
     import Alpaga
@@ -53,25 +59,8 @@ The *alpaga* module is the one where the core functions are contained. Other fil
     Dir_tuto_file = os.path.dirname(Alpaga.Data_tutorial.__file__)
     print(Dir_tuto_file)
 
-You can use these data to try the tutorial. You have one containing only one acquisition, *Single_acquisition*, and the other with a typical polarisation acquisition, *Eau_polar_V*. See the tutorial file for example. 
-
-
-
-Custom Installation
--------------------
-
-If you do not want to use pip, you can unzip the *Alpaga-version.tar.gz* file. In this file, find where the *alpaga.py* is located. You have to update your python path so that it contains the directory where is located the *alpaga.py* file: ::
-    
-    import sys
-    Dir_code_alpaga = '/where/is/located/the/alapaga.py/file'
-    sys.path.append(Dir_code_alpaga)
-    
-And to defers to the tutorial documents: ::
-    
-    import os
-    Dir_tuto_file =  os.path.join(Dir_code_alpaga, 'Data_tutorial')
+These data are used for the tutorials. See the next sections for details. 
     
     
 :Release: |release|
 :Date: |today|
-    
