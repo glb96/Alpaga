@@ -58,8 +58,19 @@ jobs:
           mkdir -p docs
           python -m sphinx -b html Wiki_raw docs
           touch docs/.nojekyll
+          ls -R docs
 
-      # 8) Update the github directory 
+      # 8) Deploy wiki 
+      - name: Deploy wiki
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          publish_branch: gh-pages
+
+
+
+      # 9) Update the github directory 
       - name: Update the package and the wiki 
         run: |
           git config user.name "github-actions[bot]"
@@ -69,12 +80,4 @@ jobs:
           git commit -m "Update built package and wiki" || echo "No changes to commit"
           git push origin master
       
-      # 9) Deploy wiki 
-      - name: Deploy wiki
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
-          publish_branch: gh-pages
-
 
