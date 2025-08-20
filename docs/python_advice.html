@@ -1,19 +1,17 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <title>8. Python advice &#8212; Alpaga 1.2 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=61243dd2"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="9. Experimental and procedure advice" href="experimental_advice.html" />
@@ -21,8 +19,9 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -36,12 +35,12 @@
             
   <blockquote>
 <div></div></blockquote>
-<div class="section" id="python-advice">
-<span id="python-advice-page"></span><h1><span class="section-number">8. </span>Python advice<a class="headerlink" href="#python-advice" title="Permalink to this heading">¶</a></h1>
+<section id="python-advice">
+<span id="python-advice-page"></span><h1><span class="section-number">8. </span>Python advice<a class="headerlink" href="#python-advice" title="Link to this heading">¶</a></h1>
 <p>Dear student, PhD, doctor, professor and guests, or Igor user,</p>
 <p>Here is some advice that you may be found useful to work with Alpaga or python in general. This page does not pretend to help you as much as a course, but I hope it can help. If you have any trick or advice, please do not hesitate to contact the HYPERLINK Alpaga maintainer to make them add to this list.</p>
-<div class="section" id="some-habits">
-<h2><span class="section-number">8.1. </span>Some habits<a class="headerlink" href="#some-habits" title="Permalink to this heading">¶</a></h2>
+<section id="some-habits">
+<h2><span class="section-number">8.1. </span>Some habits<a class="headerlink" href="#some-habits" title="Link to this heading">¶</a></h2>
 <p>The Alpaga developer propose you some habits that can make your code mode reader-friendly (or at least understand better how the Alpaga code is written).</p>
 <p>Do not call the version of your code something like ‘’new_analyse’’ or ‘’fix_bug_analysis’’. If you do not want to use versioning software such as git, name it using: ‘analysis_1’, ‘analysis_2’…</p>
 <p>The name of every variable should be the more explicit as possible. Do not call the list where the angles are stored ‘’list_a’’, but ‘’L_angle’’. Keep the closest as possible to actual name you would use in your report/manuscript/article.</p>
@@ -49,14 +48,14 @@
 <p>If it is a directory/list with a lot of dimensions, name it with a prefix <em>LL_</em></p>
 <p>If it is a temporary variable (within a loop), use the suffix <em>_t</em> or <em>_temp</em> .</p>
 <p>Initialise the size of the list if you know the dimension. It would help you to spot unexpected behaviour.</p>
-</div>
-<div class="section" id="tricks-to-save-time">
-<h2><span class="section-number">8.2. </span>Tricks to save time<a class="headerlink" href="#tricks-to-save-time" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="tricks-to-save-time">
+<h2><span class="section-number">8.2. </span>Tricks to save time<a class="headerlink" href="#tricks-to-save-time" title="Link to this heading">¶</a></h2>
 <blockquote>
 <div><ul>
 <li><p>If you copy-past, a piece of code more than 5-6 times, maybe it is time to define a new function.</p></li>
 <li><p>At the very beginning of the code, you should define a WORK_DIR and SAVE_DIR variable. In the case you move the analysis code, the data, or you change the computer where you work, these variables will help you. You just have to set the absolute path until the data directory/where you want to save your figure once, and then everything will be updated. Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span> <span class="c1"># this package should be already installed in every decent python environment</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span> <span class="c1"># this package should be already installed in every decent python environment</span>
 <span class="n">WORK_DIR</span> <span class="o">=</span> <span class="s1">&#39;/home/lama/Datas&#39;</span>
 <span class="n">SAVE_DIR</span> <span class="o">=</span> <span class="s1">&#39;/home/lama/Article/MyNextNature&#39;</span>
 </pre></div>
@@ -73,9 +72,9 @@
 <li><p>We recommend to keep the code that created a figure you used in your report/article. Even better, to copy this code and save it where the figure is located to make sure you can regenerate it if needed.</p></li>
 </ul>
 </div></blockquote>
-</div>
-<div class="section" id="useful-data-structure-in-python-dictionary">
-<h2><span class="section-number">8.3. </span>Useful data structure in python: dictionary<a class="headerlink" href="#useful-data-structure-in-python-dictionary" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="useful-data-structure-in-python-dictionary">
+<h2><span class="section-number">8.3. </span>Useful data structure in python: dictionary<a class="headerlink" href="#useful-data-structure-in-python-dictionary" title="Link to this heading">¶</a></h2>
 <p>To store several datas/list/anything in one ‘place’ in python, you can use a dictionary.</p>
 <p>A dictionary is created using:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">LL_mydict</span> <span class="o">=</span> <span class="p">{}</span>
@@ -116,11 +115,11 @@
 </pre></div>
 </div>
 <p>But you cannot access them (the observable_c_n variable) automatically. Moreover, you are very likely to make mistakes during the numerous copy-past you will face. Storing all the result in a single object (dictionary or user-defined object if you are a purist) with key generated automatically is the best way to have maintainable and safe data structure!</p>
-</div>
-<div class="section" id="how-to-access-the-data-pickle">
-<h2><span class="section-number">8.4. </span>How to access the data: pickle<a class="headerlink" href="#how-to-access-the-data-pickle" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="how-to-access-the-data-pickle">
+<h2><span class="section-number">8.4. </span>How to access the data: pickle<a class="headerlink" href="#how-to-access-the-data-pickle" title="Link to this heading">¶</a></h2>
 <p>Another useful aspect of the dictionary (where all your results are saved), is that you can save them easily using the pickle format. It is a python-friendly format, but not human readable. To open a pickle, use:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pickle</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
 <span class="n">name_file</span> <span class="o">=</span> <span class="s1">&#39;/some/directory/with/your/pickle/file.p&#39;</span>
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">name_file</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">filetoload</span><span class="p">:</span>  <span class="c1"># which makes sure that the file is properly closed after reading</span>
     <span class="n">LL_what_is_in_your_pickle</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filetoload</span><span class="p">)</span>
@@ -132,25 +131,25 @@
 </pre></div>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Release</dt>
+<dt class="field-odd">Release<span class="colon">:</span></dt>
 <dd class="field-odd"><p>1.2</p>
 </dd>
-<dt class="field-even">Date</dt>
+<dt class="field-even">Date<span class="colon">:</span></dt>
 <dd class="field-even"><p>Aug 20, 2025</p>
 </dd>
 </dl>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
-              <img class="logo" src="_static/alpaga_logo.svg" alt="Logo"/>
+              <img class="logo" src="_static/alpaga_logo.svg" alt="Logo of Alpaga"/>
             </a></p>
 <h1 class="logo"><a href="index.html">Alpaga</a></h1>
 
@@ -185,7 +184,7 @@
 </ul>
 
 
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -193,18 +192,18 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;L-GPL.
+      &#169;L-GPL.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
       <a href="_sources/python_advice.rst.txt"

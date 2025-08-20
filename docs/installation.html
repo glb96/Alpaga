@@ -1,19 +1,17 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <title>1. Installation &#8212; Alpaga 1.2 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=61243dd2"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="2. File management" href="file_management.html" />
@@ -21,8 +19,9 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -36,12 +35,13 @@
             
   <blockquote>
 <div></div></blockquote>
-<div class="section" id="installation">
-<span id="installation-page"></span><h1><span class="section-number">1. </span>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h1>
-<a class="reference internal image-reference" href="_images/alpaga_22.jpg"><img alt="_images/alpaga_22.jpg" class="align-right" src="_images/alpaga_22.jpg" style="width: 200px;" /></a>
-<p>The <a class="reference external" href="https://github.com/glb96/Alpaga/">github page</a> provides the latest version. You can download the directory but clicking on the green [&lt;&gt; code ] and then chosing either the git way (clone) or via an archive (.zip).</p>
-<div class="section" id="installation-using-pip">
-<h2><span class="section-number">1.1. </span>Installation using pip<a class="headerlink" href="#installation-using-pip" title="Permalink to this heading">¶</a></h2>
+<section id="installation">
+<span id="installation-page"></span><h1><span class="section-number">1. </span>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h1>
+<a class="reference internal image-reference" href="_images/alpaga_22.jpg"><img alt="_images/alpaga_22.jpg" class="align-right" src="_images/alpaga_22.jpg" style="width: 200px;" />
+</a>
+<p>The <a class="extlink-alpaga_github reference external" href="https://github.com/glb96/Alpaga/">github page</a> provides the latest version. You can download the directory but clicking on the green [&lt;&gt; code ] and then chosing either the git way (clone) or via an archive (.zip).</p>
+<section id="installation-using-pip">
+<h2><span class="section-number">1.1. </span>Installation using pip<a class="headerlink" href="#installation-using-pip" title="Link to this heading">¶</a></h2>
 <p>Alpaga is a python module which can be installed using pip. The package is compiled in the <em>alpaga.tar.gz</em> file. Use:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">alpaga</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
 </pre></div>
@@ -51,17 +51,18 @@
 </pre></div>
 </div>
 <p>to use a particular mypython3.X python version.</p>
-</div>
-<div class="section" id="installation-using-conda">
-<h2><span class="section-number">1.2. </span>Installation using conda<a class="headerlink" href="#installation-using-conda" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="installation-using-conda">
+<h2><span class="section-number">1.2. </span>Installation using conda<a class="headerlink" href="#installation-using-conda" title="Link to this heading">¶</a></h2>
 <p>To install using graphical Anaconda, open the Anaconda shell and run the above pip line. Make sure to call the right <em>alpaga.tar.gz</em> file – <em>i.e</em> with the correct file location in your computer.</p>
-<a class="reference internal image-reference" href="_images/anaconda_install_alpaga_visualization.png"><img alt="_images/anaconda_install_alpaga_visualization.png" class="align-center" src="_images/anaconda_install_alpaga_visualization.png" style="width: 500px;" /></a>
-</div>
-<div class="section" id="check-the-installation">
-<h2><span class="section-number">1.3. </span>Check the installation<a class="headerlink" href="#check-the-installation" title="Permalink to this heading">¶</a></h2>
+<a class="reference internal image-reference" href="_images/anaconda_install_alpaga_visualization.png"><img alt="_images/anaconda_install_alpaga_visualization.png" class="align-center" src="_images/anaconda_install_alpaga_visualization.png" style="width: 500px;" />
+</a>
+</section>
+<section id="check-the-installation">
+<h2><span class="section-number">1.3. </span>Check the installation<a class="headerlink" href="#check-the-installation" title="Link to this heading">¶</a></h2>
 <p>To use Alpaga. You can call Alpaga within a python environment using the classical import function:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">Alpaga</span>
-<span class="kn">import</span> <span class="nn">Alpaga.alpaga</span> <span class="k">as</span> <span class="nn">alpaga</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">Alpaga</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">Alpaga.alpaga</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">alpaga</span>
 </pre></div>
 </div>
 <p>Make sure to be out of the directory where the source code is located to ensure that it is indeed the package that is called.</p>
@@ -70,48 +71,48 @@
 <p>You can use <span class="incremental">print(alpaga)</span> to see where python import the package.</p>
 </div>
 <p>The <em>alpaga</em> module is the one where the core functions are contained. Other files are available in this package, contained in the directory <em>Data_tutorial</em>. The directory where is contained these files is accessible using:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">Alpaga</span>
-<span class="kn">import</span> <span class="nn">Alpaga.Data_tutorial</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">Alpaga</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">Alpaga.Data_tutorial</span>
 <span class="n">Dir_tuto_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">Alpaga</span><span class="o">.</span><span class="n">Data_tutorial</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">Dir_tuto_file</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>You can use these data to try the tutorial. You have one containing only one acquisition, <em>Single_acquisition</em>, and the other with a typical polarisation acquisition, <em>Eau_polar_V</em>. See the tutorial file for example.</p>
-</div>
-<div class="section" id="custom-installation">
-<h2><span class="section-number">1.4. </span>Custom Installation<a class="headerlink" href="#custom-installation" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="custom-installation">
+<h2><span class="section-number">1.4. </span>Custom Installation<a class="headerlink" href="#custom-installation" title="Link to this heading">¶</a></h2>
 <p>If you do not want to use pip, you can unzip the <em>Alpaga-version.tar.gz</em> file. In this file, find where the <em>alpaga.py</em> is located. You have to update your python path so that it contains the directory where is located the <em>alpaga.py</em> file:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="n">Dir_code_alpaga</span> <span class="o">=</span> <span class="s1">&#39;/where/is/located/the/alapaga.py/file&#39;</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Dir_code_alpaga</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>And to defers to the tutorial documents:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="n">Dir_tuto_file</span> <span class="o">=</span>  <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Dir_code_alpaga</span><span class="p">,</span> <span class="s1">&#39;Data_tutorial&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Release</dt>
+<dt class="field-odd">Release<span class="colon">:</span></dt>
 <dd class="field-odd"><p>1.2</p>
 </dd>
-<dt class="field-even">Date</dt>
+<dt class="field-even">Date<span class="colon">:</span></dt>
 <dd class="field-even"><p>Aug 20, 2025</p>
 </dd>
 </dl>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
-              <img class="logo" src="_static/alpaga_logo.svg" alt="Logo"/>
+              <img class="logo" src="_static/alpaga_logo.svg" alt="Logo of Alpaga"/>
             </a></p>
 <h1 class="logo"><a href="index.html">Alpaga</a></h1>
 
@@ -146,7 +147,7 @@
 </ul>
 
 
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -154,18 +155,18 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;L-GPL.
+      &#169;L-GPL.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
       <a href="_sources/installation.rst.txt"

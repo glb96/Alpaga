@@ -3,9 +3,10 @@
 For Developpers
 ================
 
-
 In this section, we provide some guidance to help developers comtributing to this project. 
 In particular, this code is developed using git because of these multiple contributors. Using the github page, one can proposes update of the code, tutorial or wiki using directly the webpage. However, to modify the package (alpaga.tar.gz) or the online wiki (you are currently reading), compilation must be performed. 
+
+Either the github workflow works and you have nothing to do in order to update the package/wiki once you have push something in the master branch, or it fails and you have to perform these part on your computer until you fix the issue. 
 
 
 Scratch git guide:
