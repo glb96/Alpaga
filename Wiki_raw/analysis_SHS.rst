@@ -22,7 +22,7 @@ a, b ,c formalism
 .. _SHS_analysis:
 
 
-One can show that the expression of the Second Harmonic Scattering (SHS) intensity resolved in polarization is (see for instance :cite:p:`le2022second` Chp V or :cite:p:`rondepierre2025correlations`  Chp XXX):
+One can show that the expression of the Second Harmonic Scattering (SHS) intensity resolved in polarization is (see for instance :cite:p:`le2022second` Chp V or :cite:p:`rondepierre2025correlations`  Chp II):
 
 .. math::
     
@@ -46,7 +46,7 @@ From this formula and the a, b ,c parameters, we can calculate three experimenta
     \zeta^V = \frac{b^V - a^V - c^V}{b^V} ~~~~~~~~~~~~~~~~~~~~~~~~ \zeta^H = \frac{a^H - c^H}{a^H + c^H}\\
     
 
-To compute uncertainties for Zeta and D, we first propagate the uncertainties from the Gaussian fit : for that we use « weight » in the Ishs fit procedure (fonction python). From this fitting procedure, standard deviations on a, b ,c  are obtained as the diagonal of the covariance matrix :cite:p:`leo1994techniques`:
+To compute uncertainties for Zeta and D, we first propagate the uncertainties from the Gaussian fit : for that we use « weight » in the Ishs fit procedure (Python function). From this fitting procedure, standard deviations on a, b ,c  are obtained as the diagonal of the covariance matrix :cite:p:`leo1994techniques`:
 
 .. math::
 
@@ -81,7 +81,7 @@ Finally, the uncertainties on D, zetaV and zetaH are calculated in Alpaga as fol
 i0, i2, i4 formalism
 ^^^^^^^^^^^^^^^^^^^^
 
-Polarized-SHS resolved experiments can also be analyzed with Fourier series developments:
+Polarized-SHS resolved experiments can also be analyzed with Fourier series developments  see :cite:p:`JulienPRL` :
 
 .. math::
     
