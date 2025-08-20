@@ -176,9 +176,6 @@ All of these calculations are numericaly implemented in shs_module.analyse_polar
 :cite:p:`rondepierre2025correlations`.
 
 
-.. bibliography::
-
-
 :Release: |release|
 :Date: |today|
 

@@ -80,6 +80,7 @@ And here the list of the scientific commuinications which have used Alpaga so fa
    ./experimental_advice
    ./alpaga
    ./devs_page
+   ./reference
    
 :Release: |release|
 :Date: |today|
