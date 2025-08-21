@@ -104,7 +104,7 @@ def clean_spectra_mean_n(L_y, L_mean_cleaning_n=[1, 1, 1, 3], L_mean_cleaning_ev
 
 ############################################################################################
 
-def averaging_and_cleaning(name_file, N_iter, extention='.dat', fct_name=standard_file_name, type_cleaning='mean', L_mean_cleaning_n=[1, 1, 1, 3], L_mean_cleaning_evo_max=[2, 1.5, 1.4, 1.3], show_spectra='average', figure_counter=1):
+def averaging_and_cleaning(name_file, N_iter, L_filename=False, extention='.dat', fct_name=standard_file_name, type_cleaning='mean', L_mean_cleaning_n=[1, 1, 1, 3], L_mean_cleaning_evo_max=[2, 1.5, 1.4, 1.3], show_spectra='average', figure_counter=1):
     '''
     For the set of acquisition with the names:
     
@@ -136,6 +136,8 @@ def averaging_and_cleaning(name_file, N_iter, extention='.dat', fct_name=standar
         The prefix to all the acquisition. Note that the path should be global and not relatif, see :ref:`file_management_page` for more information.
     N_iter : int or list of int
         x The size depend 
+    L_filename : bool or list
+        If defined to a list, should contain the list of the filename (absolute path) to treat. Works similarly with N_iter as if the filename are generated with fct_name.
     extention : str
         [Optional] The extention of your data file, see :ref:`file_management_page` for more information.
     fct_name : function
@@ -168,7 +170,9 @@ def averaging_and_cleaning(name_file, N_iter, extention='.dat', fct_name=standar
        L_lambda, L_spectra, _ = alpaga.averaging_and_cleaning(names, N_iter, extention='.dat', type_cleaning='mean', L_mean_cleaning_n=[1, 1, 1, 3], L_mean_cleaning_evo_max=[2, 1.5, 1.2, 1.1], show_spectra='all', figure_counter=10)
     
     '''
-    
+    if not isinstance(L_filename, bool) and not L_filename:
+        raise Exception('WARNING: you have defined L_filename not correctly. It should be a list of string. Not empty!')
+        
     if isinstance(N_iter, int):
         L_iter = [k for k in range(1, N_iter+1, 1)]
         if show_spectra=='all':
@@ -178,7 +182,11 @@ def averaging_and_cleaning(name_file, N_iter, extention='.dat', fct_name=standar
         if show_spectra=='all':
             print('The averaging will be done for iter within', N_iter)
         
-    name_file_t = fct_name(name_file, angle=False, iteration=str(1), extention=extention)
+    if not isinstance(L_filename, bool) and L_filename:
+        name_file_t = L_filename[0]
+    else: 
+        name_file_t = fct_name(name_file, angle=False, iteration=str(L_iter[0]), extention=extention)
+        
     # spectra = np.loadtxt(name_file + '_' + str(1) + extention, skiprows=0)
     spectra = np.loadtxt(name_file_t)
     L_x_axis = spectra.T[0]
@@ -187,15 +195,16 @@ def averaging_and_cleaning(name_file, N_iter, extention='.dat', fct_name=standar
     # mean type cleaning: 
     if type_cleaning == 'mean':
         L_population_t = np.zeros(n_lambda)
-            
         L_spectra = np.zeros((len(L_iter), n_lambda))
         L_spectra_t = np.zeros(n_lambda)
         
         for i in range(0, len(L_iter), 1):
-            name_file_t = fct_name(name_file, angle=False, iteration=str(L_iter[i]), extention=extention)
+            if not isinstance(L_filename, bool) and L_filename:
+                name_file_t = L_filename[0]
+            else: 
+                name_file_t = fct_name(name_file, angle=False, iteration=str(L_iter[i]), extention=extention)
             print(name_file_t)
             spectra = np.loadtxt(name_file_t, skiprows=0)
-
             if show_spectra == 'all':
                 plt.figure(figure_counter)
                 plt.title(name_file + '_' + str(L_iter[i]))
@@ -236,7 +245,6 @@ def averaging_and_cleaning(name_file, N_iter, extention='.dat', fct_name=standar
                 borne_max +=1
                 
             L_spectra_t[n] = (L_spectra_t[borne_min] + L_spectra_t[borne_max])/2
-            
     if show_spectra == 'all' or show_spectra == 'average': 
         plt.figure(figure_counter)
         plt.title(name_file)
@@ -295,7 +303,7 @@ def remove_noise(L_x, L_y, l_cut=[380, 395, 419, 433], order_fit_noise=4, return
     Returns
     -------
     L_x_cleaned: list
-        The x axis containing only the 3 areas.
+        The x axis containing only theData_tutorial 3 areas.
     L_y_cleaned: list
         The y values without the noise fit. Have the same size as  L_x_cleaned.
     L_y_noise_fit: list
@@ -579,41 +587,57 @@ def fit_gaussian_from_noise(L_x, L_y, l_cut=[380, 395, 419, 433], order_fit_nois
 ############################  Polarisation procedure  ######################################
 ############################################################################################      
 
-def polarisation_intensity(directory=False, prefix_file=False, L_files_angles=False, N_iter=False, extention='.dat', fct_name=standard_file_name, type_cleaning='mean', L_mean_cleaning_n=[1, 1, 1, 3], L_mean_cleaning_evo_max=[2, 1.5, 1.4, 1.3], automatic_l_cut=False, l_cut=[380, 395, 419, 433], l_cut_n_n2=[2, 9], order_fit_noise=4, method_fit_first='fit_gauss', bounds_fit_gausse=([0, 395, 1], [np.inf, 410, 25]), lambda_0_ref=403, waist_ref=2, exclu_zone=False, fixed_para_gauss_fit=True, method_fit_second='fit_gauss', save_result=True, name_save_result='./post_prod_results.p', waiting_time=False):
+def polarisation_intensity(directory=False, L_filename=False, prefix_file=False, L_files_angles=False, N_iter=False, extention='.dat', fct_name=standard_file_name, type_cleaning='mean', L_mean_cleaning_n=[1, 1, 1, 3], L_mean_cleaning_evo_max=[2, 1.5, 1.4, 1.3], automatic_l_cut=False, l_cut=[380, 395, 419, 433], l_cut_n_n2=[2, 9], order_fit_noise=4, method_fit_first='fit_gauss', bounds_fit_gausse=([0, 395, 1], [np.inf, 410, 25]), lambda_0_ref=403, waist_ref=2, exclu_zone=False, fixed_para_gauss_fit=True, method_fit_second='fit_gauss', save_result=True, name_save_result='./post_prod_results.p', waiting_time=False):
     
     # See the wiki for the doc  
     
-    L_input_list = ['directory', 'prefix_file', 'L_files_angles', 'N_iter', 'extention', 'type_cleaning', 'L_mean_cleaning_n', 'L_mean_cleaning_evo_max', 'automatic_l_cut', 'l_cut', 'l_cut_n_n2', 'order_fit_noise', 'method_fit_first', 'bounds_fit_gausse', 'lambda_0_ref', 'waist_ref', 'fixed_para_gauss_fit', 'method_fit_second', 'save_result', 'name_save_result', 'waiting_time']
+    L_input_list = ['directory', 'L_filename', 'prefix_file', 'L_files_angles', 'N_iter', 'extention', 'type_cleaning', 'L_mean_cleaning_n', 'L_mean_cleaning_evo_max', 'automatic_l_cut', 'l_cut', 'l_cut_n_n2', 'order_fit_noise', 'method_fit_first', 'bounds_fit_gausse', 'lambda_0_ref', 'waist_ref', 'fixed_para_gauss_fit', 'method_fit_second', 'save_result', 'name_save_result', 'waiting_time']
     
     L_post_prod = {}
-    if directory==False:
-        print('No directory given, I will use the input from prefix_file, L_files_angles, N_iter and extention.')
-        if not prefix_file or not L_files_angles or not N_iter or not extention:
-            raise Exception('WARNING: since no directory has been given, I need values for the optional parameters: prefix_file, L_files_angles, N_iter and extention. Please provide all of them or use directory=our_directory_where_the_data_are.')
-    else:
-        if prefix_file and L_files_angles and N_iter and extention:
-            print('I will use your custom parameters for prefixe, L_files_angles, N_iter and extention.')
+    if not isinstance(L_filename, bool):
+        if not L_filename:
+            raise Exception('ERROR: if you provide L_filename, it should be a list of list containing the filenames')
+        print('I will use your L_filename to find the files.')
+        if isinstance(L_files_angles, bool):
+            raise Exception('You have to define a L_files_angles!')
+        print('L_files_angles=', L_files_angles)
+        if isinstance(N_iter, bool):
+            raise Exception('You have to define N_iter!')
+        print('N_iter=', N_iter)
+        if isinstance(prefix_file, bool):
+            prefix_file = ''
+        if isinstance(extention, bool):
+            extention = ''
+    else:  
+        L_filename_K = False
+        if directory==False:
+            print('No directory given, I will use the input from prefix_file, L_files_angles, N_iter and extention.')
+            if not prefix_file or not L_files_angles or not N_iter or not extention:
+                raise Exception('WARNING: since no directory has been given, I need values for the optional parameters: prefix_file, L_files_angles, N_iter and extention. Please provide all of them or use directory=our_directory_where_the_data_are.')
         else:
-            prefix_file_t, L_files_angles_t, N_iter_t, extention = find_angle_iter_from_dir(directory, extention=extention)
-            if prefix_file:
-                print('I will use your custom general prefixe instead of the one found in the directory:', prefix_file)
+            if prefix_file and L_files_angles and N_iter and extention:
+                print('I will use your custom parameters for prefixe, L_files_angles, N_iter and extention.')
             else:
-                prefix_file = os.path.join(directory, prefix_file_t)
+                prefix_file_t, L_files_angles_t, N_iter_t, extention = find_angle_iter_from_dir(directory, extention=extention)
+                if prefix_file:
+                    print('I will use your custom general prefixe instead of the one found in the directory:', prefix_file)
+                else:
+                    prefix_file = os.path.join(directory, prefix_file_t)
 
-            if L_files_angles:
-                print('I will use your custom L_files_angles instead of the one found in the directory:', L_files_angles)
-            else:
-                L_files_angles = L_files_angles_t
+                if L_files_angles:
+                    print('I will use your custom L_files_angles instead of the one found in the directory:', L_files_angles)
+                else:
+                    L_files_angles = L_files_angles_t
 
-            if N_iter:
-                print('I will use your custom N_iter instead of the one found in the directory:', N_iter)
-            else:
-                N_iter = N_iter_t
-            
-    print('The prefix for all the file are: "' + prefix_file + '" with ' + str(N_iter) + ' iter. The angle are ' + str(L_files_angles) + '. The extention is: ' + extention)
+                if N_iter:
+                    print('I will use your custom N_iter instead of the one found in the directory:', N_iter)
+                else:
+                    N_iter = N_iter_t
+        print('The prefix for all the file are: "' + prefix_file + '" with ' + str(N_iter) + ' iter. The angle are ' + str(L_files_angles) + '. The extention is: ' + extention)
     
     # save input
     L_post_prod['directory'] = directory
+    L_post_prod['L_filename'] = L_filename
     L_post_prod['prefix_file'] = prefix_file
     L_post_prod['N_iter'] = N_iter
     L_post_prod['L_files_angles'] = L_files_angles
@@ -648,19 +672,18 @@ def polarisation_intensity(directory=False, prefix_file=False, L_files_angles=Fa
     
     LL_noise_param = []
     
-    
     for KKK in range(0, N_angle, 1):
+        if not isinstance(L_filename, bool):
+            L_filename_K = L_filename[KKK]
         plt.close('all')
         clear_output()
         print('Angle:', L_files_angles[KKK])
         
         names = prefix_file + '_' + L_files_angles[KKK]
-        L_lambda, L_spectra, _ = averaging_and_cleaning(names, N_iter, fct_name=fct_name, type_cleaning=type_cleaning, L_mean_cleaning_n=L_mean_cleaning_n, L_mean_cleaning_evo_max=L_mean_cleaning_evo_max, show_spectra=False, extention=extention)
+        L_lambda, L_spectra, _ = averaging_and_cleaning(names, N_iter, L_filename=L_filename_K, fct_name=fct_name, type_cleaning=type_cleaning, L_mean_cleaning_n=L_mean_cleaning_n, L_mean_cleaning_evo_max=L_mean_cleaning_evo_max, show_spectra=False, extention=extention)
         
         L_para_gauss, L_err, L_x_fit_noise, L_fit_noise, figure_counter = fit_gaussian_from_noise(L_lambda, L_spectra, l_cut=l_cut, order_fit_noise=order_fit_noise, method_fit=method_fit_first, bounds_fit_gausse=bounds_fit_gausse, lambda_0_ref=lambda_0_ref, waist_ref=waist_ref, exclu_zone=exclu_zone, fit_noise= True, show_spectra='all', figure_counter=1)
         intensity, lambda_0, waist = L_para_gauss
-        
-        # print('first', l_cut, intensity, lambda_0, waist) 
         if automatic_l_cut: # the second run with automatic l_cut
             l_cut_temp=[lambda_0-l_cut_n_n2[1]*waist, lambda_0-l_cut_n_n2[0]*waist, lambda_0+l_cut_n_n2[0]*waist, lambda_0+l_cut_n_n2[1]*waist]
             L_para_gauss, L_err, L_x_fit_noise, L_fit_noise, figure_counter = fit_gaussian_from_noise(L_lambda, L_spectra, l_cut=l_cut_temp, order_fit_noise=order_fit_noise, method_fit=method_fit_first, bounds_fit_gausse=bounds_fit_gausse, lambda_0_ref=lambda_0_ref, waist_ref=waist_ref, fit_noise= True, show_spectra='all', figure_counter=figure_counter)
@@ -710,25 +733,27 @@ def polarisation_intensity(directory=False, prefix_file=False, L_files_angles=Fa
             l_cut=[lambda_0_mean-l_cut_n_n2[1]*waist_mean, lambda_0_mean-l_cut_n_n2[0]*waist_mean, lambda_0_mean+l_cut_n_n2[0]*waist_mean, lambda_0_mean+l_cut_n_n2[1]*waist_mean]
         
         for KKK in range(0, N_angle, 1):
-                plt.close('all')
-                clear_output()
-                print('Second Run, Angle:', L_files_angles[KKK])
-                figure_counter = 1
-                names = prefix_file + '_' + L_files_angles[KKK]
-                L_lambda, L_spectra, _ = averaging_and_cleaning(names, N_iter, fct_name=fct_name, type_cleaning=type_cleaning, L_mean_cleaning_n=L_mean_cleaning_n, L_mean_cleaning_evo_max=L_mean_cleaning_evo_max, show_spectra=False, extention=extention)
-                plt.show()
-                if method_fit_second == 'fit_gauss' or method_fit_second == 'both':
-                    L_para_gauss, L_err, L_x_fit_noise, L_fit_noise, figure_counter = fit_gaussian_from_noise(L_lambda, L_spectra, l_cut=l_cut, order_fit_noise=order_fit_noise, method_fit='fit_gauss', bounds_fit_gausse=([0, lambda_0_mean-0.00001, waist_mean-0.00001], [np.inf,lambda_0_mean+0.00001, waist_mean+0.00001]), lambda_0_ref=lambda_0_mean, waist_ref=waist_mean, fit_noise= True, show_spectra='all', figure_counter=figure_counter)
-                    L_intensity_angle_fit_gauss_fixed_para[KKK] = L_para_gauss[0]
-                    L_intensity_angle_fit_gauss_fixed_para_err[KKK] = L_err[0]
+            if not isinstance(L_filename, bool):
+                L_filename_K = L_filename[KKK]
+            plt.close('all')
+            clear_output()
+            print('Second Run, Angle:', L_files_angles[KKK])
+            figure_counter = 1
+            names = prefix_file + '_' + L_files_angles[KKK]
+            L_lambda, L_spectra, _ = averaging_and_cleaning(names, N_iter, L_filename=L_filename_K, fct_name=fct_name, type_cleaning=type_cleaning, L_mean_cleaning_n=L_mean_cleaning_n, L_mean_cleaning_evo_max=L_mean_cleaning_evo_max, show_spectra=False, extention=extention)
+            plt.show()
+            if method_fit_second == 'fit_gauss' or method_fit_second == 'both':
+                L_para_gauss, L_err, L_x_fit_noise, L_fit_noise, figure_counter = fit_gaussian_from_noise(L_lambda, L_spectra, l_cut=l_cut, order_fit_noise=order_fit_noise, method_fit='fit_gauss', bounds_fit_gausse=([0, lambda_0_mean-0.00001, waist_mean-0.00001], [np.inf,lambda_0_mean+0.00001, waist_mean+0.00001]), lambda_0_ref=lambda_0_mean, waist_ref=waist_mean, fit_noise= True, show_spectra='all', figure_counter=figure_counter)
+                L_intensity_angle_fit_gauss_fixed_para[KKK] = L_para_gauss[0]
+                L_intensity_angle_fit_gauss_fixed_para_err[KKK] = L_err[0]
                         
-                if method_fit_second == 'integral_gauss' or method_fit_second == 'both':    
-                    L_para_gauss, L_err, L_x_fit_noise, L_fit_noise, figure_counter = fit_gaussian_from_noise(L_lambda, L_spectra, l_cut=l_cut, order_fit_noise=order_fit_noise, method_fit='integral_gauss', bounds_fit_gausse=([0, lambda_0_mean-0.00001, waist_mean-0.00001], [np.inf,lambda_0_mean+0.00001, waist_mean+0.00001]), lambda_0_ref=lambda_0_mean, waist_ref=waist_mean, fit_noise= True, show_spectra='all', figure_counter=figure_counter)
-                    L_intensity_angle_integral_gauss_fixed_para[KKK] = L_para_gauss[0]
-                    L_intensity_angle_integral_gauss_fixed_para_err[KKK] = L_err[0]
-                plt.show()
-                if not isinstance(waiting_time, bool): # short pause so that the user can see the plots.
-                    time.sleep(waiting_time)
+            if method_fit_second == 'integral_gauss' or method_fit_second == 'both':    
+                L_para_gauss, L_err, L_x_fit_noise, L_fit_noise, figure_counter = fit_gaussian_from_noise(L_lambda, L_spectra, l_cut=l_cut, order_fit_noise=order_fit_noise, method_fit='integral_gauss', bounds_fit_gausse=([0, lambda_0_mean-0.00001, waist_mean-0.00001], [np.inf,lambda_0_mean+0.00001, waist_mean+0.00001]), lambda_0_ref=lambda_0_mean, waist_ref=waist_mean, fit_noise= True, show_spectra='all', figure_counter=figure_counter)
+                L_intensity_angle_integral_gauss_fixed_para[KKK] = L_para_gauss[0]
+                L_intensity_angle_integral_gauss_fixed_para_err[KKK] = L_err[0]
+            plt.show()
+            if not isinstance(waiting_time, bool): # short pause so that the user can see the plots.
+                time.sleep(waiting_time)
         
         if method_fit_second == 'fit_gauss' or method_fit_second == 'both':
             L_post_prod['L_intensity_fit_gauss_fixed_para'] = L_intensity_angle_fit_gauss_fixed_para
