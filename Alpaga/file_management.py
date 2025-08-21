@@ -4,17 +4,13 @@
 # Alpaga
 # AnaLyse en PolArisation de la Generation de second hArmonique 
 
-import importlib
 import numpy as np
 import os 
 import pickle
-import time
 from scipy.optimize import curve_fit
 
 import matplotlib
-import matplotlib.cm as cm
 import matplotlib.pyplot as plt
-
 
 
 ############################################################################################
