@@ -14,8 +14,8 @@ Why multiple short acquisitions?
 
 .. _cleaning_spectra_section:
 
-.. image:: _static/alpaga_5.jpg
-   :width: 250
+.. image:: _static/spikes_problem.png
+   :width: 350
    :align: right
 
 Individual spectra often contain sudden spikes caused by detector instabilities or electronic noise.  
@@ -26,6 +26,10 @@ To deal with them, Alpaga provides:
 .. autofunction:: analyze_run.clean_spectra_mean_n
    :noindex:
 
+.. image:: _static/alpaga_5.jpg
+   :width: 250
+   :align: right
+   
 The method detects points that strongly deviate from the average across iterations, and replaces them with more reliable values.  
 Shorter acquisitions with more repetitions make spike detection easier.
 

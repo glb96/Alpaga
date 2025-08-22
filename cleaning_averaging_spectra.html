@@ -41,7 +41,7 @@
 This improves statistics and helps remove unwanted artifacts such as spikes.</p>
 <section id="why-multiple-short-acquisitions">
 <h2><span class="section-number">3.1. </span>Why multiple short acquisitions?<a class="headerlink" href="#why-multiple-short-acquisitions" title="Link to this heading">¶</a></h2>
-<a class="reference internal image-reference" href="_images/alpaga_5.jpg" id="cleaning-spectra-section"><img alt="_images/alpaga_5.jpg" class="align-right" id="cleaning-spectra-section" src="_images/alpaga_5.jpg" style="width: 250px;" />
+<a class="reference internal image-reference" href="_images/spikes_problem.png" id="cleaning-spectra-section"><img alt="_images/spikes_problem.png" class="align-right" id="cleaning-spectra-section" src="_images/spikes_problem.png" style="width: 350px;" />
 </a>
 <p>Individual spectra often contain sudden spikes caused by detector instabilities or electronic noise.
 These spikes are random, unwanted, and may distort the Gaussian signal.</p>
@@ -119,6 +119,8 @@ If a spike is detected at position k, then L_population[k] = 0.</p>
 However, for short acquisition times, it may distort the spectra.</p>
 </dd></dl>
 
+<a class="reference internal image-reference" href="_images/alpaga_5.jpg"><img alt="_images/alpaga_5.jpg" class="align-right" src="_images/alpaga_5.jpg" style="width: 250px;" />
+</a>
 <p>The method detects points that strongly deviate from the average across iterations, and replaces them with more reliable values.
 Shorter acquisitions with more repetitions make spike detection easier.</p>
 </section>
