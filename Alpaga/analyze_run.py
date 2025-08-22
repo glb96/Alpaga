@@ -13,10 +13,7 @@ import time
 from scipy.optimize import curve_fit
 
 import matplotlib
-import matplotlib.cm as cm
 import matplotlib.pyplot as plt
-
-from IPython.display import clear_output
 
 from Alpaga.file_management import standard_file_name as standard_file_name
 from Alpaga.file_management import third_floor_file_name_builder as third_floor_file_name_builder
