@@ -121,11 +121,11 @@ With the correct number of iterations (`N_iter`) and any list of angles:
     N_iter = 3
 
 .. note::
-  If you provide your data in this way, be careful when following the `tutorial_spectra_analysis` tutorial, especially during the :ref:`denoising step<cleaning_averaging_spectra_page>` (Part I.B) and when using the the core function `Alpaga.analyze_run.polarisation_intensity` (Parts III.B and III.C). 
+  If you provide your data in this way, be careful when following the `tutorial_spectra_analysis` tutorial, especially during the :ref:`denoising step<cleaning_averaging_spectra_page>` (Part I.B and I.C) and when using the the core function `Alpaga.analyze_run.polarisation_intensity` (Parts III.B and III.C). 
 
 |
 
-The  :ref:`next procedure step<cleaning_averaging_spectra_page>` is to average the clean every spectrum and to perform the average over all the acquisition ($N_iter$).  
+The  :ref:`next procedure step<cleaning_averaging_spectra_page>` is to average the clean every spectrum and to perform the average over all the acquisition (`N_iter`).  
 
     
 :Release: |release|
