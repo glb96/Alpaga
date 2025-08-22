@@ -254,7 +254,7 @@
     
 <div class="viewcode-block" id="analyse_polarization_SSHG">
 <a class="viewcode-back" href="../analysis_SSHG.html#sshg_module.analyse_polarization_SSHG">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">analyse_polarization_SSHG</span><span class="p">(</span><span class="n">angle_incidence</span><span class="p">,</span> <span class="n">n1_fonda</span><span class="p">,</span> <span class="n">n2_fonda</span><span class="p">,</span> <span class="n">n1_harmo</span><span class="p">,</span> <span class="n">n2_harmo</span><span class="p">,</span> <span class="n">L_angle_deg</span><span class="p">,</span> <span class="n">L_intensity_S</span><span class="p">,</span> <span class="n">L_intensity_P</span><span class="p">,</span> <span class="n">XXZ</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">analyse_polarization_SSHG</span><span class="p">(</span><span class="n">angle_incidence</span><span class="p">,</span> <span class="n">n1_fonda</span><span class="p">,</span> <span class="n">n2_fonda</span><span class="p">,</span> <span class="n">n1_harmo</span><span class="p">,</span> <span class="n">n2_harmo</span><span class="p">,</span> <span class="n">L_polarisation_angle</span><span class="p">,</span> <span class="n">L_intensity_S</span><span class="p">,</span> <span class="n">L_intensity_P</span><span class="p">,</span> <span class="n">XXZ</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
 <span class="w">    </span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    From experimental angle of incidence, refractive index values of materials for fundamental and harmonic wavelength, polarisation angle and the SSHG gaussian intensity, the function returns ai coefficients and chi coefficients for an isotrope achiral interface. </span>
@@ -273,7 +273,7 @@
 <span class="sd">        refractive index of medium 1 for harmonic wavelength</span>
 <span class="sd">    N2 : float</span>
 <span class="sd">        refractive index of medium 2 for harmonic wavelength</span>
-<span class="sd">    L_angle: list</span>
+<span class="sd">    L_polarisation_angle: list</span>
 <span class="sd">        The polarisation angle of the fundamental in degree.</span>
 <span class="sd">    L_intensity_S: list</span>
 <span class="sd">        The SSHG intensity for S polarized analyser. The size of *L_angle* and *L_intensity_S* shall match. </span>
@@ -313,7 +313,7 @@
     
     <span class="n">ai</span><span class="o">=</span><span class="n">ai_coeff</span><span class="p">(</span><span class="n">angle_incidence</span><span class="p">,</span><span class="n">n1_fonda</span><span class="p">,</span><span class="n">n2_fonda</span><span class="p">,</span><span class="n">n1_harmo</span><span class="p">,</span><span class="n">n2_harmo</span><span class="p">)</span>
     
-    <span class="n">L_angle_rad</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">180</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">L_angle_deg</span><span class="p">]</span>
+    <span class="n">L_angle_rad</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">180</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">L_polarisation_angle</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">XXZ</span><span class="o">==</span><span class="kc">False</span><span class="p">:</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">helper_S</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">chi_XXZ</span><span class="p">):</span> <span class="c1">#fitting of chi parametre only (not a1 parametre)</span>
