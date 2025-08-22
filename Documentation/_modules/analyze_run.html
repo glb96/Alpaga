@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>analyze_run &#8212; Alpaga 1.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <script src="../_static/documentation_options.js?v=61243dd2"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for analyze_run</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="c1"># Alpaga</span>
+<span class="c1"># AnaLyse en PolArisation de la Generation de second hArmonique </span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span> 
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">curve_fit</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">Alpaga.file_management</span><span class="w"> </span><span class="kn">import</span> <span class="n">standard_file_name</span> <span class="k">as</span> <span class="n">standard_file_name</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Alpaga.file_management</span><span class="w"> </span><span class="kn">import</span> <span class="n">third_floor_file_name_builder</span> <span class="k">as</span> <span class="n">third_floor_file_name_builder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Alpaga.file_management</span><span class="w"> </span><span class="kn">import</span> <span class="n">transform_name_file</span> <span class="k">as</span> <span class="n">transform_name_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Alpaga.file_management</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_file_iter_from_dir</span> <span class="k">as</span> <span class="n">find_file_iter_from_dir</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Alpaga.file_management</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_angle_iter_from_dir</span> <span class="k">as</span> <span class="n">find_angle_iter_from_dir</span>
+
+<span class="c1">############################################################################################</span>
+<span class="c1">####################### Cleaning and averaging spectra #####################################</span>
+<span class="c1">############################################################################################</span>
+
+<div class="viewcode-block" id="clean_spectra_mean_n">
+<a class="viewcode-back" href="../cleaning_averaging_spectra.html#analyze_run.clean_spectra_mean_n">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">clean_spectra_mean_n</span><span class="p">(</span><span class="n">L_y</span><span class="p">,</span> <span class="n">L_mean_cleaning_n</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">L_mean_cleaning_evo_max</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Detect spikes in the list of data *L_y* using a local averaging method.  </span>
+<span class="sd">    This method is designed to avoid removing features that are not actual spikes.  </span>
+<span class="sd">    Instead of applying a single rough treatment, several small treatments are performed,  </span>
+<span class="sd">    so that the spectra are affected as little as possible.  </span>
+
+<span class="sd">    **Steps**</span>
+<span class="sd">    </span>
+<span class="sd">    1) For given *mean_cleaning_n* (integer) and *mean_cleaning_evo_max* (float),  </span>
+<span class="sd">       the function scans the list *L_y* to clean.  </span>
+<span class="sd">       For a value L_y[k], it computes the local average:</span>
+
+<span class="sd">           ave_k = (L_y[k-mean_cleaning_n] + ... + L_y[k-1] + L_y[k+1] + ... + L_y[k+mean_cleaning_n]) / (2*mean_cleaning_n)</span>
+
+<span class="sd">       i.e. the local average over 2*mean_cleaning_n neighbors, **excluding** the point k.</span>
+
+<span class="sd">    2) The value L_y[k] is compared against mean_cleaning_evo_max × ave_k.  </span>
+<span class="sd">       If L_y[k] is larger, it is considered a spike.  </span>
+<span class="sd">       In this case, L_y[k] is replaced by ave_k **for the spike detection process only (not for the final analysis)**.  </span>
+<span class="sd">       Spikes are stored in the list *L_population*: if L_population[k] = 0, point k is a spike, otherwise it is 1.  </span>
+<span class="sd">       The averaging procedure will later use this list to remove the spikes.  </span>
+
+<span class="sd">    3) For every *mean_cleaning_n* and *mean_cleaning_evo_max* declared in the input arguments  </span>
+<span class="sd">       *L_mean_cleaning_n* and *L_mean_cleaning_evo_max*, steps (1) and (2) are repeated,  </span>
+<span class="sd">       updating *L_y* when spikes are detected.  </span>
+
+<span class="sd">    This multi-pass approach helps detect as many spikes as possible, while minimizing false positives.  </span>
+<span class="sd">    A recommended strategy is to start with stricter parameters, and progressively decrease the threshold.  </span>
+<span class="sd">    For example:  </span>
+
+<span class="sd">        L_mean_cleaning_n = [1, 1, 1, 3]  </span>
+<span class="sd">        L_mean_cleaning_evo_max = [2, 1.5, 1.2, 1.1]  </span>
+
+<span class="sd">    performs 4 treatments.  </span>
+<span class="sd">    The first 3 use only the two nearest neighbors (L_y[k-1] and L_y[k+1]) to compute the average.  </span>
+<span class="sd">    In the first pass, a point is flagged as a spike if it is twice this local average.  </span>
+<span class="sd">    In the second pass, the threshold is 1.5, then 1.2 in the third.  </span>
+<span class="sd">    The final pass uses 6 neighbors and a 1.1 threshold.  </span>
+
+<span class="sd">    This procedure was designed to catch spikes that may span 2–3 consecutive points (rare but possible).  </span>
+<span class="sd">    It is recommended to experiment with *L_mean_cleaning_n* and *L_mean_cleaning_evo_max*  </span>
+<span class="sd">    to ensure spikes are removed without altering the rest of the spectra.  </span>
+<span class="sd">    For instance, try:  </span>
+
+<span class="sd">        L_mean_cleaning_n = [1, 1, 1, 3]  </span>
+<span class="sd">        L_mean_cleaning_evo_max = [2, 1.5, 1.1, 1.05]  </span>
+
+<span class="sd">    to see the effect of overly strict parameters.  </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    L_y : list</span>
+<span class="sd">        Data to clean.  </span>
+<span class="sd">    L_mean_cleaning_n : list of int, optional</span>
+<span class="sd">        List of neighborhood sizes for computing local averages.  </span>
+<span class="sd">        Must have the same length as *L_mean_cleaning_evo_max*.  </span>
+<span class="sd">    L_mean_cleaning_evo_max : list of float, optional</span>
+<span class="sd">        List of maximum coefficients used for spike detection.  </span>
+<span class="sd">        Values should generally be between 1.1 and 2–3.  </span>
+<span class="sd">        A point is flagged as a spike if L_y[k] &gt; coeff × local average.  </span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    L_population : list</span>
+<span class="sd">        List of the same size as *L_y*, initialized to 1.  </span>
+<span class="sd">        If a spike is detected at position k, then L_population[k] = 0.  </span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    For practical usage, see :ref:`alpaga.averaging_and_cleaning function&lt;averaging_spectra_section&gt;`.  </span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    A Fourier-based cleaning method may be added in the future if requested.  </span>
+<span class="sd">    However, for short acquisition times, it may distort the spectra.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">L_y_clean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">L_y</span><span class="p">)</span>
+    <span class="n">L_population</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">L_y</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="c1"># Redefine the value if the old input type is used.</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">L_mean_cleaning_n</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">L_mean_cleaning_n</span> <span class="o">=</span> <span class="p">[</span><span class="n">L_mean_cleaning_n</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">L_mean_cleaning_evo_max</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">L_mean_cleaning_evo_max</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;WARNING: If only one cleaning is required, both L_mean_cleaning_n and L_mean_cleaning_evo_max should be int or float. You should also define them as a list with a single element. Example: L_mean_cleaning_n = [3] and L_mean_cleaning_evo_max = [1.4].&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">L_mean_cleaning_evo_max</span> <span class="o">=</span> <span class="p">[</span><span class="n">L_mean_cleaning_evo_max</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">L_mean_cleaning_n</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">L_mean_cleaning_evo_max</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;WARNING: If several cleanings are required, both L_mean_cleaning_n and L_mean_cleaning_evo_max should be lists.&#39;</span><span class="p">)</span>
+
+    <span class="n">N_cleaning</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">L_mean_cleaning_n</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">N_c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N_cleaning</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">mean_cleaning_n_t</span> <span class="o">=</span> <span class="n">L_mean_cleaning_n</span><span class="p">[</span><span class="n">N_c</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mean_cleaning_n_t</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;WARNING: Every element of L_mean_cleaning_n should be an int!&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mean_cleaning_n_t</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">L_y</span><span class="p">)</span><span class="o">-</span><span class="n">mean_cleaning_n_t</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">mean_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">L_y_clean</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="n">mean_cleaning_n_t</span><span class="p">:</span><span class="n">k</span><span class="p">],</span> <span class="n">L_y_clean</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">mean_cleaning_n_t</span><span class="p">]))</span> <span class="c1"># mean without the point k</span>
+            <span class="k">if</span> <span class="n">L_y_clean</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">mean_t</span> <span class="o">*</span> <span class="n">L_mean_cleaning_evo_max</span><span class="p">[</span><span class="n">N_c</span><span class="p">]:</span>
+                <span class="n">L_y_clean</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">mean_t</span>
+                <span class="n">L_population</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">return</span> <span class="n">L_population</span></div>
+
+
+
+<span class="c1">############################################################################################</span>
+
+<div class="viewcode-block" id="averaging_and_cleaning">
+<a class="viewcode-back" href="../cleaning_averaging_spectra.html#analyze_run.averaging_and_cleaning">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">averaging_and_cleaning</span><span class="p">(</span><span class="n">name_file</span><span class="p">,</span> <span class="n">N_iter</span><span class="p">,</span> <span class="n">L_filename</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;.dat&#39;</span><span class="p">,</span>
+                           <span class="n">fct_name</span><span class="o">=</span><span class="n">standard_file_name</span><span class="p">,</span> <span class="n">type_cleaning</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+                           <span class="n">L_mean_cleaning_n</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">L_mean_cleaning_evo_max</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">],</span>
+                           <span class="n">show_spectra</span><span class="o">=</span><span class="s1">&#39;average&#39;</span><span class="p">,</span> <span class="n">figure_counter</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    For a set of acquisitions with filenames:</span>
+<span class="sd">    </span>
+<span class="sd">        *name_file* + &#39;_&#39; + i + *extension*,</span>
+<span class="sd">    </span>
+<span class="sd">    return the mean spectra cleaned of spikes. Currently, only one type of averaging and cleaning is available through *type_cleaning*, which is &#39;mean&#39;.</span>
+<span class="sd">    </span>
+<span class="sd">    Each acquisition i is processed using the function :func:`alpaga.clean_spectra_mean_n` </span>
+<span class="sd">    with optional arguments *L_mean_cleaning_n* and *L_mean_cleaning_evo_max*, see :ref:`cleaning_averaging_spectra_page` </span>
+<span class="sd">    for details. Spikes are detected for each spectrum, and the mean is computed element-wise over all acquisitions, ignoring the spikes.</span>
+<span class="sd">    </span>
+<span class="sd">    Example:</span>
+<span class="sd">    If there are 4 acquisitions, for the k-th element (e.g., wavelength 404 nm):</span>
+<span class="sd">    </span>
+<span class="sd">        - If no spikes are detected for all 4 acquisitions, the average is the mean of all 4 values.</span>
+<span class="sd">        - If the second acquisition has a spike at this element, the average ignores the second acquisition **only for this element**.</span>
+<span class="sd">        - If all 4 acquisitions have a spike at this element, it may indicate:</span>
+<span class="sd">            * Detection parameters are too strict: decrease values in *L_mean_cleaning_evo_max*.</span>
+<span class="sd">            * Acquisition time per spectrum is too long, increasing spike probability.</span>
+<span class="sd">            * A serious detector issue or other abnormality (e.g., ISS data). </span>
+<span class="sd">    </span>
+<span class="sd">    In such cases, a warning is printed, and the mean value is used for that element, but acquisition parameters should be reconsidered.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name_file : str</span>
+<span class="sd">        Prefix for all acquisition filenames. Use absolute paths; see :ref:`file_management_page` for more details.</span>
+<span class="sd">    N_iter : int or list of int</span>
+<span class="sd">        Number of acquisitions to average. If a list is provided, only those iterations are processed.</span>
+<span class="sd">    L_filename : bool or list of str</span>
+<span class="sd">        If a list is provided, contains the absolute filenames to process, bypassing generated filenames.</span>
+<span class="sd">    extension : str</span>
+<span class="sd">        [Optional] File extension for data files.</span>
+<span class="sd">    fct_name : function</span>
+<span class="sd">        [Optional] Function used to generate a filename from prefix, iteration, and extension. Defaults to :func:`alpaga.standard_file_name`.</span>
+<span class="sd">    type_cleaning : str</span>
+<span class="sd">        [Optional] Currently only &#39;mean&#39; is supported.</span>
+<span class="sd">    L_mean_cleaning_n : list</span>
+<span class="sd">        [Optional] See :func:`alpaga.clean_spectra_mean_n` for details.</span>
+<span class="sd">    L_mean_cleaning_evo_max : list</span>
+<span class="sd">        [Optional] See :func:`alpaga.clean_spectra_mean_n` for details.</span>
+<span class="sd">    show_spectra : str</span>
+<span class="sd">        [Optional] &#39;average&#39; plots only the final averaged spectra, &#39;all&#39; also plots spike detection for each iteration. Any other value disables plotting.</span>
+<span class="sd">    figure_counter : int</span>
+<span class="sd">        [Optional] Number of the first figure for plotting.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    L_x_axis : list</span>
+<span class="sd">        X-axis values from the spectra files.</span>
+<span class="sd">    L_spectra_t : list</span>
+<span class="sd">        Averaged and cleaned spectra.</span>
+<span class="sd">    figure_counter : int</span>
+<span class="sd">        Updated figure counter for subsequent plots.</span>
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">       names = &#39;Spectra_4.0&#39;</span>
+<span class="sd">       N_iter = 4</span>
+<span class="sd">       L_lambda, L_spectra, _ = alpaga.averaging_and_cleaning(</span>
+<span class="sd">           names, N_iter, extension=&#39;.dat&#39;, type_cleaning=&#39;mean&#39;,</span>
+<span class="sd">           L_mean_cleaning_n=[1, 1, 1, 3], L_mean_cleaning_evo_max=[2, 1.5, 1.2, 1.1],</span>
+<span class="sd">           show_spectra=&#39;all&#39;, figure_counter=10)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">L_filename</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">L_filename</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;WARNING: L_filename is not defined correctly. It should be a non-empty list of strings!&#39;</span><span class="p">)</span>
+        
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">N_iter</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">L_iter</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N_iter</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">show_spectra</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Averaging will be done for iterations from 1 to&#39;</span><span class="p">,</span> <span class="n">N_iter</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">N_iter</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">L_iter</span> <span class="o">=</span> <span class="n">N_iter</span>
+        <span class="k">if</span> <span class="n">show_spectra</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Averaging will be done for iterations:&#39;</span><span class="p">,</span> <span class="n">N_iter</span><span class="p">)</span>
+        
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">L_filename</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">and</span> <span class="n">L_filename</span><span class="p">:</span>
+        <span class="n">name_file_t</span> <span class="o">=</span> <span class="n">L_filename</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span> 
+        <span class="n">name_file_t</span> <span class="o">=</span> <span class="n">fct_name</span><span class="p">(</span><span class="n">name_file</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">iteration</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">L_iter</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">extension</span><span class="o">=</span><span class="n">extension</span><span class="p">)</span>
+        
+    <span class="n">spectra</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">name_file_t</span><span class="p">)</span>
+    <span class="n">L_x_axis</span> <span class="o">=</span> <span class="n">spectra</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">n_lambda</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">L_x_axis</span><span class="p">)</span>
+        
+    <span class="c1"># Mean-type cleaning</span>
+    <span class="k">if</span> <span class="n">type_cleaning</span> <span class="o">==</span> <span class="s1">&#39;mean&#39;</span><span class="p">:</span>
+        <span class="n">L_population_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_lambda</span><span class="p">)</span>
+        <span class="n">L_spectra</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">L_iter</span><span class="p">),</span> <span class="n">n_lambda</span><span class="p">))</span>
+        <span class="n">L_spectra_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_lambda</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">L_iter</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">L_filename</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="ow">and</span> <span class="n">L_filename</span><span class="p">:</span>
+                <span class="n">name_file_t</span> <span class="o">=</span> <span class="n">L_filename</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span> 
+                <span class="n">name_file_t</span> <span class="o">=</span> <span class="n">fct_name</span><span class="p">(</span><span class="n">name_file</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">iteration</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">L_iter</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="n">extension</span><span class="o">=</span><span class="n">extension</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">name_file_t</span><span class="p">)</span>
+            <span class="n">spectra</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">name_file_t</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">show_spectra</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figure_counter</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">name_file</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">L_iter</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">L_x_axis</span><span class="p">,</span> <span class="n">spectra</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                
+            <span class="n">L_population</span> <span class="o">=</span> <span class="n">clean_spectra_mean_n</span><span class="p">(</span>
+                <span class="n">spectra</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                <span class="n">L_mean_cleaning_n</span><span class="o">=</span><span class="n">L_mean_cleaning_n</span><span class="p">,</span>
+                <span class="n">L_mean_cleaning_evo_max</span><span class="o">=</span><span class="n">L_mean_cleaning_evo_max</span>
+            <span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">show_spectra</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figure_counter</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">L_population</span><span class="p">)):</span>
+                    <span class="k">if</span> <span class="n">L_population</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">L_x_axis</span><span class="p">[</span><span class="n">n</span><span class="p">]],</span> <span class="p">[</span><span class="n">spectra</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">n</span><span class="p">]],</span> <span class="s1">&#39;*&#39;</span><span class="p">)</span>
+                <span class="n">figure_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+            
+            <span class="n">L_spectra</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">spectra</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">L_population</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">L_population</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">L_spectra</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">L_population_t</span> <span class="o">+=</span> <span class="n">L_population</span>
+            
+        <span class="n">L_to_correct</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">L_population_t</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">L_population_t</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Warning: For files with prefix </span><span class="si">{</span><span class="n">name_file</span><span class="si">}</span><span class="s1">, a spike was detected at lambda </span><span class="si">{</span><span class="n">L_x_axis</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="si">}</span><span class="s1"> for all iterations! The returned value may not be meaningful.&#39;</span><span class="p">)</span>
+                <span class="n">L_population_t</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">L_to_correct</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+                    
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">L_iter</span><span class="p">)):</span>
+            <span class="n">L_spectra_t</span> <span class="o">+=</span> <span class="n">L_spectra</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                
+        <span class="n">L_spectra_t</span> <span class="o">/=</span> <span class="n">L_population_t</span>
+            
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">L_to_correct</span><span class="p">:</span>  <span class="c1"># Avoid zeros in spectra</span>
+            <span class="n">borne_min</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">borne_max</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">while</span> <span class="n">L_spectra_t</span><span class="p">[</span><span class="n">borne_min</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">borne_min</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="k">while</span> <span class="n">L_spectra_t</span><span class="p">[</span><span class="n">borne_max</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">borne_max</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">L_spectra_t</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">L_spectra_t</span><span class="p">[</span><span class="n">borne_min</span><span class="p">]</span> <span class="o">+</span> <span class="n">L_spectra_t</span><span class="p">[</span><span class="n">borne_max</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+    
+    <span class="k">if</span> <span class="n">show_spectra</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="s1">&#39;average&#39;</span><span class="p">]:</span> 
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figure_counter</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">name_file</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">L_x_axis</span><span class="p">,</span> <span class="n">L_spectra_t</span><span class="p">)</span>
+        <span class="n">figure_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+    
+    <span class="k">return</span> <span class="n">L_x_axis</span><span class="p">,</span> <span class="n">L_spectra_t</span><span class="p">,</span> <span class="n">figure_counter</span></div>
+
+
+        
+<span class="c1">############################################################################################</span>
+<span class="c1">################################# Fit and noise   ##########################################</span>
+<span class="c1">############################################################################################    </span>
+
+<div class="viewcode-block" id="remove_noise">
+<a class="viewcode-back" href="../fitting_procedure.html#analyze_run.remove_noise">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">remove_noise</span><span class="p">(</span><span class="n">L_x</span><span class="p">,</span> <span class="n">L_y</span><span class="p">,</span> <span class="n">l_cut</span><span class="o">=</span><span class="p">[</span><span class="mi">380</span><span class="p">,</span> <span class="mi">395</span><span class="p">,</span> <span class="mi">419</span><span class="p">,</span> <span class="mi">433</span><span class="p">],</span> <span class="n">order_fit_noise</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">return_fit_noise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_boundary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_spectra</span><span class="o">=</span><span class="kc">False</span> <span class="p">,</span> <span class="n">figure_counter</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Remove the noise of a spectra to make the gaussian fit easier. </span>
+<span class="sd">    </span>
+<span class="sd">    The x axis is given by *L_x* and the y axis *L_y*. Using the list *l_cut*, the list is cutted in 3 areas. From the x value *l_cut[0]* to *l_cut[1]* is define the first area, from *l_cut[1]* to *l_cut[2]* the second and *l_cut[2]* to *l_cut[3]* the last one. The second area is the target area where the gaussian should be. The first and last area will be used to define the noise in the second area using a polynomial fit. </span>
+<span class="sd">    </span>
+<span class="sd">    This function will first find the element of the x axis to create the 3 areas. In order to get the elements to recreate these area, set the optional parameter return_boundary to True. It will return the list *x_cut* which can be use as follow to define the 3 areas: ::</span>
+<span class="sd">        </span>
+<span class="sd">        L_y_noise = np.append(L_y[x_cut[0]:x_cut[1]], L_y[x_cut[2]:x_cut[3]]) # to define the first and last area</span>
+<span class="sd">        L_y_target = L_y[x_cut[1]:x_cut[2]] # to define the second area</span>
+<span class="sd">    </span>
+<span class="sd">    Then, the first and last part are fitted using polynomial function up to the order given by the optional parameter *order_fit_noise*. To make this function return the fitted noise, set the optional parameter *return_fit_noise* to True. It will return the list *L_y_noise_fit* which is the polynomial function calculated throughout the 3 areas. </span>
+<span class="sd">    </span>
+<span class="sd">    Finally, it substracts the fitted noise to all the 3 areas. Therefore, the first and last area should be close to zero, while the second area should contain a nice gaussian. If it is not the case, you should try different *l_cut* value in order to get the best noise fit as possible. </span>
+<span class="sd">    </span>
+<span class="sd">    In order to plot the different areas and the polynomial fit, set *show_spectra* to &#39;all&#39;. The initial number of the figure (plt.figure(K)) is given by the argument *figure_counter*.</span>
+<span class="sd">    </span>
+<span class="sd">    The first returned list is the x axis starting from the l_cut[0] until l_cut[2], *L_x_cleaned*.</span>
+<span class="sd">    The second returned list is  the y value where the noise has been substracted, *L_y_noise_fit*. Its size is the same as the returned x axis.</span>
+<span class="sd">    </span>
+<span class="sd">    If return_fit_noise is set to True, the list *L_y_noise_fit* containing the polynome calculated within the 3 areas is returned.</span>
+<span class="sd">    </span>
+<span class="sd">    If return_boundary is set to True, the list *x_cut*  containing the positions of the l_cut values in the original x axis is returned -- see above.</span>
+<span class="sd">    </span>
+<span class="sd">    In any case, the last returned value is an int, which is the next figure number that you can use -- without interfering with the function plots. </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    L_x: list</span>
+<span class="sd">        The x axis that will be used to define the 3 areas. </span>
+<span class="sd">    L_y : list</span>
+<span class="sd">       The y axis where the noise should be remove</span>
+<span class="sd">    l_cut: list of float</span>
+<span class="sd">        [Optional] Define the 3 areas using the value of *L_x*. *l_cut* should contained the **value** to define the different areas, not the element number. See the example.</span>
+<span class="sd">    order_fit_noise: int</span>
+<span class="sd">        [Optional] The polynome order used for the noise fit. It is recommanded to used 2, 3 or 4. The polynome order has very small impact in the result if the *l_cut* parameter is well defined. </span>
+<span class="sd">    return_fit_noise: bool</span>
+<span class="sd">        [Optional] If set to True, return the noise fitted by a polynomial, *L_y_noise_fit*. Return a list of values, not the function.</span>
+<span class="sd">    return_boundary: bool </span>
+<span class="sd">        [Optional] If set to True, return the *x_axis* which contains the element number to define the boundary of the 3 areas from the initial *L_x* list. </span>
+<span class="sd">    show_spectra: str</span>
+<span class="sd">        [Optional] If set to &#39;all&#39;, print the 3 area and the polynomial fit.</span>
+<span class="sd">    figure_counter: int</span>
+<span class="sd">        [Optional] The number of the first figure plot.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    L_x_cleaned: list</span>
+<span class="sd">        The x axis containing only theData_tutorial 3 areas.</span>
+<span class="sd">    L_y_cleaned: list</span>
+<span class="sd">        The y values without the noise fit. Have the same size as  L_x_cleaned.</span>
+<span class="sd">    L_y_noise_fit: list</span>
+<span class="sd">        The noise fitted by a polynomial. Is returned if *return_fit_noise* is set to True.</span>
+<span class="sd">    x_cut: list</span>
+<span class="sd">        The element position to define the boundary of the 3 areas from the initial *L_x* list. Is returned if *return_boundary* is set to True.</span>
+<span class="sd">    figure_counter: int</span>
+<span class="sd">         The new value for your next figure number. </span>
+<span class="sd">            </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    See the tutorial for precise examples. Below is shown how the results will be returned depending on the optional parameters:</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        L_x_cleaned, L_y_cleaned, figure_counter = alpaga.remove_noise(L_lambda, L_spectra, l_cut=l_cut, order_fit_noise=order_fit_noise, return_fit_noise=False, return_boundary=False, show_spectra=&#39;all&#39;, figure_counter=1)</span>
+<span class="sd">        L_x_cleaned, L_y_cleaned, L_y_noise_fit, figure_counter = alpaga.remove_noise(L_lambda, L_spectra, l_cut=l_cut, order_fit_noise=order_fit_noise, return_fit_noise=True, return_boundary=False, show_spectra=&#39;all&#39;, figure_counter=1)</span>
+<span class="sd">        L_x_cleaned, L_y_cleaned, x_cut, figure_counter = alpaga.remove_noise(L_lambda, L_spectra, l_cut=l_cut, order_fit_noise=order_fit_noise, return_fit_noise=False, return_boundary=True, show_spectra=&#39;all&#39;, figure_counter=1)</span>
+<span class="sd">        L_x_cleaned, L_y_cleaned, L_y_noise_fit, x_cut, figure_counter = alpaga.remove_noise(L_lambda, L_spectra, l_cut=l_cut, order_fit_noise=order_fit_noise, return_fit_noise=True, return_boundary=True, show_spectra=&#39;all&#39;, figure_counter=1)</span>
+<span class="sd">    </span>
+<span class="sd">    Note that the argument should be defined before in the code -- see the tutorial.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># find where to make the cut to define the noise</span>
+    <span class="n">N_lambda</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">L_x</span><span class="p">)</span>
+    <span class="n">KKK</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">trotter</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">x_cut</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="k">while</span> <span class="n">trotter</span><span class="o">&lt;</span><span class="mi">4</span> <span class="ow">or</span> <span class="n">KKK</span><span class="o">&gt;</span><span class="n">N_lambda</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">L_x</span><span class="p">[</span><span class="n">KKK</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">l_cut</span><span class="p">[</span><span class="n">trotter</span><span class="p">]:</span>
+            <span class="n">x_cut</span><span class="p">[</span><span class="n">trotter</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">KKK</span><span class="p">)</span>
+            <span class="n">trotter</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">KKK</span> <span class="o">+=</span> <span class="mi">1</span>
+        
+    <span class="c1">#print(x_cut)</span>
+    <span class="n">L_x_cleaned</span> <span class="o">=</span> <span class="n">L_x</span><span class="p">[</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">3</span><span class="p">]]</span>
+    <span class="c1"># Fit the noise:</span>
+    <span class="n">L_x_noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">L_x</span><span class="p">[</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">L_x</span><span class="p">[</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span>
+    <span class="n">L_y_noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">L_y</span><span class="p">[</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">L_y</span><span class="p">[</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">L_x_noise</span><span class="p">,</span> <span class="n">L_y_noise</span><span class="p">,</span> <span class="n">order_fit_noise</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">poly1d</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+    <span class="n">L_y_noise_fit</span> <span class="o">=</span> <span class="n">p</span><span class="p">(</span><span class="n">L_x_cleaned</span><span class="p">)</span>
+    <span class="n">L_y_cleaned</span> <span class="o">=</span> <span class="n">L_y</span><span class="p">[</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">3</span><span class="p">]]</span><span class="o">-</span><span class="n">L_y_noise_fit</span>
+    
+    <span class="k">if</span> <span class="n">show_spectra</span><span class="o">==</span><span class="s1">&#39;all&#39;</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figure_counter</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">L_y</span><span class="p">[</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">3</span><span class="p">]],</span> <span class="s1">&#39;r*&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;total&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">L_x_noise</span><span class="p">,</span> <span class="n">L_y_noise</span><span class="p">,</span> <span class="s1">&#39;b*&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;noise areas&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">L_y_noise_fit</span><span class="p">,</span> <span class="s1">&#39;k--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;polynomial fit&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="n">figure_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+        
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">return_fit_noise</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">return_boundary</span><span class="p">:</span>
+            <span class="k">return</span><span class="p">(</span><span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">L_y_cleaned</span><span class="p">,</span> <span class="n">figure_counter</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span><span class="p">(</span><span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">L_y_cleaned</span><span class="p">,</span> <span class="n">x_cut</span><span class="p">,</span> <span class="n">figure_counter</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">return_boundary</span><span class="p">:</span>
+            <span class="k">return</span><span class="p">(</span><span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">L_y_cleaned</span><span class="p">,</span> <span class="n">L_y_noise_fit</span><span class="p">,</span> <span class="n">figure_counter</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span><span class="p">(</span><span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">L_y_cleaned</span><span class="p">,</span> <span class="n">L_y_noise_fit</span><span class="p">,</span> <span class="n">x_cut</span><span class="p">,</span> <span class="n">figure_counter</span><span class="p">)</span></div>
+
+
+<span class="c1">############################################################################################    </span>
+
+<div class="viewcode-block" id="fit_gausse">
+<a class="viewcode-back" href="../fitting_procedure.html#analyze_run.fit_gausse">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fit_gausse</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">intensity</span><span class="p">,</span> <span class="n">lambda_0</span><span class="p">,</span> <span class="n">waist</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Function used to define the &#39;gaussian shape&#39; in Alpaga.</span>
+<span class="sd">    </span>
+<span class="sd">    y = intensity*np.exp(-((x-lambda_0)/waist)**2)</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x: list</span>
+<span class="sd">        The x values</span>
+<span class="sd">    intensity: float</span>
+<span class="sd">        The gaussian intensity, the parameter targeted by the whole procedure.</span>
+<span class="sd">    lambda_0: float</span>
+<span class="sd">        The position of the gaussian maximum.</span>
+<span class="sd">    waist: float</span>
+<span class="sd">        The waist of the gaussian.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    y: list</span>
+<span class="sd">        The gaussian intensity</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">intensity</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="n">lambda_0</span><span class="p">)</span><span class="o">/</span><span class="n">waist</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></div>
+
+
+<span class="c1">############################################################################################    </span>
+
+<div class="viewcode-block" id="intensity_from_gaussian_integral">
+<a class="viewcode-back" href="../fitting_procedure.html#analyze_run.intensity_from_gaussian_integral">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">intensity_from_gaussian_integral</span><span class="p">(</span><span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">L_y_cleaned</span><span class="p">,</span> <span class="n">lambda_0</span><span class="p">,</span> <span class="n">waist</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Extract the gaussian intensity using integration method. The integral is made using the numpy.trapz function. Then, the intensity is given by: ::</span>
+<span class="sd">    </span>
+<span class="sd">        I0 = integral_value/(waist*np.sqrt(np.pi))</span>
+<span class="sd">    </span>
+<span class="sd">    Note that in this procedure there is not yet uncertitude calculations. </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    L_x_cleaned: list</span>
+<span class="sd">        The x-axis used to compute the integral. This axis should contain at least the gaussian.</span>
+<span class="sd">    L_y_cleaned: list</span>
+<span class="sd">        The y-axis used to compute the integral. Usually, this value is the output obtained by the :ref:`alpaga.remove_noise function&lt;remove_noise_section&gt;`. Appart from the gaussian curve, the rest of the value should be as close to zero as possible. Since the integration is made over the full list, the other values can affect the final intensity if they are not in average zero.</span>
+<span class="sd">    lambda_0: float</span>
+<span class="sd">        Useless. This input is still in the code for coherence with the other possible method.</span>
+<span class="sd">    waist: float</span>
+<span class="sd">        The waist of the gaussian. Used to extract the gaussian intensity from the integral value. </span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    I0: float</span>
+<span class="sd">        The computed gaussian intensity</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">integral_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">L_y_cleaned</span><span class="p">,</span> <span class="n">L_x_cleaned</span><span class="p">)</span>
+    <span class="c1"># int exp(-alpha x**2) = sqrt(pi/alpha)</span>
+    <span class="c1"># We use: I(x) = I0 exp(- (x-lambda_0)/waist))**2)</span>
+    <span class="c1"># int I0 exp(- (x-lambda_0)/waist))**2) = I0 waist sqrt(pi)</span>
+    <span class="n">I0</span> <span class="o">=</span> <span class="n">integral_value</span><span class="o">/</span><span class="p">(</span><span class="n">waist</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">I0</span><span class="p">)</span></div>
+
+
+<span class="c1">############################################################################################    </span>
+
+<div class="viewcode-block" id="fit_gaussian_from_noise">
+<a class="viewcode-back" href="../fitting_procedure.html#analyze_run.fit_gaussian_from_noise">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fit_gaussian_from_noise</span><span class="p">(</span><span class="n">L_x</span><span class="p">,</span> <span class="n">L_y</span><span class="p">,</span> <span class="n">l_cut</span><span class="o">=</span><span class="p">[</span><span class="mi">380</span><span class="p">,</span> <span class="mi">395</span><span class="p">,</span> <span class="mi">419</span><span class="p">,</span> <span class="mi">433</span><span class="p">],</span> <span class="n">order_fit_noise</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">method_fit</span><span class="o">=</span><span class="s1">&#39;fit_gauss&#39;</span><span class="p">,</span> <span class="n">bounds_fit_gausse</span><span class="o">=</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">395</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="mi">410</span><span class="p">,</span> <span class="mi">25</span><span class="p">]),</span> <span class="n">lambda_0_ref</span><span class="o">=</span><span class="mi">403</span><span class="p">,</span> <span class="n">waist_ref</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">exclu_zone</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fit_noise</span><span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">show_spectra</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">figure_counter</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    This method returns the intensity *I0*, the position of the maxima *lambda_0* and the waist *waist* for the gaussian in *L_y*. First, it removes the noise using the :ref:`alpaga.remove_noise function&lt;remove_noise_section&gt;`, then it extracts the intensity. Two method are available to extract the intensity:</span>
+<span class="sd">    </span>
+<span class="sd">    1) If *method_fit* is set to &#39;fit_gauss&#39;:</span>
+<span class="sd">        </span>
+<span class="sd">        The intensity is extracted using the *scipy.optimize.curve_fit* function: ::</span>
+<span class="sd">                    </span>
+<span class="sd">            p, q = curve_fit(fit_gausse, L_x_cleaned, L_y_cleaned, bounds=bounds_fit_gausse) </span>
+<span class="sd">            I0, lambda_0, waist = p[0], p[1], p[2]</span>
+<span class="sd">                </span>
+<span class="sd">        Where the function fit_gausse is defined here ADDREF, the x and y input are the output of the cleaning procedure, see the :ref:`alpaga.remove_noise function&lt;remove_noise_section&gt;` and the bounds are given by the optional parameter *bounds_fit_gausse*. This method returns the intensity *I0*, the position of the maxima *lambda_0* and the waist *waist*. This make this approach the more polyvalent, and should be used in the first place to caracterise your experimental laser conditions -- *i.e.* *lambda_0* and *waist*.</span>
+<span class="sd">        </span>
+<span class="sd">    2) If *method_fit* is set to &#39;fit_gauss_w_exclu&#39;:</span>
+<span class="sd">        </span>
+<span class="sd">        It is the same method as before but with an exclusion zone (for exemple if an Hyper Raman band is close to your SHG signal). You have to add the exclusion zone with the parameter exclu_zone = [ X min of zone ; X max of zone ].</span>
+<span class="sd">                </span>
+<span class="sd">    3) If *method_fit* is set to &#39;integral_gauss&#39;:</span>
+<span class="sd">        </span>
+<span class="sd">        The intensity is extracted using the function alpaga.intensity_from_gaussian_integral ADDREF: ::</span>
+<span class="sd">                    </span>
+<span class="sd">            I0 = intensity_from_gaussian_integral(L_x_cleaned, L_y_cleaned, lambda_0, waist)</span>
+<span class="sd">                </span>
+<span class="sd">        Where the *lambda_0* and *waist* are given by the optimal parameters *lambda_0_ref* and *waist_ref*. Note that the *lambda_0_ref* has no impact on the result -- I0. It is just usefull for the plots. </span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    L_x: list</span>
+<span class="sd">        The x axis, used for the noise removal, see the :ref:`alpaga.remove_noise function&lt;remove_noise_section&gt;`, and the fit parameters. </span>
+<span class="sd">    L_y: list</span>
+<span class="sd">        The y axis where the gaussian intensity should be extracted.</span>
+<span class="sd">    l_cut: list of float</span>
+<span class="sd">        [Optional] Parameters used for the fit removal, see the :ref:`alpaga.remove_noise function&lt;remove_noise_section&gt;`.</span>
+<span class="sd">    order_fit_noise: int</span>
+<span class="sd">        [Optional] Parameters used for the fit removal, see the :ref:`alpaga.remove_noise function&lt;remove_noise_section&gt;`.</span>
+<span class="sd">    method_fit: str</span>
+<span class="sd">        [Optional] The method to use to extract the intensity once the noise has been removed. </span>
+<span class="sd">    bounds_fit_gausse: list</span>
+<span class="sd">        [Optional] Defines the bounds for the free parameters used in the &#39;fit_gauss&#39; method -- see *method_fit* argument. You should try to narrow down the possible value of the parameters to avoid trouble if the gaussian intensity is low. Indeed, sometimes the fit will increase the waist instead of decreasing the intensity *I0*. For exemple, if you want to restrict the value of *lambda_0* within 401 and 405, and the value of the waist from 2 to 3, use: *bounds_fit_gausse* = ([0, 401, 1], [np.inf, 405, 3]). See the documentation of the *scipy.optimize.curve_fit* function for more information. </span>
+<span class="sd">    lambda_0_ref: float</span>
+<span class="sd">        [Optional] The *lambda_0* value used for the &#39;integral_gauss&#39; method -- see *method_fit* argument. This parameter has no impact on the result, but on the plot that can be draw to check the procedure.</span>
+<span class="sd">    waist_ref: float</span>
+<span class="sd">        [Optional] The *waist* value used for the &#39;integral_gauss&#39; method -- see *method_fit* argument. This parameter has an important influence on the *I0* value. Choose it wisely -- see :ref:`polarisation_procedure_page`. </span>
+<span class="sd">    exclu_zone: list of float</span>
+<span class="sd">        [Optional] Couple of float defining the excluding zone during gaussian fit, if method_fit is set to &#39;fit_gauss_w_exclu&#39;</span>
+<span class="sd">    show_spectra: str</span>
+<span class="sd">        [Optional] If set to &#39;all&#39;, prints figures to check the results. Otherwise no figure is plotted.</span>
+<span class="sd">    figure_counter: int</span>
+<span class="sd">        [Optional] The number of the first figure plot.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    L_para_gauss: list</span>
+<span class="sd">        The list of parameters to define the Gaussian: [I0, lambda_0, waist]. I0 is the Gaussian intensity, lambda_0 the value of the center wave-length and waist the waist of the Gaussian. </span>
+<span class="sd">    L_err: list</span>
+<span class="sd">        The list of associated error for the Gaussian parameters: [err_I0, err_lambda_0, err_waist]. Note that not there is no associated error defined for the integral calculation method. The error list is still retrun but with zero values.</span>
+<span class="sd">    figure_counter: int</span>
+<span class="sd">         The new value for your next figure number. </span>
+<span class="sd">            </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    See the tutorial for more examples. Here is the full procedure step by step:</span>
+<span class="sd">    ::</span>
+<span class="sd">    </span>
+<span class="sd">        # define the directory where the data are.</span>
+<span class="sd">        directory = os.path.join(WORK_DIR, &#39;Eau_V_Spectres&#39;) </span>
+<span class="sd">        </span>
+<span class="sd">        # Find the Alpaga friendly parameters that describe the datas</span>
+<span class="sd">        prefix_file, L_files_angles, N_iter, extension = alpaga.find_angle_iter_from_dir(directory)</span>
+
+<span class="sd">        # Update the name to treat only one acquisition. </span>
+<span class="sd">        names = os.path.join(directory, prefix_file) + &#39;_&#39; + L_files_angles[0] </span>
+<span class="sd">        </span>
+<span class="sd">        # Cleans the acquisition from the spikes and averges it over the N_iter</span>
+<span class="sd">        L_lambda, L_spectra, _ = alpaga.averaging_and_cleaning(names, N_iter, extension=&#39;.dat&#39;, type_cleaning=&#39;mean&#39;, L_mean_cleaning_n=[1, 1, 1, 3], L_mean_cleaning_evo_max=[2, 1.5, 1.3, 1.3], show_spectra=False, figure_counter=1)</span>
+<span class="sd">        </span>
+<span class="sd">        # Remove the noise and return the gaussian parameters</span>
+<span class="sd">        intensity, lambda_0, omega, figure_counter = Alpaga.analyze_run.fit_gaussian_from_noise(L_lambda, L_spectra, l_cut=[380, 399, 414, 431], order_fit_noise=4, bounds_fit_gausse=([0, 395, 1], [np.inf, 410, 25]), show_spectra=&#39;all&#39;)</span>
+<span class="sd">        </span>
+<span class="sd">        print(intensity, lambda_0, omega)</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">show_spectra</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figure_counter</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">L_x</span><span class="p">,</span> <span class="n">L_y</span><span class="p">)</span>
+        <span class="n">figure_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+        
+    <span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">L_y_cleaned</span><span class="p">,</span> <span class="n">L_fit_noise</span><span class="p">,</span> <span class="n">figure_counter</span> <span class="o">=</span> <span class="n">remove_noise</span><span class="p">(</span><span class="n">L_x</span><span class="p">,</span> <span class="n">L_y</span><span class="p">,</span> <span class="n">l_cut</span><span class="o">=</span><span class="n">l_cut</span><span class="p">,</span> <span class="n">order_fit_noise</span><span class="o">=</span><span class="n">order_fit_noise</span><span class="p">,</span> 
+                                                            <span class="n">return_fit_noise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_spectra</span><span class="o">=</span><span class="n">show_spectra</span><span class="p">,</span> <span class="n">figure_counter</span><span class="o">=</span><span class="n">figure_counter</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">show_spectra</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figure_counter</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">L_y_cleaned</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">method_fit</span> <span class="o">==</span> <span class="s1">&#39;fit_gauss&#39;</span><span class="p">:</span>
+        <span class="n">p</span><span class="p">,</span> <span class="n">q</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">fit_gausse</span><span class="p">,</span> <span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">L_y_cleaned</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds_fit_gausse</span><span class="p">)</span> 
+        <span class="n">I0</span><span class="p">,</span> <span class="n">lambda_0</span><span class="p">,</span> <span class="n">waist</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">L_para_gauss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">I0</span><span class="p">,</span> <span class="n">lambda_0</span><span class="p">,</span> <span class="n">waist</span><span class="p">])</span>
+        
+        <span class="n">perr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">q</span><span class="p">))</span>
+        <span class="n">I0_serr</span><span class="p">,</span> <span class="n">lambda_0_serr</span><span class="p">,</span> <span class="n">waist_serr</span> <span class="o">=</span> <span class="n">perr</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">perr</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">perr</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">L_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">I0_serr</span><span class="p">,</span> <span class="n">lambda_0_serr</span><span class="p">,</span> <span class="n">waist_serr</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">show_spectra</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figure_counter</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">fit_gausse</span><span class="p">(</span><span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">I0</span><span class="p">,</span> <span class="n">lambda_0</span><span class="p">,</span> <span class="n">waist</span><span class="p">))</span>
+            
+    <span class="k">elif</span> <span class="n">method_fit</span> <span class="o">==</span> <span class="s1">&#39;fit_gauss_w_exclu&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">exclu_zone</span> <span class="o">==</span> <span class="kc">False</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;No exclusion zone defined&quot;</span><span class="p">)</span>
+        <span class="c1"># find where to make the cut to define the exclusion zone</span>
+        <span class="n">N_lambda</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">L_x_cleaned</span><span class="p">)</span>
+        <span class="n">KKK</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">trotter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">x_cut</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="k">while</span> <span class="n">trotter</span><span class="o">&lt;</span><span class="mi">2</span> <span class="ow">or</span> <span class="n">KKK</span><span class="o">&gt;</span><span class="n">N_lambda</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">L_x_cleaned</span><span class="p">[</span><span class="n">KKK</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">exclu_zone</span><span class="p">[</span><span class="n">trotter</span><span class="p">]:</span>
+                <span class="n">x_cut</span><span class="p">[</span><span class="n">trotter</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">KKK</span><span class="p">)</span>
+                <span class="n">trotter</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">KKK</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1">#define new list without exclusion list</span>
+        <span class="n">L_x_cleaned_exclu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">L_x_cleaned</span><span class="p">,</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">1</span><span class="p">])],</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">L_y_cleaned_exclu</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">L_y_cleaned</span><span class="p">,</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">1</span><span class="p">])],</span> <span class="mi">0</span><span class="p">)</span>
+        
+            
+        <span class="n">p</span><span class="p">,</span> <span class="n">q</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">fit_gausse</span><span class="p">,</span> <span class="n">L_x_cleaned_exclu</span><span class="p">,</span> <span class="n">L_y_cleaned_exclu</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds_fit_gausse</span><span class="p">)</span> 
+        <span class="n">I0</span><span class="p">,</span> <span class="n">lambda_0</span><span class="p">,</span> <span class="n">waist</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">L_para_gauss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">I0</span><span class="p">,</span> <span class="n">lambda_0</span><span class="p">,</span> <span class="n">waist</span><span class="p">])</span>
+        
+        <span class="n">perr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">q</span><span class="p">))</span>
+        <span class="n">I0_serr</span><span class="p">,</span> <span class="n">lambda_0_serr</span><span class="p">,</span> <span class="n">waist_serr</span> <span class="o">=</span> <span class="n">perr</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">perr</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">perr</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">L_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">I0_serr</span><span class="p">,</span> <span class="n">lambda_0_serr</span><span class="p">,</span> <span class="n">waist_serr</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">show_spectra</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figure_counter</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">fit_gausse</span><span class="p">(</span><span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">I0</span><span class="p">,</span> <span class="n">lambda_0</span><span class="p">,</span> <span class="n">waist</span><span class="p">))</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">L_x_cleaned</span><span class="p">[</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">L_y_cleaned</span><span class="p">[</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span><span class="s1">&#39;r*&#39;</span><span class="p">)</span>
+    
+    <span class="k">elif</span> <span class="n">method_fit</span> <span class="o">==</span> <span class="s1">&#39;integral_gauss&#39;</span><span class="p">:</span>
+        <span class="n">I0</span> <span class="o">=</span> <span class="n">intensity_from_gaussian_integral</span><span class="p">(</span><span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">L_y_cleaned</span><span class="p">,</span> <span class="n">lambda_0_ref</span><span class="p">,</span> <span class="n">waist_ref</span><span class="p">)</span>
+        <span class="n">L_para_gauss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">I0</span><span class="p">,</span> <span class="n">lambda_0_ref</span><span class="p">,</span> <span class="n">waist_ref</span><span class="p">])</span>
+        <span class="n">L_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">show_spectra</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figure_counter</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">fit_gausse</span><span class="p">(</span><span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">I0</span><span class="p">,</span> <span class="n">lambda_0_ref</span><span class="p">,</span> <span class="n">waist_ref</span><span class="p">))</span>
+            
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;WARNING: method_fit argument not valid. Possible value: &#39;fit_gauss&#39; or &#39;integral_gauss&#39;&quot;</span><span class="p">)</span>
+        
+    <span class="n">figure_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+    
+    <span class="k">if</span> <span class="n">fit_noise</span> <span class="o">==</span> <span class="kc">False</span> <span class="p">:</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">L_para_gauss</span><span class="p">,</span> <span class="n">L_err</span><span class="p">,</span> <span class="n">figure_counter</span><span class="p">)</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">L_para_gauss</span><span class="p">,</span> <span class="n">L_err</span><span class="p">,</span> <span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">L_fit_noise</span><span class="p">,</span> <span class="n">figure_counter</span><span class="p">)</span></div>
+
+    
+
+<span class="c1">############################################################################################    </span>
+<span class="c1">############################  Polarisation procedure  ######################################</span>
+<span class="c1">############################################################################################      </span>
+
+<div class="viewcode-block" id="polarisation_intensity">
+<a class="viewcode-back" href="../polarisation_procedure.html#analyze_run.polarisation_intensity">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">polarisation_intensity</span><span class="p">(</span><span class="n">directory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">L_filename</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">prefix_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">L_files_angles</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">N_iter</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;.dat&#39;</span><span class="p">,</span> <span class="n">fct_name</span><span class="o">=</span><span class="n">standard_file_name</span><span class="p">,</span> <span class="n">type_cleaning</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">L_mean_cleaning_n</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">L_mean_cleaning_evo_max</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">],</span> <span class="n">automatic_l_cut</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">l_cut</span><span class="o">=</span><span class="p">[</span><span class="mi">380</span><span class="p">,</span> <span class="mi">395</span><span class="p">,</span> <span class="mi">419</span><span class="p">,</span> <span class="mi">433</span><span class="p">],</span> <span class="n">l_cut_n_n2</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span> <span class="n">order_fit_noise</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">method_fit_first</span><span class="o">=</span><span class="s1">&#39;fit_gauss&#39;</span><span class="p">,</span> <span class="n">bounds_fit_gausse</span><span class="o">=</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">395</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="mi">410</span><span class="p">,</span> <span class="mi">25</span><span class="p">]),</span> <span class="n">lambda_0_ref</span><span class="o">=</span><span class="mi">403</span><span class="p">,</span> <span class="n">waist_ref</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">exclu_zone</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fixed_para_gauss_fit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">method_fit_second</span><span class="o">=</span><span class="s1">&#39;fit_gauss&#39;</span><span class="p">,</span> <span class="n">save_result</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name_save_result</span><span class="o">=</span><span class="s1">&#39;./post_prod_results.p&#39;</span><span class="p">,</span> <span class="n">waiting_time</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    
+    <span class="c1"># See the wiki for the doc  </span>
+    
+    <span class="n">L_input_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;directory&#39;</span><span class="p">,</span> <span class="s1">&#39;L_filename&#39;</span><span class="p">,</span> <span class="s1">&#39;prefix_file&#39;</span><span class="p">,</span> <span class="s1">&#39;L_files_angles&#39;</span><span class="p">,</span> <span class="s1">&#39;N_iter&#39;</span><span class="p">,</span> <span class="s1">&#39;extension&#39;</span><span class="p">,</span> <span class="s1">&#39;type_cleaning&#39;</span><span class="p">,</span> <span class="s1">&#39;L_mean_cleaning_n&#39;</span><span class="p">,</span> <span class="s1">&#39;L_mean_cleaning_evo_max&#39;</span><span class="p">,</span> <span class="s1">&#39;automatic_l_cut&#39;</span><span class="p">,</span> <span class="s1">&#39;l_cut&#39;</span><span class="p">,</span> <span class="s1">&#39;l_cut_n_n2&#39;</span><span class="p">,</span> <span class="s1">&#39;order_fit_noise&#39;</span><span class="p">,</span> <span class="s1">&#39;method_fit_first&#39;</span><span class="p">,</span> <span class="s1">&#39;bounds_fit_gausse&#39;</span><span class="p">,</span> <span class="s1">&#39;lambda_0_ref&#39;</span><span class="p">,</span> <span class="s1">&#39;waist_ref&#39;</span><span class="p">,</span> <span class="s1">&#39;fixed_para_gauss_fit&#39;</span><span class="p">,</span> <span class="s1">&#39;method_fit_second&#39;</span><span class="p">,</span> <span class="s1">&#39;save_result&#39;</span><span class="p">,</span> <span class="s1">&#39;name_save_result&#39;</span><span class="p">,</span> <span class="s1">&#39;waiting_time&#39;</span><span class="p">]</span>
+    
+    <span class="n">L_post_prod</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">L_filename</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">L_filename</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;ERROR: if you provide L_filename, it should be a list of list containing the filenames&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;I will use your L_filename to find the files.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">L_files_angles</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;You have to define a L_files_angles!&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;L_files_angles=&#39;</span><span class="p">,</span> <span class="n">L_files_angles</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">N_iter</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;You have to define N_iter!&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;N_iter=&#39;</span><span class="p">,</span> <span class="n">N_iter</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prefix_file</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="n">prefix_file</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">extension</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="n">extension</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">else</span><span class="p">:</span>  
+        <span class="n">L_filename_K</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">directory</span><span class="o">==</span><span class="kc">False</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No directory given, I will use the input from prefix_file, L_files_angles, N_iter and extension.&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">prefix_file</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">L_files_angles</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">N_iter</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">extension</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;WARNING: since no directory has been given, I need values for the optional parameters: prefix_file, L_files_angles, N_iter and extension. Please provide all of them or use directory=our_directory_where_the_data_are.&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">prefix_file</span> <span class="ow">and</span> <span class="n">L_files_angles</span> <span class="ow">and</span> <span class="n">N_iter</span> <span class="ow">and</span> <span class="n">extension</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;I will use your custom parameters for prefixe, L_files_angles, N_iter and extension.&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">prefix_file_t</span><span class="p">,</span> <span class="n">L_files_angles_t</span><span class="p">,</span> <span class="n">N_iter_t</span><span class="p">,</span> <span class="n">extension</span> <span class="o">=</span> <span class="n">find_angle_iter_from_dir</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="n">extension</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">prefix_file</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;I will use your custom general prefixe instead of the one found in the directory:&#39;</span><span class="p">,</span> <span class="n">prefix_file</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">prefix_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">prefix_file_t</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">L_files_angles</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;I will use your custom L_files_angles instead of the one found in the directory:&#39;</span><span class="p">,</span> <span class="n">L_files_angles</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">L_files_angles</span> <span class="o">=</span> <span class="n">L_files_angles_t</span>
+
+                <span class="k">if</span> <span class="n">N_iter</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;I will use your custom N_iter instead of the one found in the directory:&#39;</span><span class="p">,</span> <span class="n">N_iter</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">N_iter</span> <span class="o">=</span> <span class="n">N_iter_t</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The prefix for all the file are: &quot;&#39;</span> <span class="o">+</span> <span class="n">prefix_file</span> <span class="o">+</span> <span class="s1">&#39;&quot; with &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">N_iter</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; iter. The angle are &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">L_files_angles</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;. The extension is: &#39;</span> <span class="o">+</span> <span class="n">extension</span><span class="p">)</span>
+    
+    <span class="c1"># save input</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;directory&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">directory</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;L_filename&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">L_filename</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;prefix_file&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prefix_file</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;N_iter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">N_iter</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;L_files_angles&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">L_files_angles</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;extension&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">extension</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;type_cleaning&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">type_cleaning</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;L_mean_cleaning_n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">L_mean_cleaning_n</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;L_mean_cleaning_evo_max&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">L_mean_cleaning_evo_max</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;automatic_l_cut&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">automatic_l_cut</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;l_cut&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">l_cut</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;l_cut_n_n2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">l_cut_n_n2</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;order_fit_noise&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">order_fit_noise</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;bounds_fit_gausse&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bounds_fit_gausse</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;lambda_0_ref&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lambda_0_ref</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;waist_ref&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">waist_ref</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;method_fit_first&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">method_fit_first</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;method_fit_second&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">method_fit_second</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;fixed_para_gauss_fit&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fixed_para_gauss_fit</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;save_result&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">save_result</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;name_save_result&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name_save_result</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;waiting_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">waiting_time</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;exclu_zone&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">exclu_zone</span>
+    
+    <span class="c1"># the first polarisation analysis</span>
+    <span class="n">N_angle</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">L_files_angles</span><span class="p">)</span>
+    <span class="n">L_intensity_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N_angle</span><span class="p">))</span>
+    <span class="n">L_lambda_0_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N_angle</span><span class="p">))</span>
+    <span class="n">L_waist_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N_angle</span><span class="p">))</span>
+    
+    <span class="n">L_intensity_angle_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N_angle</span><span class="p">))</span>
+    <span class="n">L_lambda_0_angle_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N_angle</span><span class="p">))</span>
+    <span class="n">L_waist_angle_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N_angle</span><span class="p">))</span>
+    
+    <span class="n">LL_noise_param</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">KKK</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N_angle</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">L_filename</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="n">L_filename_K</span> <span class="o">=</span> <span class="n">L_filename</span><span class="p">[</span><span class="n">KKK</span><span class="p">]</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+        <span class="n">clear_output</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Angle:&#39;</span><span class="p">,</span> <span class="n">L_files_angles</span><span class="p">[</span><span class="n">KKK</span><span class="p">])</span>
+        
+        <span class="n">names</span> <span class="o">=</span> <span class="n">prefix_file</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">L_files_angles</span><span class="p">[</span><span class="n">KKK</span><span class="p">]</span>
+        <span class="n">L_lambda</span><span class="p">,</span> <span class="n">L_spectra</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">averaging_and_cleaning</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">N_iter</span><span class="p">,</span> <span class="n">L_filename</span><span class="o">=</span><span class="n">L_filename_K</span><span class="p">,</span> <span class="n">fct_name</span><span class="o">=</span><span class="n">fct_name</span><span class="p">,</span> <span class="n">type_cleaning</span><span class="o">=</span><span class="n">type_cleaning</span><span class="p">,</span> <span class="n">L_mean_cleaning_n</span><span class="o">=</span><span class="n">L_mean_cleaning_n</span><span class="p">,</span> <span class="n">L_mean_cleaning_evo_max</span><span class="o">=</span><span class="n">L_mean_cleaning_evo_max</span><span class="p">,</span> <span class="n">show_spectra</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="n">extension</span><span class="p">)</span>
+        
+        <span class="n">L_para_gauss</span><span class="p">,</span> <span class="n">L_err</span><span class="p">,</span> <span class="n">L_x_fit_noise</span><span class="p">,</span> <span class="n">L_fit_noise</span><span class="p">,</span> <span class="n">figure_counter</span> <span class="o">=</span> <span class="n">fit_gaussian_from_noise</span><span class="p">(</span><span class="n">L_lambda</span><span class="p">,</span> <span class="n">L_spectra</span><span class="p">,</span> <span class="n">l_cut</span><span class="o">=</span><span class="n">l_cut</span><span class="p">,</span> <span class="n">order_fit_noise</span><span class="o">=</span><span class="n">order_fit_noise</span><span class="p">,</span> <span class="n">method_fit</span><span class="o">=</span><span class="n">method_fit_first</span><span class="p">,</span> <span class="n">bounds_fit_gausse</span><span class="o">=</span><span class="n">bounds_fit_gausse</span><span class="p">,</span> <span class="n">lambda_0_ref</span><span class="o">=</span><span class="n">lambda_0_ref</span><span class="p">,</span> <span class="n">waist_ref</span><span class="o">=</span><span class="n">waist_ref</span><span class="p">,</span> <span class="n">exclu_zone</span><span class="o">=</span><span class="n">exclu_zone</span><span class="p">,</span> <span class="n">fit_noise</span><span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">show_spectra</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">figure_counter</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">intensity</span><span class="p">,</span> <span class="n">lambda_0</span><span class="p">,</span> <span class="n">waist</span> <span class="o">=</span> <span class="n">L_para_gauss</span>
+        <span class="k">if</span> <span class="n">automatic_l_cut</span><span class="p">:</span> <span class="c1"># the second run with automatic l_cut</span>
+            <span class="n">l_cut_temp</span><span class="o">=</span><span class="p">[</span><span class="n">lambda_0</span><span class="o">-</span><span class="n">l_cut_n_n2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">waist</span><span class="p">,</span> <span class="n">lambda_0</span><span class="o">-</span><span class="n">l_cut_n_n2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">waist</span><span class="p">,</span> <span class="n">lambda_0</span><span class="o">+</span><span class="n">l_cut_n_n2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">waist</span><span class="p">,</span> <span class="n">lambda_0</span><span class="o">+</span><span class="n">l_cut_n_n2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">waist</span><span class="p">]</span>
+            <span class="n">L_para_gauss</span><span class="p">,</span> <span class="n">L_err</span><span class="p">,</span> <span class="n">L_x_fit_noise</span><span class="p">,</span> <span class="n">L_fit_noise</span><span class="p">,</span> <span class="n">figure_counter</span> <span class="o">=</span> <span class="n">fit_gaussian_from_noise</span><span class="p">(</span><span class="n">L_lambda</span><span class="p">,</span> <span class="n">L_spectra</span><span class="p">,</span> <span class="n">l_cut</span><span class="o">=</span><span class="n">l_cut_temp</span><span class="p">,</span> <span class="n">order_fit_noise</span><span class="o">=</span><span class="n">order_fit_noise</span><span class="p">,</span> <span class="n">method_fit</span><span class="o">=</span><span class="n">method_fit_first</span><span class="p">,</span> <span class="n">bounds_fit_gausse</span><span class="o">=</span><span class="n">bounds_fit_gausse</span><span class="p">,</span> <span class="n">lambda_0_ref</span><span class="o">=</span><span class="n">lambda_0_ref</span><span class="p">,</span> <span class="n">waist_ref</span><span class="o">=</span><span class="n">waist_ref</span><span class="p">,</span> <span class="n">fit_noise</span><span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">show_spectra</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">figure_counter</span><span class="o">=</span><span class="n">figure_counter</span><span class="p">)</span>
+            <span class="n">intensity</span><span class="p">,</span> <span class="n">lambda_0</span><span class="p">,</span> <span class="n">waist</span> <span class="o">=</span> <span class="n">L_para_gauss</span>
+        
+        <span class="n">poly</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">L_x_fit_noise</span><span class="p">,</span> <span class="n">L_fit_noise</span><span class="p">,</span> <span class="n">deg</span><span class="o">=</span><span class="n">order_fit_noise</span><span class="p">)</span>
+        <span class="n">LL_noise_param</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">poly</span><span class="p">)</span>
+        
+        <span class="n">L_intensity_angle</span><span class="p">[</span><span class="n">KKK</span><span class="p">]</span> <span class="o">=</span> <span class="n">intensity</span>
+        <span class="n">L_lambda_0_angle</span><span class="p">[</span><span class="n">KKK</span><span class="p">]</span> <span class="o">=</span> <span class="n">lambda_0</span>
+        <span class="n">L_waist_angle</span><span class="p">[</span><span class="n">KKK</span><span class="p">]</span> <span class="o">=</span> <span class="n">waist</span>
+        
+        <span class="n">L_intensity_angle_err</span><span class="p">[</span><span class="n">KKK</span><span class="p">]</span> <span class="o">=</span> <span class="n">L_err</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">L_lambda_0_angle_err</span><span class="p">[</span><span class="n">KKK</span><span class="p">]</span> <span class="o">=</span> <span class="n">L_err</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">L_waist_angle_err</span><span class="p">[</span><span class="n">KKK</span><span class="p">]</span> <span class="o">=</span> <span class="n">L_err</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">waiting_time</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span> <span class="c1"># short pause so that the user can see the plots.</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">waiting_time</span><span class="p">)</span>
+    
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;L_intensity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">L_intensity_angle</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;L_intensity_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">L_intensity_angle_err</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;L_lambda_0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">L_lambda_0_angle</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;L_lambda_0_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">L_lambda_0_angle_err</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;L_waist&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">L_waist_angle</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;L_waist_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">L_waist_angle_err</span>
+    <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;LL_noise_param&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">LL_noise_param</span>
+    
+    
+    <span class="c1"># the second polarisation analysis with fixed lambda_0 and waist</span>
+    <span class="k">if</span> <span class="n">fixed_para_gauss_fit</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">method_fit_second</span> <span class="o">==</span> <span class="s1">&#39;fit_gauss&#39;</span> <span class="ow">or</span> <span class="n">method_fit_second</span> <span class="o">==</span> <span class="s1">&#39;both&#39;</span><span class="p">:</span>
+            <span class="n">L_intensity_angle_fit_gauss_fixed_para</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N_angle</span><span class="p">))</span>
+            <span class="n">L_intensity_angle_fit_gauss_fixed_para_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N_angle</span><span class="p">))</span>
+        
+            
+        <span class="k">if</span> <span class="n">method_fit_second</span> <span class="o">==</span> <span class="s1">&#39;integral_gauss&#39;</span> <span class="ow">or</span> <span class="n">method_fit_second</span> <span class="o">==</span> <span class="s1">&#39;both&#39;</span><span class="p">:</span>
+            <span class="n">L_intensity_angle_integral_gauss_fixed_para</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N_angle</span><span class="p">))</span>
+            <span class="n">L_intensity_angle_integral_gauss_fixed_para_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N_angle</span><span class="p">))</span>
+        
+        <span class="n">lambda_0_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">L_lambda_0_angle</span><span class="p">)</span> 
+        <span class="n">waist_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">L_waist_angle</span><span class="p">)</span> 
+        <span class="n">L_intensity_angle_fixed_para</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N_angle</span><span class="p">))</span>
+        
+        <span class="k">if</span> <span class="n">automatic_l_cut</span><span class="p">:</span> <span class="c1"># reset the l_cut using the automatic scheme</span>
+            <span class="n">l_cut</span><span class="o">=</span><span class="p">[</span><span class="n">lambda_0_mean</span><span class="o">-</span><span class="n">l_cut_n_n2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">waist_mean</span><span class="p">,</span> <span class="n">lambda_0_mean</span><span class="o">-</span><span class="n">l_cut_n_n2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">waist_mean</span><span class="p">,</span> <span class="n">lambda_0_mean</span><span class="o">+</span><span class="n">l_cut_n_n2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">waist_mean</span><span class="p">,</span> <span class="n">lambda_0_mean</span><span class="o">+</span><span class="n">l_cut_n_n2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">waist_mean</span><span class="p">]</span>
+        
+        <span class="k">for</span> <span class="n">KKK</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N_angle</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">L_filename</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+                <span class="n">L_filename_K</span> <span class="o">=</span> <span class="n">L_filename</span><span class="p">[</span><span class="n">KKK</span><span class="p">]</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+            <span class="n">clear_output</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Second Run, Angle:&#39;</span><span class="p">,</span> <span class="n">L_files_angles</span><span class="p">[</span><span class="n">KKK</span><span class="p">])</span>
+            <span class="n">figure_counter</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="n">prefix_file</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">L_files_angles</span><span class="p">[</span><span class="n">KKK</span><span class="p">]</span>
+            <span class="n">L_lambda</span><span class="p">,</span> <span class="n">L_spectra</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">averaging_and_cleaning</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">N_iter</span><span class="p">,</span> <span class="n">L_filename</span><span class="o">=</span><span class="n">L_filename_K</span><span class="p">,</span> <span class="n">fct_name</span><span class="o">=</span><span class="n">fct_name</span><span class="p">,</span> <span class="n">type_cleaning</span><span class="o">=</span><span class="n">type_cleaning</span><span class="p">,</span> <span class="n">L_mean_cleaning_n</span><span class="o">=</span><span class="n">L_mean_cleaning_n</span><span class="p">,</span> <span class="n">L_mean_cleaning_evo_max</span><span class="o">=</span><span class="n">L_mean_cleaning_evo_max</span><span class="p">,</span> <span class="n">show_spectra</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="n">extension</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">method_fit_second</span> <span class="o">==</span> <span class="s1">&#39;fit_gauss&#39;</span> <span class="ow">or</span> <span class="n">method_fit_second</span> <span class="o">==</span> <span class="s1">&#39;both&#39;</span><span class="p">:</span>
+                <span class="n">L_para_gauss</span><span class="p">,</span> <span class="n">L_err</span><span class="p">,</span> <span class="n">L_x_fit_noise</span><span class="p">,</span> <span class="n">L_fit_noise</span><span class="p">,</span> <span class="n">figure_counter</span> <span class="o">=</span> <span class="n">fit_gaussian_from_noise</span><span class="p">(</span><span class="n">L_lambda</span><span class="p">,</span> <span class="n">L_spectra</span><span class="p">,</span> <span class="n">l_cut</span><span class="o">=</span><span class="n">l_cut</span><span class="p">,</span> <span class="n">order_fit_noise</span><span class="o">=</span><span class="n">order_fit_noise</span><span class="p">,</span> <span class="n">method_fit</span><span class="o">=</span><span class="s1">&#39;fit_gauss&#39;</span><span class="p">,</span> <span class="n">bounds_fit_gausse</span><span class="o">=</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">lambda_0_mean</span><span class="o">-</span><span class="mf">0.00001</span><span class="p">,</span> <span class="n">waist_mean</span><span class="o">-</span><span class="mf">0.00001</span><span class="p">],</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span><span class="n">lambda_0_mean</span><span class="o">+</span><span class="mf">0.00001</span><span class="p">,</span> <span class="n">waist_mean</span><span class="o">+</span><span class="mf">0.00001</span><span class="p">]),</span> <span class="n">lambda_0_ref</span><span class="o">=</span><span class="n">lambda_0_mean</span><span class="p">,</span> <span class="n">waist_ref</span><span class="o">=</span><span class="n">waist_mean</span><span class="p">,</span> <span class="n">fit_noise</span><span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">show_spectra</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">figure_counter</span><span class="o">=</span><span class="n">figure_counter</span><span class="p">)</span>
+                <span class="n">L_intensity_angle_fit_gauss_fixed_para</span><span class="p">[</span><span class="n">KKK</span><span class="p">]</span> <span class="o">=</span> <span class="n">L_para_gauss</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">L_intensity_angle_fit_gauss_fixed_para_err</span><span class="p">[</span><span class="n">KKK</span><span class="p">]</span> <span class="o">=</span> <span class="n">L_err</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        
+            <span class="k">if</span> <span class="n">method_fit_second</span> <span class="o">==</span> <span class="s1">&#39;integral_gauss&#39;</span> <span class="ow">or</span> <span class="n">method_fit_second</span> <span class="o">==</span> <span class="s1">&#39;both&#39;</span><span class="p">:</span>    
+                <span class="n">L_para_gauss</span><span class="p">,</span> <span class="n">L_err</span><span class="p">,</span> <span class="n">L_x_fit_noise</span><span class="p">,</span> <span class="n">L_fit_noise</span><span class="p">,</span> <span class="n">figure_counter</span> <span class="o">=</span> <span class="n">fit_gaussian_from_noise</span><span class="p">(</span><span class="n">L_lambda</span><span class="p">,</span> <span class="n">L_spectra</span><span class="p">,</span> <span class="n">l_cut</span><span class="o">=</span><span class="n">l_cut</span><span class="p">,</span> <span class="n">order_fit_noise</span><span class="o">=</span><span class="n">order_fit_noise</span><span class="p">,</span> <span class="n">method_fit</span><span class="o">=</span><span class="s1">&#39;integral_gauss&#39;</span><span class="p">,</span> <span class="n">bounds_fit_gausse</span><span class="o">=</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">lambda_0_mean</span><span class="o">-</span><span class="mf">0.00001</span><span class="p">,</span> <span class="n">waist_mean</span><span class="o">-</span><span class="mf">0.00001</span><span class="p">],</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span><span class="n">lambda_0_mean</span><span class="o">+</span><span class="mf">0.00001</span><span class="p">,</span> <span class="n">waist_mean</span><span class="o">+</span><span class="mf">0.00001</span><span class="p">]),</span> <span class="n">lambda_0_ref</span><span class="o">=</span><span class="n">lambda_0_mean</span><span class="p">,</span> <span class="n">waist_ref</span><span class="o">=</span><span class="n">waist_mean</span><span class="p">,</span> <span class="n">fit_noise</span><span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">show_spectra</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">figure_counter</span><span class="o">=</span><span class="n">figure_counter</span><span class="p">)</span>
+                <span class="n">L_intensity_angle_integral_gauss_fixed_para</span><span class="p">[</span><span class="n">KKK</span><span class="p">]</span> <span class="o">=</span> <span class="n">L_para_gauss</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">L_intensity_angle_integral_gauss_fixed_para_err</span><span class="p">[</span><span class="n">KKK</span><span class="p">]</span> <span class="o">=</span> <span class="n">L_err</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">waiting_time</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span> <span class="c1"># short pause so that the user can see the plots.</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">waiting_time</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">method_fit_second</span> <span class="o">==</span> <span class="s1">&#39;fit_gauss&#39;</span> <span class="ow">or</span> <span class="n">method_fit_second</span> <span class="o">==</span> <span class="s1">&#39;both&#39;</span><span class="p">:</span>
+            <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;L_intensity_fit_gauss_fixed_para&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">L_intensity_angle_fit_gauss_fixed_para</span>
+            <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;L_intensity_fit_gauss_fixed_para_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">L_intensity_angle_fit_gauss_fixed_para_err</span>
+                
+        <span class="k">if</span> <span class="n">method_fit_second</span> <span class="o">==</span> <span class="s1">&#39;integral_gauss&#39;</span> <span class="ow">or</span> <span class="n">method_fit_second</span> <span class="o">==</span> <span class="s1">&#39;both&#39;</span><span class="p">:</span>
+            <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;L_intensity_integral_gauss_fixed_para&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">L_intensity_angle_integral_gauss_fixed_para</span>
+            <span class="n">L_post_prod</span><span class="p">[</span><span class="s1">&#39;L_intensity_integral_gauss_fixed_para_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">L_intensity_angle_integral_gauss_fixed_para_err</span>
+                
+        
+    <span class="c1"># saving the results</span>
+    <span class="k">if</span> <span class="n">save_result</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The results will be saved at: &#39;</span> <span class="o">+</span> <span class="n">name_save_result</span> <span class="o">+</span> <span class="s1">&#39;. Please note that this will erase the file with the same name if it exist. Use the optional input name_save_result to change the name. Note that you SHOULD set the general path.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">name_save_result</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">name_save_result</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">name_save_result</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span> <span class="p">)</span> <span class="k">as</span> <span class="n">pfile</span><span class="p">:</span> <span class="c1"># which makes sure that the file is properly closed after writing</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">L_post_prod</span><span class="p">,</span> <span class="n">pfile</span><span class="p">)</span>
+        
+        <span class="n">name_save_result_txt</span> <span class="o">=</span><span class="n">name_save_result</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.txt&#39;</span> 
+        
+        <span class="n">L_float</span> <span class="o">=</span><span class="p">[</span> <span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">L_files_angles</span><span class="p">]</span>
+        
+        <span class="n">L_to_write</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">L_float</span><span class="p">,</span> <span class="n">L_intensity_angle</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">name_save_result_txt</span><span class="p">,</span> <span class="n">L_to_write</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;    &#39;</span><span class="p">)</span>
+        
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The results are not saved. Set save_result to True if you want to save them.&#39;</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">L_post_prod</span><span class="p">)</span></div>
+
+
+<span class="c1">############################################################################################     </span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/alpaga_logo.svg" alt="Logo of Alpaga"/>
+            </a></p>
+<h1 class="logo"><a href="../index.html">Alpaga</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">1. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../file_management.html">2. File Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleaning_averaging_spectra.html">3. Cleaning and Averaging Spectra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fitting_procedure.html">4. Fitting the Gaussian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../polarisation_procedure.html">5. Polarisation Procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis_SHS.html">6. SHS analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis_SSHG.html">7. SSHG analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_advice.html">8. Python advice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../experimental_advice.html">9. Experimental and procedure advice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../for_developpers.html">10. For Developpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../alpaga.html">11. Source code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devs_page.html">12. Alpaga’s developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">13. Reference</a></li>
+</ul>
+
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;L-GPL.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
