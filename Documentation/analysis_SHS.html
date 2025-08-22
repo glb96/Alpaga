@@ -1,17 +1,19 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="./">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>6. SHS analysis &#8212; Alpaga 1.2 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
-    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <script src="_static/documentation_options.js?v=61243dd2"></script>
-    <script src="_static/doctools.js?v=9bcbadda"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -20,9 +22,8 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
-
   
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
   
@@ -36,16 +37,15 @@
             
   <blockquote>
 <div></div></blockquote>
-<section id="shs-analysis">
-<span id="analysis-shs-page"></span><h1><span class="section-number">6. </span>SHS analysis<a class="headerlink" href="#shs-analysis" title="Link to this heading">¶</a></h1>
+<div class="section" id="shs-analysis">
+<span id="analysis-shs-page"></span><h1><span class="section-number">6. </span>SHS analysis<a class="headerlink" href="#shs-analysis" title="Permalink to this heading">¶</a></h1>
 <p>Once the spectrum analysis for all the angles has been performed, see ref:<span class="incremental">polarisation_procedure_page</span>, several observables can be extracted from the angle-dependent intensity data. Many possible analyses can be made depending on what you are looking for. We are detailling the two that are commonly used at your lab, ILM.</p>
-<a class="reference internal image-reference" href="_images/alpaga_18.jpg"><img alt="_images/alpaga_18.jpg" class="align-right" src="_images/alpaga_18.jpg" style="width: 200px;" />
-</a>
+<a class="reference internal image-reference" href="_images/alpaga_18.jpg"><img alt="_images/alpaga_18.jpg" class="align-right" src="_images/alpaga_18.jpg" style="width: 200px;" /></a>
 <p>But, if you have developed your own code that extracts other observable from the intensity in function of the polarization angle data, please do not hesitate to contact us so that this code can be added in Alpaga!</p>
-<section id="theoritical-stuff">
-<h2><span class="section-number">6.1. </span>Theoritical stuff<a class="headerlink" href="#theoritical-stuff" title="Link to this heading">¶</a></h2>
-<section id="a-b-c-formalism">
-<h3><span class="section-number">6.1.1. </span>a, b ,c formalism<a class="headerlink" href="#a-b-c-formalism" title="Link to this heading">¶</a></h3>
+<div class="section" id="theoritical-stuff">
+<h2><span class="section-number">6.1. </span>Theoritical stuff<a class="headerlink" href="#theoritical-stuff" title="Permalink to this heading">¶</a></h2>
+<div class="section" id="a-b-c-formalism">
+<h3><span class="section-number">6.1.1. </span>a, b ,c formalism<a class="headerlink" href="#a-b-c-formalism" title="Permalink to this heading">¶</a></h3>
 <p id="id1">One can show that the expression of the Second Harmonic Scattering (SHS) intensity resolved in polarization is (see for instance <span id="id2">[<a class="reference internal" href="reference.html#id4" title="Guillaume Le Breton. Second harmonic generation of non-resonant liquid: from the molecular response to the experimental measurement. PhD thesis, Université Claude Bernard-Lyon I, 2022.">5</a>]</span> Chp V or <span id="id3">[<a class="reference internal" href="reference.html#id2" title="Fabien Rondepierre. Corrélations orientationnelles des liquides explorées par diffusion de second harmonique. PhD thesis, Université Claude Bernard Lyon I, 2025.">7</a>]</span>  Chp II):</p>
 <div class="math notranslate nohighlight">
 \[I^{\Gamma}_{SHS}(\gamma) = a^{\Gamma}cos^4(\gamma) + b^{\Gamma} cos^2(\gamma)sin^2(\gamma) + c^{\Gamma}sin^4(\gamma)\]</div>
@@ -83,9 +83,9 @@
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-</section>
-<section id="i0-i2-i4-formalism">
-<h3><span class="section-number">6.1.2. </span>i0, i2, i4 formalism<a class="headerlink" href="#i0-i2-i4-formalism" title="Link to this heading">¶</a></h3>
+</div>
+<div class="section" id="i0-i2-i4-formalism">
+<h3><span class="section-number">6.1.2. </span>i0, i2, i4 formalism<a class="headerlink" href="#i0-i2-i4-formalism" title="Permalink to this heading">¶</a></h3>
 <p>Polarized-SHS resolved experiments can also be analyzed with Fourier series developments  see <span id="id8">[<a class="reference internal" href="reference.html#id9" title="Julien Duboisset and Pierre-François Brevet. Salt-induced long-to-short range orientational transition in water. Phys. Rev. Lett., 120:263001, Jun 2018. URL: https://link.aps.org/doi/10.1103/PhysRevLett.120.263001, doi:10.1103/PhysRevLett.120.263001.">12</a>]</span> :</p>
 <div class="math notranslate nohighlight">
 \[I^{\Gamma}_{SHS}(\gamma) = i_0^{\Gamma} + i_2^{\Gamma} cos(2\gamma) + i_4^{\Gamma}cos(4\gamma)\]</div>
@@ -96,8 +96,7 @@
 \tilde{i}_4 &amp;= \frac{2}{N}  \, \sum_{n = 0}^{N -1} \, I_n \, cos(4\gamma_n) \simeq  i_4^{}\end{split}\]</div>
 <p>where N is the number of measurements.</p>
 <p>We can then obtain all the contributions from the signal:</p>
-<a class="reference internal image-reference" href="_images/water_shs_fs.png"><img alt="_images/water_shs_fs.png" class="align-center" src="_images/water_shs_fs.png" style="width: 3000px;" />
-</a>
+<a class="reference internal image-reference" href="_images/water_shs_fs.png"><img alt="_images/water_shs_fs.png" class="align-center" src="_images/water_shs_fs.png" style="width: 3000px;" /></a>
 <p>All graphs are plotted as a function of the incoming polarization angle.</p>
 <ul class="simple">
 <li><p>TOP LEFT: raw data of <span class="math notranslate nohighlight">\(I_{SHS}\)</span> for V-outlet Polarisation, and fit <span class="math notranslate nohighlight">\(i_0 + i_2 ~cos(2\gamma) + i_4~cos(4\gamma)\)</span> in continuous curve.</p></li>
@@ -129,17 +128,17 @@
 <p>In order to compute the uncertainties on our observables, we use the residue from the analysis to calculate the standard deviation as:</p>
 <div class="math notranslate nohighlight">
 \[\sigma_{\tilde{i_0}} = \frac{\sigma_{res}}{\sqrt{N}} ~~;~~ \sigma_{\tilde{i_2}} = \frac{\sigma_{res}}{\sqrt{2N}} ~~;~~ \sigma_{\tilde{i_4}} = \frac{\sigma_{res}}{\sqrt{2N}}\]</div>
-</section>
-</section>
-<section id="numerical-stuff">
-<h2><span class="section-number">6.2. </span>Numerical Stuff<a class="headerlink" href="#numerical-stuff" title="Link to this heading">¶</a></h2>
+</div>
+</div>
+<div class="section" id="numerical-stuff">
+<h2><span class="section-number">6.2. </span>Numerical Stuff<a class="headerlink" href="#numerical-stuff" title="Permalink to this heading">¶</a></h2>
 <p>All of these calculations are numericaly implemented in shs_module.analyse_polarization_SHS in V and H version:</p>
 <dl class="py function">
 <dt class="sig sig-object py">
 <span class="sig-prename descclassname"><span class="pre">shs_module.</span></span><span class="sig-name descname"><span class="pre">analyse_polarization_SHS_V</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L_angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_intensity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_intensity_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shs_module.html#analyse_polarization_SHS_V"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>From the polarisation angle and the SHS gaussian intensity, return many properties.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>L_angle</strong> (<em>list</em>) – The polarisation angle of the fundamental in degree.</p></li>
 <li><p><strong>L_intensity</strong> (<em>list</em>) – The HRS intensity. The size of <em>L_angle</em> and <em>L_intensity</em> shall match.</p></li>
@@ -147,7 +146,7 @@
 <li><p><strong>L_intensity_error</strong> (<em>bool</em><em> or </em><em>float</em>) – [Optional] If set to False, then the uncertanty are not computed. If set to a list, the L_intensity_error is the list of the associated ABSOLUTE error relative to the intensity.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>L_SHS_prop</strong> (<em>list</em>) – The list of the computed properties. L_SHS_prop = [a, b, c, Zeta, Depol, i0, i2, i4, alpha_0]</p></li>
 <li><p><strong>L_SHS_prop_error</strong> (<em>list</em>) – The list of the error relative to the computed properties. L_SHS_prop_error = [a_verr, b_verr, c_verr, Zeta_serr, i0_serr, i2_serr, i4_serr]</p></li>
@@ -165,7 +164,7 @@
 <span class="sig-prename descclassname"><span class="pre">shs_module.</span></span><span class="sig-name descname"><span class="pre">analyse_polarization_SHS_H</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L_angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_intensity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_intensity_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shs_module.html#analyse_polarization_SHS_H"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>From the polarisation angle and the SHS gaussian intensity, return many properties.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>L_angle</strong> (<em>list</em>) – The polarisation angle of the fundamental in degree.</p></li>
 <li><p><strong>L_intensity</strong> (<em>list</em>) – The HRS intensity. The size of <em>L_angle</em> and <em>L_intensity</em> shall match.</p></li>
@@ -173,7 +172,7 @@
 <li><p><strong>L_intensity_error</strong> (<em>bool</em><em> or </em><em>float</em>) – [Optional] If set to False, then the uncertanty are not computed. If set to a list, the L_intensity_error is the list of the associated ABSOLUTE error relative to the intensity.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>L_SHS_prop</strong> (<em>list</em>) – The list of the computed properties. L_SHS_prop = [a, b, c, alpha_0, Zeta, Depol, i0, i2, i4]</p></li>
 <li><p><strong>L_SHS_prop_error</strong> (<em>list</em>) – The list of the error relative to the computed properties. L_SHS_prop_error = [a_verr, b_verr, c_verr, Zeta_serr, i0_serr, i2_serr, i4_serr]</p></li>
@@ -184,25 +183,25 @@
 </dd></dl>
 
 <dl class="field-list simple">
-<dt class="field-odd">Release<span class="colon">:</span></dt>
+<dt class="field-odd">Release</dt>
 <dd class="field-odd"><p>1.2</p>
 </dd>
-<dt class="field-even">Date<span class="colon">:</span></dt>
+<dt class="field-even">Date</dt>
 <dd class="field-even"><p>Aug 22, 2025</p>
 </dd>
 </dl>
-</section>
-</section>
+</div>
+</div>
 
 
           </div>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
-              <img class="logo" src="_static/alpaga_logo.svg" alt="Logo of Alpaga"/>
+              <img class="logo" src="_static/alpaga_logo.svg" alt="Logo"/>
             </a></p>
 <h1 class="logo"><a href="index.html">Alpaga</a></h1>
 
@@ -239,7 +238,7 @@
 </ul>
 
 
-<search id="searchbox" style="display: none" role="search">
+<div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -247,18 +246,18 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</search>
+</div>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;L-GPL.
+      &copy;L-GPL.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="_sources/analysis_SHS.rst.txt"
