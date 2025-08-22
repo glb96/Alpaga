@@ -67,11 +67,8 @@ def test_polarisation_intensity_reference():
 
     # Load reference results
     reference_file = os.path.join(directory, 'post_prod_results.p')
-    print(directory)
-    print(reference_file)
     with open(reference_file, "rb") as filetoload:
         L_post_prod_load = pickle.load(filetoload)
-    print(L_post_prod_load.keys())
     # List of keys to compare
     L_to_compare = [
         'L_intensity', 'L_intensity_error', 'L_lambda_0', 'L_lambda_0',
