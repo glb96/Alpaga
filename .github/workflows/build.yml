@@ -46,12 +46,17 @@ jobs:
         run: |
           python -m pip install alpaga.tar.gz
 
-      # 6) Install dependencies for wiki
+      # 6) Run tests
+      - name: Run tests
+        run: |
+          python -m pytest tests --disable-warnings -v
+
+      # 7) Install dependencies for wiki
       - name: Install Sphinx dependencies for wiki
         run: |
           pip install -r requirements_wiki.txt
 
-      # 7) Build the wiki
+      # 8) Build the wiki
       - name: Build Sphinx wiki
         run: |
           rm -rf Documentation
@@ -59,7 +64,7 @@ jobs:
           python -m sphinx -b html Wiki_raw Documentation
           touch Documentation/.nojekyll
 
-      # 8) Deploy wiki 
+      # 9) Deploy wiki 
       - name: Deploy wiki
         uses: peaceiris/actions-gh-pages@v3
         with:
@@ -68,8 +73,7 @@ jobs:
           publish_branch: gh-pages
 
 
-
-      # 9) Update the github directory 
+      # 10) Update the github directory 
       - name: Update the package and the wiki 
         run: |
           git config user.name "github-actions[bot]"
