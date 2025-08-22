@@ -210,7 +210,7 @@ def fit_pola45(x,  chi_XXZ, chi_ZXX, chi_ZZZ, ai):
     
 ############################################################################################
     
-def analyse_polarization_SSHG(angle_incidence, n1_fonda, n2_fonda, n1_harmo, n2_harmo, L_angle_deg, L_intensity_S, L_intensity_P, XXZ=False) :
+def analyse_polarization_SSHG(angle_incidence, n1_fonda, n2_fonda, n1_harmo, n2_harmo, L_polarisation_angle, L_intensity_S, L_intensity_P, XXZ=False) :
     
     '''
     From experimental angle of incidence, refractive index values of materials for fundamental and harmonic wavelength, polarisation angle and the SSHG gaussian intensity, the function returns ai coefficients and chi coefficients for an isotrope achiral interface. 
@@ -229,7 +229,7 @@ def analyse_polarization_SSHG(angle_incidence, n1_fonda, n2_fonda, n1_harmo, n2_
         refractive index of medium 1 for harmonic wavelength
     N2 : float
         refractive index of medium 2 for harmonic wavelength
-    L_angle: list
+    L_polarisation_angle: list
         The polarisation angle of the fundamental in degree.
     L_intensity_S: list
         The SSHG intensity for S polarized analyser. The size of *L_angle* and *L_intensity_S* shall match. 
@@ -269,7 +269,7 @@ def analyse_polarization_SSHG(angle_incidence, n1_fonda, n2_fonda, n1_harmo, n2_
     
     ai=ai_coeff(angle_incidence,n1_fonda,n2_fonda,n1_harmo,n2_harmo)
     
-    L_angle_rad = [i*np.pi/180 for i in L_angle_deg]
+    L_angle_rad = [i*np.pi/180 for i in L_polarisation_angle]
 
     if XXZ==False:
         def helper_S(x, chi_XXZ): #fitting of chi parametre only (not a1 parametre)

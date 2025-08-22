@@ -22,6 +22,17 @@ from Alpaga.file_management import find_file_iter_from_dir as find_file_iter_fro
 from Alpaga.file_management import find_angle_iter_from_dir as find_angle_iter_from_dir
 
 ############################################################################################
+
+try:
+    from IPython.display import clear_output
+except ImportError:
+    # fallback for normal Python environment
+    def clear_output(wait=False):
+        pass  # do nothing
+    
+############################################################################################
+    
+############################################################################################
 ####################### Cleaning and averaging spectra #####################################
 ############################################################################################
 
@@ -627,11 +638,34 @@ def fit_gaussian_from_noise(L_x, L_y, l_cut=[380, 395, 419, 433], order_fit_nois
 ############################  Polarisation procedure  ######################################
 ############################################################################################      
 
-def polarisation_intensity(directory=False, L_filename=False, prefix_file=False, L_files_angles=False, N_iter=False, extension='.dat', fct_name=standard_file_name, type_cleaning='mean', L_mean_cleaning_n=[1, 1, 1, 3], L_mean_cleaning_evo_max=[2, 1.5, 1.4, 1.3], automatic_l_cut=False, l_cut=[380, 395, 419, 433], l_cut_n_n2=[2, 9], order_fit_noise=4, method_fit_first='fit_gauss', bounds_fit_gausse=([0, 395, 1], [np.inf, 410, 25]), lambda_0_ref=403, waist_ref=2, exclu_zone=False, fixed_para_gauss_fit=True, method_fit_second='fit_gauss', save_result=True, name_save_result='./post_prod_results.p', waiting_time=False):
-    
-    # See the wiki for the doc  
-    
-    L_input_list = ['directory', 'L_filename', 'prefix_file', 'L_files_angles', 'N_iter', 'extension', 'type_cleaning', 'L_mean_cleaning_n', 'L_mean_cleaning_evo_max', 'automatic_l_cut', 'l_cut', 'l_cut_n_n2', 'order_fit_noise', 'method_fit_first', 'bounds_fit_gausse', 'lambda_0_ref', 'waist_ref', 'fixed_para_gauss_fit', 'method_fit_second', 'save_result', 'name_save_result', 'waiting_time']
+def polarisation_intensity(directory=False, 
+                           L_filename=False, 
+                           prefix_file=False, 
+                           L_files_angles=False, 
+                           N_iter=False, 
+                           extension='.dat', 
+                           fct_name=standard_file_name, 
+                           type_cleaning='mean', 
+                           L_mean_cleaning_n=[1, 1, 1, 3], 
+                           L_mean_cleaning_evo_max=[2, 1.5, 1.4, 1.3], 
+                           automatic_l_cut=False, l_cut=[380, 395, 419, 433], 
+                           l_cut_n_n2=[2, 9], 
+                           order_fit_noise=4, 
+                           method_fit_first='fit_gauss', 
+                           bounds_fit_gausse=([0, 395, 1], [np.inf, 410, 25]), 
+                           lambda_0_ref=403, 
+                           waist_ref=2, 
+                           exclu_zone=False, 
+                           fixed_para_gauss_fit=True, 
+                           method_fit_second='fit_gauss', 
+                           save_result=True, 
+                           name_save_result='./post_prod_results.p', 
+                           waiting_time=False, 
+                           show_figure=True):
+    '''
+    See the wiki for the doc  
+    '''
+    L_input_list = ['directory', 'L_filename', 'prefix_file', 'L_files_angles', 'N_iter', 'extension', 'type_cleaning', 'L_mean_cleaning_n', 'L_mean_cleaning_evo_max', 'automatic_l_cut', 'l_cut', 'l_cut_n_n2', 'order_fit_noise', 'method_fit_first', 'bounds_fit_gausse', 'lambda_0_ref', 'waist_ref', 'fixed_para_gauss_fit', 'method_fit_second', 'save_result', 'name_save_result', 'waiting_time', 'show_figure']
     
     L_post_prod = {}
     if not isinstance(L_filename, bool):
@@ -675,6 +709,10 @@ def polarisation_intensity(directory=False, L_filename=False, prefix_file=False,
                     N_iter = N_iter_t
         print('The prefix for all the file are: "' + prefix_file + '" with ' + str(N_iter) + ' iter. The angle are ' + str(L_files_angles) + '. The extension is: ' + extension)
     
+    if show_figure:
+        show_figure_fit_gauss = 'all'
+    else:
+        show_figure_fit_gauss = ''
     # save input
     L_post_prod['directory'] = directory
     L_post_prod['L_filename'] = L_filename
@@ -722,11 +760,11 @@ def polarisation_intensity(directory=False, L_filename=False, prefix_file=False,
         names = prefix_file + '_' + L_files_angles[KKK]
         L_lambda, L_spectra, _ = averaging_and_cleaning(names, N_iter, L_filename=L_filename_K, fct_name=fct_name, type_cleaning=type_cleaning, L_mean_cleaning_n=L_mean_cleaning_n, L_mean_cleaning_evo_max=L_mean_cleaning_evo_max, show_spectra=False, extension=extension)
         
-        L_para_gauss, L_err, L_x_fit_noise, L_fit_noise, figure_counter = fit_gaussian_from_noise(L_lambda, L_spectra, l_cut=l_cut, order_fit_noise=order_fit_noise, method_fit=method_fit_first, bounds_fit_gausse=bounds_fit_gausse, lambda_0_ref=lambda_0_ref, waist_ref=waist_ref, exclu_zone=exclu_zone, fit_noise= True, show_spectra='all', figure_counter=1)
+        L_para_gauss, L_err, L_x_fit_noise, L_fit_noise, figure_counter = fit_gaussian_from_noise(L_lambda, L_spectra, l_cut=l_cut, order_fit_noise=order_fit_noise, method_fit=method_fit_first, bounds_fit_gausse=bounds_fit_gausse, lambda_0_ref=lambda_0_ref, waist_ref=waist_ref, exclu_zone=exclu_zone, fit_noise= True, show_spectra=show_figure_fit_gauss, figure_counter=1)
         intensity, lambda_0, waist = L_para_gauss
         if automatic_l_cut: # the second run with automatic l_cut
             l_cut_temp=[lambda_0-l_cut_n_n2[1]*waist, lambda_0-l_cut_n_n2[0]*waist, lambda_0+l_cut_n_n2[0]*waist, lambda_0+l_cut_n_n2[1]*waist]
-            L_para_gauss, L_err, L_x_fit_noise, L_fit_noise, figure_counter = fit_gaussian_from_noise(L_lambda, L_spectra, l_cut=l_cut_temp, order_fit_noise=order_fit_noise, method_fit=method_fit_first, bounds_fit_gausse=bounds_fit_gausse, lambda_0_ref=lambda_0_ref, waist_ref=waist_ref, fit_noise= True, show_spectra='all', figure_counter=figure_counter)
+            L_para_gauss, L_err, L_x_fit_noise, L_fit_noise, figure_counter = fit_gaussian_from_noise(L_lambda, L_spectra, l_cut=l_cut_temp, order_fit_noise=order_fit_noise, method_fit=method_fit_first, bounds_fit_gausse=bounds_fit_gausse, lambda_0_ref=lambda_0_ref, waist_ref=waist_ref, fit_noise= True, show_spectra=show_figure_fit_gauss, figure_counter=figure_counter)
             intensity, lambda_0, waist = L_para_gauss
         
         poly = np.polyfit(L_x_fit_noise, L_fit_noise, deg=order_fit_noise)
@@ -740,11 +778,13 @@ def polarisation_intensity(directory=False, L_filename=False, prefix_file=False,
         L_lambda_0_angle_err[KKK] = L_err[1]
         L_waist_angle_err[KKK] = L_err[2]
         
-        plt.show()
-        
+        if show_figure:
+            plt.show()
+            
         if not isinstance(waiting_time, bool): # short pause so that the user can see the plots.
             time.sleep(waiting_time)
-    
+        plt.clf()
+        plt.close('all')
     L_post_prod['L_intensity'] = L_intensity_angle
     L_post_prod['L_intensity_error'] = L_intensity_angle_err
     L_post_prod['L_lambda_0'] = L_lambda_0_angle
@@ -781,17 +821,21 @@ def polarisation_intensity(directory=False, L_filename=False, prefix_file=False,
             figure_counter = 1
             names = prefix_file + '_' + L_files_angles[KKK]
             L_lambda, L_spectra, _ = averaging_and_cleaning(names, N_iter, L_filename=L_filename_K, fct_name=fct_name, type_cleaning=type_cleaning, L_mean_cleaning_n=L_mean_cleaning_n, L_mean_cleaning_evo_max=L_mean_cleaning_evo_max, show_spectra=False, extension=extension)
-            plt.show()
+            if show_figure:
+                plt.show()
+                
             if method_fit_second == 'fit_gauss' or method_fit_second == 'both':
-                L_para_gauss, L_err, L_x_fit_noise, L_fit_noise, figure_counter = fit_gaussian_from_noise(L_lambda, L_spectra, l_cut=l_cut, order_fit_noise=order_fit_noise, method_fit='fit_gauss', bounds_fit_gausse=([0, lambda_0_mean-0.00001, waist_mean-0.00001], [np.inf,lambda_0_mean+0.00001, waist_mean+0.00001]), lambda_0_ref=lambda_0_mean, waist_ref=waist_mean, fit_noise= True, show_spectra='all', figure_counter=figure_counter)
+                L_para_gauss, L_err, L_x_fit_noise, L_fit_noise, figure_counter = fit_gaussian_from_noise(L_lambda, L_spectra, l_cut=l_cut, order_fit_noise=order_fit_noise, method_fit='fit_gauss', bounds_fit_gausse=([0, lambda_0_mean-0.00001, waist_mean-0.00001], [np.inf,lambda_0_mean+0.00001, waist_mean+0.00001]), lambda_0_ref=lambda_0_mean, waist_ref=waist_mean, fit_noise= True, show_spectra=show_figure_fit_gauss, figure_counter=figure_counter)
                 L_intensity_angle_fit_gauss_fixed_para[KKK] = L_para_gauss[0]
                 L_intensity_angle_fit_gauss_fixed_para_err[KKK] = L_err[0]
                         
             if method_fit_second == 'integral_gauss' or method_fit_second == 'both':    
-                L_para_gauss, L_err, L_x_fit_noise, L_fit_noise, figure_counter = fit_gaussian_from_noise(L_lambda, L_spectra, l_cut=l_cut, order_fit_noise=order_fit_noise, method_fit='integral_gauss', bounds_fit_gausse=([0, lambda_0_mean-0.00001, waist_mean-0.00001], [np.inf,lambda_0_mean+0.00001, waist_mean+0.00001]), lambda_0_ref=lambda_0_mean, waist_ref=waist_mean, fit_noise= True, show_spectra='all', figure_counter=figure_counter)
+                L_para_gauss, L_err, L_x_fit_noise, L_fit_noise, figure_counter = fit_gaussian_from_noise(L_lambda, L_spectra, l_cut=l_cut, order_fit_noise=order_fit_noise, method_fit='integral_gauss', bounds_fit_gausse=([0, lambda_0_mean-0.00001, waist_mean-0.00001], [np.inf,lambda_0_mean+0.00001, waist_mean+0.00001]), lambda_0_ref=lambda_0_mean, waist_ref=waist_mean, fit_noise= True, show_spectra=show_figure_fit_gauss, figure_counter=figure_counter)
                 L_intensity_angle_integral_gauss_fixed_para[KKK] = L_para_gauss[0]
                 L_intensity_angle_integral_gauss_fixed_para_err[KKK] = L_err[0]
-            plt.show()
+            if show_figure:
+                plt.show()
+                
             if not isinstance(waiting_time, bool): # short pause so that the user can see the plots.
                 time.sleep(waiting_time)
         
