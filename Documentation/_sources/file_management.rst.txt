@@ -1,87 +1,124 @@
 .. _file_management_page:
 
-File management 
-================
+File Management
+===============
 
-In this page, we will explain how the data are handled by Alpaga. First, how the data are expected to be stored and named, then how to open them to start the procedure. 
+In this page, we explain how data are handled by Alpaga: first, how the data are expected to be stored and named, and then how to access them to start the analysis procedure.
 
 ------------------------
-Expected data structure
+Expected Data Structure
 ------------------------
 
-The numerical procedure is built around the experimental one: 
+The numerical procedure is built around the experimental setup.  
 
-For a given analyser angle (either V/H or S/P depending on how you prefer to call this angle) of the 2 omega photon and other experimental parameters (fundamental power, sample, temperature, number of surfactant/lama per metre square), a directory regroups the measured spectra for one or several incoming polarisation angle. 
-In this directory, ''angle'' can vary arbitrary, as long as the name of the file follow this structure: 
+For a given analyzer angle (either V/H or S/P, depending on your terminology) of the 2-omega photon and other experimental parameters (fundamental power, sample, temperature, number of surfactant/layer per square meter), a directory contains the measured spectra for one or more incoming polarization angles.  
 
-prefix_angle-value_iter-number.extention
+In this directory, the "angle" can take arbitrary values, as long as the file names follow this structure:
 
-This structure is defined through several internal function, and more especially by the alpaga.standard_file_name function:
+``prefix_angle-value_iter-number.extension``
+
+This structure is defined through several internal functions, particularly the `alpaga.file_management.standard_file_name` function:
 
 .. autofunction:: file_management.standard_file_name
    :noindex:
 
-You can define another structure for the file, see the last paragraph.
+You can define another file-naming structure if needed (see the last section).
 
-For example, in the directory: /home/lama/Datas/Water_acquisition/V_analser, there are the files: spectra_water_v_2.0_1.dat, spectra_water_v_2.0_2.dat, spectra_water_v_4.0_1.dat, spectra_water_v_4.0_2.dat, spectra_water_v_6.0_1.dat, spectra_water_v_6.0_2.dat . The prefix for all these files is  /home/lama/Datas/Water_acquisition/V_analser/spectra_water_v, the list of the angle is [2.0, 4.0, 6.0] and the total number of iterations is 2. 
+For example, in the directory:  
 
-.. warning:: The Alpaga developer warmly recommend you to always define an absolute path to your data rather than local one. If you ran the code in the directory  /home/lama/Datas/Water_acquisition, you may indeed use a shorter prefix such as V_analser/spectra_water_v. However, it is more stable to keep with /home/lama/Datas/Water_acquisition/V_analser/spectra_water_v anytime. 
+``/home/lama/Datas/Water_acquisition/V_analyser``  
 
-The angles can be whatever string, you can encode other varying properties using this framework: there is no need for this ''list of angle'' to be bounded, or evenly distributed. Be just aware that the very last analysis (:ref:`from the experimental data to the real observable you want like the i4 or surface susceptibility<analysis_SHS_page>` ) may not work as expected.
+the files may include:  
 
-.. note:: Alpaga can treat all or only part of the 'angle' available in a directory, see :ref:`this page<polarisation_procedure_page>` for more information. 
+``spectra_water_v_2.0_1.dat``, ``spectra_water_v_2.0_2.dat``, ``spectra_water_v_4.0_1.dat``, ``spectra_water_v_4.0_2.dat``, ``spectra_water_v_6.0_1.dat``, ``spectra_water_v_6.0_2.dat``.  
+
+Here:  
+- The prefix for all these files is `/home/lama/Datas/Water_acquisition/V_analyser/spectra_water_v`.  
+- The list of angles is `[2.0, 4.0, 6.0]`.  
+- The total number of iterations is 2.
+
+.. warning::  
+   The Alpaga developers strongly recommend always using an absolute path to your data rather than a relative one. For instance, if you run the code in `/home/lama/Datas/Water_acquisition`, you could use a shorter prefix such as `V_analyser/spectra_water_v`. However, using the full path `/home/lama/Datas/Water_acquisition/V_analyser/spectra_water_v` is more stable.
+
+The angles can be any string; you can encode other varying properties using this framework. The "list of angles" does not need to be bounded or evenly distributed. Be aware, however, that the final analysis (:ref:`from the experimental data to the real observable you want, such as the i4 or surface susceptibility<analysis_SHS_page>`) may not work as expected if the angles are irregular.
+
+.. note::  
+   Alpaga can process all or only a subset of the available angles in a directory. See :ref:`this page<polarisation_procedure_page>` for more information.
 
 .. image:: _static/alpaga_6.jpg
    :width: 250
    :align: right
 
+For each acquisition with the same experimental parameters (for example, angle=2.0), several acquisitions are made in order to average the spectra. See :ref:`the cleaning procedure<cleaning_averaging_spectra_page>` for more details. These acquisitions are stored using different iteration numbers, from 1 to N. In this example, there are 2 iterations: `spectra_water_v_2.0_1.dat` and `spectra_water_v_2.0_2.dat`, which will be used to compute a cleaned spectrum for the angle value 2.0.
 
-For each acquisition with the same experimental parameters (for instance angle=2.0), several acquisitions will be made in order to average the spectra. See :ref:`the cleaning procedure<cleaning_averaging_spectra_page>` for more details. These acquisitions are stored using different iterations value, from 1 to N. Within this example, there are 2 iterations: spectra_water_v_2.0_1.dat and spectra_water_v_2.0_2.dat which will be used to get a cleaned spectrum for the angle value 2.0. 
+.. note::  
+   For all angles, the exact same number of iterations should be available. If you want to average over fewer iterations than available, you can redefine it using `iter_number`. See :ref:`the cleaning procedure<cleaning_averaging_spectra_page>`.
 
-.. note:: For all the angle value, the exact same amount of iterations should be given. If you want to average over less iterations then available, you can redefine it using iter_number. See the See :ref:`the cleaning procedure<cleaning_averaging_spectra_page>`.
-
-
-Now that we have presented the data structure, let's be more explicit. First, we will see how to open a ''single acquisition'', meaning for a given ''angle'': the name should be  prefix_iter-number.extention . Then, we will see how to treat acquisition for several angles, meaning files with names: prefix_angle-value_iter-number.extention . The output given by these functions will be used later on during the procedure. 
+Now that we have described the data structure, let's be more explicit. First, we show how to open a "single acquisition" (i.e., for a given angle) with file names like `prefix_iter-number.extension`. Then, we show how to handle acquisitions for multiple angles, with file names like `prefix_angle-value_iter-number.extension`. The output from these functions is used later in the procedure.
 
 ------------------------
-Open single acquisition
+Open Single Acquisition
 ------------------------
 
-To get the Alpaga parameters to treat a single acquisition located in a directory, use the function: 
+To get the Alpaga parameters for processing a single acquisition located in a directory, use the function:  
 
 .. autofunction:: file_management.find_file_iter_from_dir
    :noindex:
 
-
 ------------------------
-Open angle acquisition
+Open Angle Acquisition
 ------------------------
 
 .. _open_angle_acquisition_section:
 
-To get the Alpaga parameters to treat an acquisition with several angle value located in a directory, use the function: 
+To get the Alpaga parameters for processing acquisitions with multiple angles located in a directory, use the function:  
 
 .. autofunction:: file_management.find_angle_iter_from_dir
    :noindex:
-   
+
 .. image:: _static/alpaga_11.jpg
    :width: 250
    :align: right
+
    
 ----------------------------
-Define your own set of file
+Define Your Own Set of Files
 ----------------------------
 
-In order to go further, you need to have defined a general prefix, list of angles, number of iterations and the extenuation. If you have used the previous procedure, be just aware that you have to set the prefix **with** the general path, *i.e.*: ::
+To go further, you need to define a general prefix, a list of angles, the number of iterations, and the file extension. If you followed the previous procedure, be sure to include the full path in the prefix, i.e.:
+
+::
 
     prefix_general = os.path.join(directory, prefix)
 
-If you want to set yourself these values, you can. Either if you built your own procedure using only piece of Alpaga (therefore you should be good enough in python and thus not need advice), or in the initial parameter of the automatised procedure alpaga.polarisation_intensity, see :ref:`here<polarisation_procedure_page>`. 
+If you want to set these values manually, you can. This may be useful if you built your own procedure using only parts of Alpaga (in which case, you should be comfortable with Python and may not need further guidance), or if you want to set the initial parameters for the automated procedure `alpaga.polarisation_intensity` (see :ref:`here<polarisation_procedure_page>`).
 
+Furthermore, if your file naming structure differs from the standard Alpaga format, you can still use the majority of the code, except for the `alpaga.find_file_iter_from_dir` and `alpaga.find_angle_iter_from_dir` functions. To do so, you must define your own function that specifies how to construct a file name given a `prefix`, `angle`, `iteration`, and `extension`. In other words, you define your own equivalent of `alpaga.standard_file_name`. See the tutorial for more examples.
 
-Moreover, if you do not use the same structure, you can still use the majority of the code, expect the alpaga.find_file_iter_from_dir and alpaga.find_angle_iter_from_dir function. To do so, you would have to define your own function that define how to built the name of the file provided a 'prefix', 'angle', 'iteration' and 'extension'. In other words, your own alpaga.standard_file_name function. See the tutorial for more example. 
+To use your custom function and replace the standard naming structure, provide it through the optional argument `fct_name` in the `alpaga.averaging_and_cleaning` and `alpaga.polarisation_intensity` functions.
 
-To include this function and replace the standard structure, use the optional argument *fct_name* of the alpaga.averaging_and_cleaning and **alpaga.polarisation_intensity** function.
+-----------------------------
+Different Naming Conventions
+-----------------------------
+
+If your file naming convention differs significantly from the standard Alpaga format, you must provide the full path to each acquisition as an `N_angle x N_iter` list. For example, for 2 angles and 3 iterations:
+
+.. code-block:: python
+
+    L_filename = [
+        [filename_angle1_iter1, filename_angle1_iter2, filename_angle1_iter3],
+        [filename_angle2_iter1, filename_angle2_iter2, filename_angle2_iter3]
+    ]
+
+With the correct number of iterations (`N_iter`) and any list of angles:
+
+.. code-block:: python
+
+    L_files_angles = ['angle_value_1', 'angle_value_2']
+    N_iter = 3
+
+.. note::
+  If you provide your data in this way, be careful when following the `tutorial_spectra_analysis` tutorial, especially during the :ref:`denoising step<cleaning_averaging_spectra_page>` (part I.C) and when using the the core function `Alpaga.analyze_run.polarisation_intensity` (Part III.C). 
 
 |
 

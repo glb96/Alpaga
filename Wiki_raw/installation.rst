@@ -37,7 +37,7 @@ Make sure to use the correct *alpaga.tar.gz* file — *i.e.* check that the path
 
 
 Testing your installation
-==========================
+---------------------------
 
 To use Alpaga, import it in a Python environment with: ::
     
@@ -54,7 +54,7 @@ If you have issues, make sure that Alpaga is correctly installed (import Alpaga 
 If you are stuck, please contact us using the GitHub page by raising an issue. 
 
 Tutorials
-==========
+----------
 
 Tutorials are available in the Tutorials directory.  
 Some pages of this wiki point to tutorials that help you understand how Alpaga works.  

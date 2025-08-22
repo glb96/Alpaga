@@ -10,7 +10,7 @@ Either the github workflow works and you have nothing to do in order to update t
 
 
 How to : compile a new homemade Alpaga version:
----------------------------------------
+-----------------------------------------------
 
 If you want to develop new functions or modules in Alpaga module, make sure to compile your code into *.tar.gz* file. To do so, one can use the bash script *to_creat_package.sh*.
 
