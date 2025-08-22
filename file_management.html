@@ -47,7 +47,7 @@
 <p>This structure is defined through several internal functions, particularly the <span class="incremental">alpaga.file_management.standard_file_name</span> function:</p>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">file_management.</span></span><span class="sig-name descname"><span class="pre">standard_file_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefixe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iteration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extention</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.dat'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/file_management.html#standard_file_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">file_management.</span></span><span class="sig-name descname"><span class="pre">standard_file_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefixe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iteration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.dat'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/file_management.html#standard_file_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Define how to built the file name of an acquisition.</p>
 <p>You may define your own function if your file does not follow the same structure. However, we warmly recommend to use the same input/output for this function as follow:</p>
 <dl class="field-list simple">
@@ -56,7 +56,7 @@
 <li><p><strong>prefixe</strong> (<em>str</em>) – The prefix</p></li>
 <li><p><strong>angle</strong> (<em>str</em><em> or </em><em>bool</em>) – [Optional] If not bool, update the name of the file with this ‘angle’ value.</p></li>
 <li><p><strong>iteration</strong> (<em>str</em><em> or </em><em>bool</em>) – [Optional] If not bool, update the name of the file with this ‘iteration’ value.</p></li>
-<li><p><strong>extention</strong> (<em>str</em>) – [Optional] The extention of the spectra file. Default value: ‘.dat’</p></li>
+<li><p><strong>extension</strong> (<em>str</em>) – [Optional] The extension of the spectra file. Default value: ‘.dat’</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -71,7 +71,7 @@
 <em>prefixe</em> = ‘polarV’
 <em>angle</em> = ‘42.0’
 <em>iteration</em> = ‘4’
-<em>extention</em> = ‘.dat’
+<em>extension</em> = ‘.dat’
 output is: ‘polarV_42.0_4.dat’</p>
 </dd></dl>
 
@@ -100,6 +100,10 @@ output is: ‘polarV_42.0_4.dat’</p>
 <p class="admonition-title">Note</p>
 <p>For all angles, the exact same number of iterations should be available. If you want to average over fewer iterations than available, you can redefine it using <span class="incremental">iter_number</span>. See <a class="reference internal" href="cleaning_averaging_spectra.html#cleaning-averaging-spectra-page"><span class="std std-ref">the cleaning procedure</span></a>.</p>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the tutorials and in the code, the number of iteration is often stored in <span class="incremental">N_iter</span>.</p>
+</div>
 <p>Now that we have described the data structure, let’s be more explicit. First, we show how to open a “single acquisition” (i.e., for a given angle) with file names like <span class="incremental">prefix_iter-number.extension</span>. Then, we show how to handle acquisitions for multiple angles, with file names like <span class="incremental">prefix_angle-value_iter-number.extension</span>. The output from these functions is used later in the procedure.</p>
 </section>
 <section id="open-single-acquisition">
@@ -107,32 +111,32 @@ output is: ‘polarV_42.0_4.dat’</p>
 <p>To get the Alpaga parameters for processing a single acquisition located in a directory, use the function:</p>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">file_management.</span></span><span class="sig-name descname"><span class="pre">find_file_iter_from_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extention</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.dat'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/file_management.html#find_file_iter_from_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Return the prefix (<em>prefix_file</em>), the number of iter (<em>N_iter</em>) and the extention (<em>extention</em>) of a single acquisition located in the repertory <em>directory</em>.</p>
+<span class="sig-prename descclassname"><span class="pre">file_management.</span></span><span class="sig-name descname"><span class="pre">find_file_iter_from_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.dat'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/file_management.html#find_file_iter_from_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Return the prefix (<em>prefix_file</em>), the number of iter (<em>N_iter</em>) and the extension (<em>extension</em>) of a single acquisition located in the repertory <em>directory</em>.</p>
 <p>The expected name of the file is:</p>
-<p>directory + prefix + _ + i + extention</p>
+<p>directory + prefix + _ + i + extension</p>
 <p>Where i goes from 1 to <em>N_iter</em>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>directory</strong> (<em>str</em>) – The directory where is stored the datas</p></li>
-<li><p><strong>extention</strong> (<em>str</em>) – [Optional] The extention of the spectra file. Default value: ‘.dat’</p></li>
+<li><p><strong>extension</strong> (<em>str</em>) – [Optional] The extension of the spectra file. Default value: ‘.dat’</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>prefix_file</strong> (<em>str</em>) – The prefixe shared by all the spectra iteration.</p></li>
 <li><p><strong>N_iter</strong> (<em>int</em>) – The number of iter found for this prefixe. Alpaga has check that all the iter are present to avoid ‘File not found’ error later on.</p></li>
-<li><p><strong>extention</strong> (<em>str</em>) – The extention of the detected spectra file. Same value as in the input</p></li>
+<li><p><strong>extension</strong> (<em>str</em>) – The extension of the detected spectra file. Same value as in the input</p></li>
 </ul>
 </p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p>Let’s assume that in the directory /home/lama/Datas/Water_acquisition/Test_120sec TOCHANGE, is located the spectra: water_1.dat, water_2.dat, water_3.dat. The prefix of these file is ‘water’, the total number of iter is <em>N_iter</em> = 3, and the extention is .dat . In order to get automatically theses information, use:</p>
+<p>Let’s assume that in the directory /home/lama/Datas/Water_acquisition/Test_120sec TOCHANGE, is located the spectra: water_1.dat, water_2.dat, water_3.dat. The prefix of these file is ‘water’, the total number of iter is <em>N_iter</em> = 3, and the extension is .dat . In order to get automatically theses information, use:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">directory</span> <span class="o">=</span> <span class="s1">&#39;/home/lama/Datas/Water_acquisition/Test_120sec&#39;</span>
-<span class="n">prefix</span><span class="p">,</span> <span class="n">N_iter</span><span class="p">,</span> <span class="n">extention</span> <span class="o">=</span> <span class="n">alpaga</span><span class="o">.</span><span class="n">find_file_iter_from_dir</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The prefix for all the file is: &quot;&#39;</span> <span class="o">+</span> <span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;&quot; with &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">N_iter</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; iter. The extention is: &#39;</span> <span class="o">+</span> <span class="n">extention</span><span class="p">)</span>
+<span class="n">prefix</span><span class="p">,</span> <span class="n">N_iter</span><span class="p">,</span> <span class="n">extension</span> <span class="o">=</span> <span class="n">alpaga</span><span class="o">.</span><span class="n">find_file_iter_from_dir</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The prefix for all the file is: &quot;&#39;</span> <span class="o">+</span> <span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;&quot; with &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">N_iter</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; iter. The extension is: &#39;</span> <span class="o">+</span> <span class="n">extension</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -143,16 +147,16 @@ output is: ‘polarV_42.0_4.dat’</p>
 <p id="open-angle-acquisition-section">To get the Alpaga parameters for processing acquisitions with multiple angles located in a directory, use the function:</p>
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">file_management.</span></span><span class="sig-name descname"><span class="pre">find_angle_iter_from_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extention</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.dat'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/file_management.html#find_angle_iter_from_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Return the prefix (<em>prefix_file</em>), the list of the angle (<em>L_files_angles</em>) the number of iter (<em>N_iter</em>) and the extention (<em>extention</em>) of an acquisition located in the repertory <em>directory</em>.</p>
+<span class="sig-prename descclassname"><span class="pre">file_management.</span></span><span class="sig-name descname"><span class="pre">find_angle_iter_from_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.dat'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/file_management.html#find_angle_iter_from_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Return the prefix (<em>prefix_file</em>), the list of the angle (<em>L_files_angles</em>) the number of iter (<em>N_iter</em>) and the extension (<em>extension</em>) of an acquisition located in the repertory <em>directory</em>.</p>
 <p>The expected name of the file is:</p>
-<p>directory + prefix + _ + k + _ + i + extention</p>
+<p>directory + prefix + _ + k + _ + i + extension</p>
 <p>Where k goes within all the value of <em>L_files_angles</em>. k can be a float (please try to avoid very long decimal angle value) and where i goes from 1 to <em>N_iter</em>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>directory</strong> (<em>str</em>) – The directory where is stored the datas</p></li>
-<li><p><strong>extention</strong> (<em>str</em>) – [Optional] The extention of the spectra file. Default value: ‘.dat’</p></li>
+<li><p><strong>extension</strong> (<em>str</em>) – [Optional] The extension of the spectra file. Default value: ‘.dat’</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -160,16 +164,16 @@ output is: ‘polarV_42.0_4.dat’</p>
 <li><p><strong>prefix_file</strong> (<em>str</em>) – The prefixe shared by all the spectra iteration.</p></li>
 <li><p><strong>L_files_angles</strong> (<em>list of str</em>) – The list of the angle found. <em>L_files_angles</em> is a list of string – to avoid bad behavior if your angles has a name like 4.10.</p></li>
 <li><p><strong>N_iter</strong> (<em>int</em>) – The number of iter found for this prefixe. Alpaga has check that all the iter are present for all the angle to avoid ‘File not found’ error later on.</p></li>
-<li><p><strong>extention</strong> (<em>str</em>) – The extention of the detected spectra file. Same value as in the input</p></li>
+<li><p><strong>extension</strong> (<em>str</em>) – The extension of the detected spectra file. Same value as in the input</p></li>
 </ul>
 </p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p>Let’s assume that in the directory /home/lama/Datas/Water_acquisition/Test_120sec TOCHANGE, is located the spectra: water_4.0_1.dat, water_4.0_2.dat, water_15.0_2.dat, water_15.0_2.dat. The prefix of these file is ‘water’, the total number of iter is <em>N_iter</em> = 2, the list of angle is <em>L_files_angles</em> = [4.0, 15.0] and the extention is .dat . In order to get automatically theses information, use:</p>
+<p>Let’s assume that in the directory /home/lama/Datas/Water_acquisition/Test_120sec TOCHANGE, is located the spectra: water_4.0_1.dat, water_4.0_2.dat, water_15.0_2.dat, water_15.0_2.dat. The prefix of these file is ‘water’, the total number of iter is <em>N_iter</em> = 2, the list of angle is <em>L_files_angles</em> = [4.0, 15.0] and the extension is .dat . In order to get automatically theses information, use:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">directory</span> <span class="o">=</span> <span class="s1">&#39;/home/lama/Datas/Water_acquisition/Test_120sec&#39;</span>
-<span class="n">prefix</span><span class="p">,</span> <span class="n">L_files_angles</span><span class="p">,</span> <span class="n">N_iter</span><span class="p">,</span> <span class="n">extention</span> <span class="o">=</span> <span class="n">alpaga</span><span class="o">.</span><span class="n">find_angle_iter_from_dir</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The prefix for all the file is: &quot;&#39;</span> <span class="o">+</span> <span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;&quot; with &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">N_iter</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; iter. The angle found are &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">L_files_angles</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;. The extention is: &#39;</span> <span class="o">+</span> <span class="n">extention</span><span class="p">)</span>
+<span class="n">prefix</span><span class="p">,</span> <span class="n">L_files_angles</span><span class="p">,</span> <span class="n">N_iter</span><span class="p">,</span> <span class="n">extension</span> <span class="o">=</span> <span class="n">alpaga</span><span class="o">.</span><span class="n">find_angle_iter_from_dir</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The prefix for all the file is: &quot;&#39;</span> <span class="o">+</span> <span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;&quot; with &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">N_iter</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; iter. The angle found are &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">L_files_angles</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;. The extension is: &#39;</span> <span class="o">+</span> <span class="n">extension</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -203,7 +207,7 @@ output is: ‘polarV_42.0_4.dat’</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If you provide your data in this way, be careful when following the <span class="incremental">tutorial_spectra_analysis</span> tutorial, especially during the <a class="reference internal" href="cleaning_averaging_spectra.html#cleaning-averaging-spectra-page"><span class="std std-ref">denoising step</span></a> (part I.C) and when using the the core function <span class="incremental">Alpaga.analyze_run.polarisation_intensity</span> (Part III.C).</p>
+<p>If you provide your data in this way, be careful when following the <span class="incremental">tutorial_spectra_analysis</span> tutorial, especially during the <a class="reference internal" href="cleaning_averaging_spectra.html#cleaning-averaging-spectra-page"><span class="std std-ref">denoising step</span></a> (Part I.B) and when using the the core function <span class="incremental">Alpaga.analyze_run.polarisation_intensity</span> (Parts III.B and III.C).</p>
 </div>
 <div class="line-block">
 <div class="line"><br /></div>

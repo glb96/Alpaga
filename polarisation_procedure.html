@@ -55,13 +55,13 @@
 </section>
 <section id="which-file-to-analyse">
 <h2><span class="section-number">5.2. </span>Which file to analyse?<a class="headerlink" href="#which-file-to-analyse" title="Link to this heading">¶</a></h2>
-<p>This method expects to analyse data with several ‘polarisation angle’. The expected data architecture and the function that will be used to open them are presented in the <a class="reference internal" href="file_management.html#file-management-page"><span class="std std-ref">File Management</span></a> page. If you want to use all the data available in a given directory, you just have to set the <em>directory</em> argument – and maybe the <em>extention</em> if your data files are not in the .dat format. The others are there for more specific usage.</p>
+<p>This method expects to analyse data with several ‘polarisation angle’. The expected data architecture and the function that will be used to open them are presented in the <a class="reference internal" href="file_management.html#file-management-page"><span class="std std-ref">File Management</span></a> page. If you want to use all the data available in a given directory, you just have to set the <em>directory</em> argument – and maybe the <em>extension</em> if your data files are not in the .dat format. The others are there for more specific usage.</p>
 <blockquote>
 <div><ul>
 <li><p><strong>directory</strong>: str or bool</p>
 <blockquote>
 <div><p>If string: The directory where is located the data you want to analyse. Please note that only one ‘experiment’ should be stored in this directory. See <a class="reference internal" href="file_management.html#file-management-page"><span class="std std-ref">File Management</span></a> page.</p>
-<p>If set to False: The procedure to find the files, the number of iterations and the list of angles is bypass. Therefore, you should provide these values using all the following argument: <em>prefix_file</em>, <em>L_files_angles</em>, <em>N_iter</em> and <em>extention</em>.</p>
+<p>If set to False: The procedure to find the files, the number of iterations and the list of angles is bypass. Therefore, you should provide these values using all the following argument: <em>prefix_file</em>, <em>L_files_angles</em>, <em>N_iter</em> and <em>extension</em>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If any of these arguments (<em>prefix_file</em>, <em>L_files_angles</em>, <em>N_iter</em>) is set to a value while a <em>directory</em> argument is given, the function will first define these value using the <a class="reference internal" href="file_management.html#open-angle-acquisition-section"><span class="std std-ref">alpaga.find_angle_iter_from_dir function</span></a>. Then, it will replace the found value by the one given by these arguments.</p>
@@ -86,7 +86,7 @@
 <p>If set to an integer, this <em>N_iter</em> will be used instead of the one found automatically. This can be handy if you want to check if the total acquisition time is good enough – for instance by comparing with a smaller one, <em>i.e.</em> smaller <em>N_iter</em> value.</p>
 </div></blockquote>
 </li>
-<li><p><strong>extention</strong>: str</p>
+<li><p><strong>extension</strong>: str</p>
 <blockquote>
 <div><p>The extension of your data files. By default ‘.dat’ .</p>
 </div></blockquote>

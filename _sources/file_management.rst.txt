@@ -53,6 +53,9 @@ For each acquisition with the same experimental parameters (for example, angle=2
 
 .. note::  
    For all angles, the exact same number of iterations should be available. If you want to average over fewer iterations than available, you can redefine it using `iter_number`. See :ref:`the cleaning procedure<cleaning_averaging_spectra_page>`.
+   
+.. note:: 
+   In the tutorials and in the code, the number of iteration is often stored in `N_iter`.
 
 Now that we have described the data structure, let's be more explicit. First, we show how to open a "single acquisition" (i.e., for a given angle) with file names like `prefix_iter-number.extension`. Then, we show how to handle acquisitions for multiple angles, with file names like `prefix_angle-value_iter-number.extension`. The output from these functions is used later in the procedure.
 
@@ -118,7 +121,7 @@ With the correct number of iterations (`N_iter`) and any list of angles:
     N_iter = 3
 
 .. note::
-  If you provide your data in this way, be careful when following the `tutorial_spectra_analysis` tutorial, especially during the :ref:`denoising step<cleaning_averaging_spectra_page>` (part I.C) and when using the the core function `Alpaga.analyze_run.polarisation_intensity` (Part III.C). 
+  If you provide your data in this way, be careful when following the `tutorial_spectra_analysis` tutorial, especially during the :ref:`denoising step<cleaning_averaging_spectra_page>` (Part I.B) and when using the the core function `Alpaga.analyze_run.polarisation_intensity` (Parts III.B and III.C). 
 
 |
 
