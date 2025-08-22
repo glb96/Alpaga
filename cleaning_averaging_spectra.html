@@ -12,7 +12,6 @@
     <script src="_static/documentation_options.js?v=61243dd2"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="4. Fitting the Gaussian" href="fitting_procedure.html" />
@@ -38,36 +37,31 @@
 <div></div></blockquote>
 <section id="cleaning-and-averaging-spectra">
 <span id="cleaning-averaging-spectra-page"></span><h1><span class="section-number">3. </span>Cleaning and Averaging Spectra<a class="headerlink" href="#cleaning-and-averaging-spectra" title="Link to this heading">¶</a></h1>
-<p>In this page, we will see how the cleaning and averaging procedure is performed. For the same experimental parameters (for instance the same fundamental polarisation angle), several acquisitions, <em>N_iter</em>, is made for a total acquisition time of <span class="math notranslate nohighlight">\(T = \Delta t \times N\_iter\)</span>, where <span class="math notranslate nohighlight">\(\Delta t\)</span> is the acquisition time for a single spectrum.</p>
-<p>But why not make only one spectrum with <span class="math notranslate nohighlight">\(T = \Delta t\)</span>, instead of many with smaller acquisition time?</p>
-<section id="how-to-get-ride-of-the-spikes">
-<h2><span class="section-number">3.1. </span>How to get ride of the spikes?<a class="headerlink" href="#how-to-get-ride-of-the-spikes" title="Link to this heading">¶</a></h2>
+<p>When repeating the same measurement, several spectra (<em>N_iter</em>) are acquired.
+This improves statistics and helps remove unwanted artifacts such as spikes.</p>
+<section id="why-multiple-short-acquisitions">
+<h2><span class="section-number">3.1. </span>Why multiple short acquisitions?<a class="headerlink" href="#why-multiple-short-acquisitions" title="Link to this heading">¶</a></h2>
 <a class="reference internal image-reference" href="_images/alpaga_5.jpg" id="cleaning-spectra-section"><img alt="_images/alpaga_5.jpg" class="align-right" id="cleaning-spectra-section" src="_images/alpaga_5.jpg" style="width: 250px;" />
 </a>
-<p>The reason is that there are some ‘spikes’ in a spectrum, due to detection troubles, see Figure TOADD. Add: origine de ces spickes?
-These spikes are completely unwanted and can make the detection of the gaussian difficult. In the worst-case scenario, a pick right at the gaussian maximum can make the acquisition not exploitable. Since it is very hard to avoid them during the experiment, we have better to remove them during the treatment of the data.</p>
-<p>Therefore, Alpaga propose to detect the spike using the function:</p>
-<p>In order to help the detection of spike, it is better to have many acquisitions for small acquisition time, than few acquisition with large acquisition time. In the Figure TOADD is plotted the number of spikes found by the alpaga.clean_spectra_mean_n function for the same set of data, but with different acquisition time. &#64;Antonin: je te laisse terminer ici.</p>
-<p>Once the spikes have been detected, we have to choose how to deal with them.</p>
+<p>Individual spectra often contain sudden spikes caused by detector instabilities or electronic noise.
+These spikes are random, unwanted, and may distort the Gaussian signal.</p>
+<p>To deal with them, Alpaga provides:</p>
+<p>The method detects points that strongly deviate from the average across iterations, and replaces them with more reliable values.
+Shorter acquisitions with more repetitions make spike detection easier.</p>
 </section>
 <section id="averaging-procedure">
 <h2><span class="section-number">3.2. </span>Averaging procedure<a class="headerlink" href="#averaging-procedure" title="Link to this heading">¶</a></h2>
-<p id="averaging-spectra-section">To average the <em>N_iter</em> spectra and remove the spikes, use the function:</p>
+<p id="averaging-spectra-section">Once cleaned, the spectra are averaged to obtain a stable signal:</p>
+<p>This function applies the cleaning step to all spectra, then returns the averaged result for each angle.</p>
 <a class="reference internal image-reference" href="_images/alpaga_16.jpg"><img alt="_images/alpaga_16.jpg" class="align-center" src="_images/alpaga_16.jpg" style="width: 400px;" />
 </a>
 </section>
 <section id="towards-the-gaussian-intensity">
-<h2><span class="section-number">3.3. </span>Towards the gaussian intensity<a class="headerlink" href="#towards-the-gaussian-intensity" title="Link to this heading">¶</a></h2>
-<p>The cleaning and averaging procedure are not very sensitive to the numerical parameters you can set to Alpaga. However, it is important to have spectra with small enough acquisition time to make the spike detection easy. Moreover, it is important to have an important number of spectra to have well converged averaged spectra. To check the (total) time needed to have converged data, we recommend to check your final observable rather than the spectra.</p>
-<p>The <a class="reference internal" href="fitting_procedure.html#fitting-procedure-page"><span class="std std-ref">next section</span></a> is the fit of this average spectrum to find the intensity of the gaussian. Therefore, the input will be the x value (the wave number) and the y averaged one (the spectra value).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Release<span class="colon">:</span></dt>
-<dd class="field-odd"><p>1.2</p>
-</dd>
-<dt class="field-even">Date<span class="colon">:</span></dt>
-<dd class="field-even"><p>Aug 22, 2025</p>
-</dd>
-</dl>
+<h2><span class="section-number">3.3. </span>Towards the Gaussian intensity<a class="headerlink" href="#towards-the-gaussian-intensity" title="Link to this heading">¶</a></h2>
+<p>The procedure is not very sensitive to parameter tuning.
+The key is to record many short spectra so that spikes can be removed and the average converges.</p>
+<p>The next step is to fit this averaged spectrum to extract the Gaussian intensity
+(<a class="reference internal" href="fitting_procedure.html#fitting-procedure-page"><span class="std std-ref">see fitting procedure</span></a>).</p>
 </section>
 </section>
 
@@ -95,9 +89,9 @@ These spikes are completely unwanted and can make the detection of the gaussian 
 <li class="toctree-l1"><a class="reference internal" href="installation.html">1. Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="file_management.html">2. File Management</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">3. Cleaning and Averaging Spectra</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#how-to-get-ride-of-the-spikes">3.1. How to get ride of the spikes?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#why-multiple-short-acquisitions">3.1. Why multiple short acquisitions?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#averaging-procedure">3.2. Averaging procedure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#towards-the-gaussian-intensity">3.3. Towards the gaussian intensity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#towards-the-gaussian-intensity">3.3. Towards the Gaussian intensity</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="fitting_procedure.html">4. Fitting the Gaussian</a></li>
