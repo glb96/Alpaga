@@ -34,13 +34,13 @@ Below is presented the argument that you can pass to the function depending on w
 Which file to analyse?
 -----------------------
 
-This method expects to analyse data with several 'polarisation angle'. The expected data architecture and the function that will be used to open them are presented in the :ref:`file_management_page` page. If you want to use all the data available in a given directory, you just have to set the *directory* argument -- and maybe the *extention* if your data files are not in the .dat format. The others are there for more specific usage. 
+This method expects to analyse data with several 'polarisation angle'. The expected data architecture and the function that will be used to open them are presented in the :ref:`file_management_page` page. If you want to use all the data available in a given directory, you just have to set the *directory* argument -- and maybe the *extension* if your data files are not in the .dat format. The others are there for more specific usage. 
 
     + **directory**: str or bool
         
         If string: The directory where is located the data you want to analyse. Please note that only one 'experiment' should be stored in this directory. See :ref:`file_management_page` page.
         
-        If set to False: The procedure to find the files, the number of iterations and the list of angles is bypass. Therefore, you should provide these values using all the following argument: *prefix_file*, *L_files_angles*, *N_iter* and *extention*. 
+        If set to False: The procedure to find the files, the number of iterations and the list of angles is bypass. Therefore, you should provide these values using all the following argument: *prefix_file*, *L_files_angles*, *N_iter* and *extension*. 
         
         .. note:: If any of these arguments (*prefix_file*, *L_files_angles*, *N_iter*) is set to a value while a *directory* argument is given, the function will first define these value using the :ref:`alpaga.find_angle_iter_from_dir function<open_angle_acquisition_section>`. Then, it will replace the found value by the one given by these arguments.  
         
@@ -62,7 +62,7 @@ This method expects to analyse data with several 'polarisation angle'. The expec
         
         If set to an integer, this *N_iter* will be used instead of the one found automatically. This can be handy if you want to check if the total acquisition time is good enough -- for instance by comparing with a smaller one, *i.e.* smaller *N_iter* value. 
     
-    + **extention**: str
+    + **extension**: str
         
         The extension of your data files. By default '.dat' . 
     

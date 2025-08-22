@@ -1,17 +1,19 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="./">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>3. Cleaning and Averaging Spectra &#8212; Alpaga 1.2 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
-    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <script src="_static/documentation_options.js?v=61243dd2"></script>
-    <script src="_static/doctools.js?v=9bcbadda"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -20,9 +22,8 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
-
   
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
   
@@ -36,50 +37,137 @@
             
   <blockquote>
 <div></div></blockquote>
-<section id="cleaning-and-averaging-spectra">
-<span id="cleaning-averaging-spectra-page"></span><h1><span class="section-number">3. </span>Cleaning and Averaging Spectra<a class="headerlink" href="#cleaning-and-averaging-spectra" title="Link to this heading">¶</a></h1>
+<div class="section" id="cleaning-and-averaging-spectra">
+<span id="cleaning-averaging-spectra-page"></span><h1><span class="section-number">3. </span>Cleaning and Averaging Spectra<a class="headerlink" href="#cleaning-and-averaging-spectra" title="Permalink to this heading">¶</a></h1>
 <p>In this page, we will see how the cleaning and averaging procedure is performed. For the same experimental parameters (for instance the same fundamental polarisation angle), several acquisitions, <em>N_iter</em>, is made for a total acquisition time of <span class="math notranslate nohighlight">\(T = \Delta t \times N\_iter\)</span>, where <span class="math notranslate nohighlight">\(\Delta t\)</span> is the acquisition time for a single spectrum.</p>
 <p>But why not make only one spectrum with <span class="math notranslate nohighlight">\(T = \Delta t\)</span>, instead of many with smaller acquisition time?</p>
-<section id="how-to-get-ride-of-the-spikes">
-<h2><span class="section-number">3.1. </span>How to get ride of the spikes?<a class="headerlink" href="#how-to-get-ride-of-the-spikes" title="Link to this heading">¶</a></h2>
-<a class="reference internal image-reference" href="_images/alpaga_5.jpg" id="cleaning-spectra-section"><img alt="_images/alpaga_5.jpg" class="align-right" id="cleaning-spectra-section" src="_images/alpaga_5.jpg" style="width: 250px;" />
-</a>
+<div class="section" id="how-to-get-ride-of-the-spikes">
+<h2><span class="section-number">3.1. </span>How to get ride of the spikes?<a class="headerlink" href="#how-to-get-ride-of-the-spikes" title="Permalink to this heading">¶</a></h2>
+<a class="reference internal image-reference" href="_images/alpaga_5.jpg" id="cleaning-spectra-section"><img alt="_images/alpaga_5.jpg" class="align-right" id="cleaning-spectra-section" src="_images/alpaga_5.jpg" style="width: 250px;" /></a>
 <p>The reason is that there are some ‘spikes’ in a spectrum, due to detection troubles, see Figure TOADD. Add: origine de ces spickes?
 These spikes are completely unwanted and can make the detection of the gaussian difficult. In the worst-case scenario, a pick right at the gaussian maximum can make the acquisition not exploitable. Since it is very hard to avoid them during the experiment, we have better to remove them during the treatment of the data.</p>
 <p>Therefore, Alpaga propose to detect the spike using the function:</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">analyze_run.</span></span><span class="sig-name descname"><span class="pre">clean_spectra_mean_n</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_mean_cleaning_n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">3]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_mean_cleaning_evo_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">1.5,</span> <span class="pre">1.4,</span> <span class="pre">1.3]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analyze_run.html#clean_spectra_mean_n"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Detect the spickes in the list of data <em>L_y</em> using local averaged method. This method aim to NOT remove something which is not a spick. Therefore, instead of a single rough treatment, it has be chosen to perform several ‘small’ treatment in order to affect as less as possible the spectra.</p>
+<ol class="arabic simple">
+<li><p>For a given <em>mean_cleaning_n</em> value (integer) and <em>mean_cleaning_evo_max</em> (float), this function will read the whole list <em>L_y</em> to clean. For a given L_y[k] value, it will compute the local average:</p></li>
+</ol>
+<p>ave_k = (L_y[k-mean_cleaning_n] + L_y[k-mean_cleaning_n+1] + …. L_y[k-1] + L_y[k+1] + L_y[k+2] … + L_y[k+mean_cleaning_n])/(2*mean_cleaning_n)</p>
+<p>In other words, the local average of size 2*mean_cleaning_n <strong>without</strong> the point k.</p>
+<ol class="arabic simple" start="2">
+<li><p>It compares if the  L_y[k] value is larger than mean_cleaning_evo_max x ave_k. If it is so, the k value is considerated as a spike. In this case, the L_y[k] value is set to ave_k <strong>for the rest of the spick detection but not for the reste of the analysis</strong>. The found spikes are stored using the list <em>L_population</em>. If L_population[k] = 0, it means that the k value has been detected to be a spike, otherwise it is set to 1. The averaging procedure will use this list to get ride of the spickes.</p></li>
+<li><p>For every <em>mean_cleaning_n</em> and <em>mean_cleaning_evo_max</em> declred in the input argument <em>L_mean_cleaning_n</em> and <em>L_mean_cleaning_evo_max</em>, the point 1) and 2) are repeted – with and update of the <em>L_y</em> value if spikes are detected.</p></li>
+</ol>
+<p>Therefore, to found as many spike as possible, while avoiding the detection of ‘’false spickes’’, it is recommanded to start with very tight parameters, and to deacrease the maximal deviation. For instance <em>L_mean_cleaning_n</em> = [1, 1, 1, 3], <em>L_mean_cleaning_evo_max</em> = [2, 1.5, 1.2, 1.1] performed 4 treatments. The first 3 treatment compute very local averaged: only the first closest neighbourgs are used to compute the average (thus 2 point: L_[k-1] and L_[k+1]). In the first treatment, if the L_y[k] value is larger then twice this local average, it is considerated as a spicked, and set to the averaged value. In the second, the L_y[k] value must be 1.5 larger and in the third treatment only 1.2 larger to be considerated as spicke. Finally, the last treatment use an average computed using 6 neigbors and a 1.1 maximal coefficiant.</p>
+<p>This procedure has been built especially to get ride of spicke that spread over 2 or 3 points in a row – even if it is very rare. We recommand to play a bit with these <em>L_mean_cleaning_n</em> and <em>L_mean_cleaning_evo_max</em> parameters to make sure the spickes are detected while the reste of the spectra remains untouched – try something like L_mean_cleaning_n=[1, 1, 1, 3], L_mean_cleaning_evo_max=[2, 1.5, 1.1, 1.05] to see the effect of too strick parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>L_y</strong> (<em>list</em>) – The data to clean</p></li>
+<li><p><strong>L_mean_cleaning_n</strong> (<em>list</em><em> of </em><em>int</em>) – [Optional] The list of the size to built the local average. The <em>L_mean_cleaning_n</em> and <em>L_mean_cleaning_evo_max</em> shall have the same length.</p></li>
+<li><p><strong>L_mean_cleaning_evo_max</strong> (<em>list</em><em> of </em><em>float</em>) – [Optional] The list of the maximal coefficiant used to found spike. These value should be larger then 1 or even 1.1, and less then 2 or 3. A L_y[k] value is detected as a spicke if L_y[k] &gt; maximal coefficiant x local average.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>L_population</strong> – The list where is stored the found spicke. <em>L_population</em> have the same size of <em>L_y</em> and is initialize at 1. If a spicke is found at the position k, <em>L_population[k]</em> = 0.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>For pratical example, see the <a class="reference internal" href="#averaging-spectra-section"><span class="std std-ref">alpaga.averaging_and_cleaning function</span></a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A fourier method to clean the spectra may be added if enough asked. However, for small acquisition time it may impact more the spectra.</p>
+</div>
+</dd></dl>
+
 <p>In order to help the detection of spike, it is better to have many acquisitions for small acquisition time, than few acquisition with large acquisition time. In the Figure TOADD is plotted the number of spikes found by the alpaga.clean_spectra_mean_n function for the same set of data, but with different acquisition time. &#64;Antonin: je te laisse terminer ici.</p>
 <p>Once the spikes have been detected, we have to choose how to deal with them.</p>
-</section>
-<section id="averaging-procedure">
-<h2><span class="section-number">3.2. </span>Averaging procedure<a class="headerlink" href="#averaging-procedure" title="Link to this heading">¶</a></h2>
+</div>
+<div class="section" id="averaging-procedure">
+<h2><span class="section-number">3.2. </span>Averaging procedure<a class="headerlink" href="#averaging-procedure" title="Permalink to this heading">¶</a></h2>
 <p id="averaging-spectra-section">To average the <em>N_iter</em> spectra and remove the spikes, use the function:</p>
-<a class="reference internal image-reference" href="_images/alpaga_16.jpg"><img alt="_images/alpaga_16.jpg" class="align-center" src="_images/alpaga_16.jpg" style="width: 400px;" />
-</a>
-</section>
-<section id="towards-the-gaussian-intensity">
-<h2><span class="section-number">3.3. </span>Towards the gaussian intensity<a class="headerlink" href="#towards-the-gaussian-intensity" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">analyze_run.</span></span><span class="sig-name descname"><span class="pre">averaging_and_cleaning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">name_file,</span> <span class="pre">N_iter,</span> <span class="pre">L_filename=False,</span> <span class="pre">extension='.dat',</span> <span class="pre">fct_name=&lt;function</span> <span class="pre">standard_file_name&gt;,</span> <span class="pre">type_cleaning='mean',</span> <span class="pre">L_mean_cleaning_n=[1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">3],</span> <span class="pre">L_mean_cleaning_evo_max=[2,</span> <span class="pre">1.5,</span> <span class="pre">1.4,</span> <span class="pre">1.3],</span> <span class="pre">show_spectra='average',</span> <span class="pre">figure_counter=1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analyze_run.html#averaging_and_cleaning"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>For the set of acquisition with the names:</p>
+<p><em>name_file</em> + ‘_’ + i + <em>extension</em>,</p>
+<p>return the mean spectra cleaned of the spickes. Today, only one type of averaging and cleaning is available through <em>type_cleaning</em>, it is ‘mean’.</p>
+<p>For every acquisition i, the spectrum is treated using the function alpaga.clean_spectra_mean_n with the optional argument <em>L_mean_cleaning_n</em> and <em>L_mean_cleaning_evo_max</em>, see <a class="reference internal" href="#cleaning-spectra-section"><span class="std std-ref">here</span></a> for more detail: the spickes are detected. Then, the average over all the acquisition is performed element per element without the spickes.</p>
+<p>For instance, let’s assume that there are 4 acquisitions. For the k element (let s say it correspond to the wave-length 404 nm), if there is no spicke detected for all the 4 acquisitions, the averaging is the mean of every 4 acquisition k value. If the second acquisition has a spick at this particular k element, the averaging will not considere the second acquisition <strong>only for the k element</strong>. If all the 4 acquisitions have a spick at the k element, it means either:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The detection of the spick is too strict and you should decrease the values used in <em>L_mean_cleaning_evo_max</em>.</p></li>
+<li><p>The acquisition time for every spectra is too long. Therefore, during one spectra acquisition you have a large number of spick, and thus a higher probability that every acquisition has a spick at a given location k. For instance, if you have only one acquisition, if there is a spick at element k, you cannot use it. With 2 acquisitions (with half the acquisition time for a single one, thus concerving the total acquisition time), the spick would impact only one spectra, and you can use the other one to have a meaningfull value for the element k. Repeating this proocedure up to 40-50 spectra, you have no chance to have a spick for every acquisition at the same element.</p></li>
+<li><p>If for the whole 50-100 acquisitions you have spickes, it can means that the detector have a serious problem that you should fix. Or that you acquire datas from ISS – in this case the Alpaga developpers wish you a good and safe trip.</p></li>
+</ul>
+</div></blockquote>
+<p>If for an element k, every acquisition has a spick, a message is print to warn you. For this k element, the mean value of the averaged spectra is used. However, you should reconsider your acquisition parameter to avoid this situation.</p>
+<p>The function return the x axis, <em>L_x_axis</em> , found in the spectra file (the first colum) and the averaged spectra, <em>L_spectra_t</em> .</p>
+<p><em>N_iter</em> set how many acquisitions has to be averaged. If <em>N_iter</em> is an int, the i goes from 1 to N_iter. If it is a list, the averaging is made over the iteration present in the list. Example: N_iter = [1, 3, 5] would average the acquisition 1, 3 and 5.</p>
+<p>The function can also print some figure to help you check its procedure. Set <em>show_spectra</em> to ‘average’ to have only final average spectra ploted, to ‘all’ to have also the spick detection for every iter. Set it to anything else if you do not want any plot. The initial number of the figure (plt.figure(K)) is given by the argument <em>figure_counter</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name_file</strong> (<em>str</em>) – The prefix to all the acquisition. Note that the path should be global and not relatif, see <a class="reference internal" href="file_management.html#file-management-page"><span class="std std-ref">File Management</span></a> for more information.</p></li>
+<li><p><strong>N_iter</strong> (<em>int</em><em> or </em><em>list</em><em> of </em><em>int</em>) – x The size depend</p></li>
+<li><p><strong>L_filename</strong> (<em>bool</em><em> or </em><em>list</em>) – If defined to a list, should contain the list of the filename (absolute path) to treat. Works similarly with N_iter as if the filename are generated with fct_name.</p></li>
+<li><p><strong>extension</strong> (<em>str</em>) – [Optional] The extension of your data file, see <a class="reference internal" href="file_management.html#file-management-page"><span class="std std-ref">File Management</span></a> for more information.</p></li>
+<li><p><strong>fct_name</strong> (<em>function</em>) – [Optional] The function used to built the name of a file given the prefixe, angle, iteration and extension. By default, the alpaga.standard_file_name function is used.</p></li>
+<li><p><strong>type_cleaning</strong> (<em>str</em>) – [Optional] The only possible value actually is ‘mean’.</p></li>
+<li><p><strong>L_mean_cleaning_n</strong> (<em>list</em>) – [Optional] see the <a class="reference internal" href="#cleaning-spectra-section"><span class="std std-ref">alpaga.clean_spectra_mean_n function</span></a></p></li>
+<li><p><strong>L_mean_cleaning_evo_max</strong> (<em>list</em>) – [Optional] see the <a class="reference internal" href="#cleaning-spectra-section"><span class="std std-ref">alpaga.clean_spectra_mean_n function</span></a></p></li>
+<li><p><strong>show_spectra</strong> (<em>str</em>) – [Optional] ‘average’ to have only final average spectra ploted, ‘all’ to have also the spick detection for every iter. Set it to anything else if you do not want any plot.</p></li>
+<li><p><strong>figure_counter</strong> (<em>int</em>) – [Optional] The number of the first figure plot.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>L_x_axis</strong> (<em>list</em>) – The x axis.</p></li>
+<li><p><strong>L_spectra_t</strong> (<em>list</em>) – The averaged and cleaned datas.</p></li>
+<li><p><strong>figure_counter</strong> (<em>int</em>) – The new value for your next figure number.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">names</span> <span class="o">=</span> <span class="n">TOCHANGE</span>
+<span class="n">N_iter</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">L_lambda</span><span class="p">,</span> <span class="n">L_spectra</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">alpaga</span><span class="o">.</span><span class="n">averaging_and_cleaning</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">N_iter</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;.dat&#39;</span><span class="p">,</span> <span class="n">type_cleaning</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">L_mean_cleaning_n</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">L_mean_cleaning_evo_max</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">],</span> <span class="n">show_spectra</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">figure_counter</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<a class="reference internal image-reference" href="_images/alpaga_16.jpg"><img alt="_images/alpaga_16.jpg" class="align-center" src="_images/alpaga_16.jpg" style="width: 400px;" /></a>
+</div>
+<div class="section" id="towards-the-gaussian-intensity">
+<h2><span class="section-number">3.3. </span>Towards the gaussian intensity<a class="headerlink" href="#towards-the-gaussian-intensity" title="Permalink to this heading">¶</a></h2>
 <p>The cleaning and averaging procedure are not very sensitive to the numerical parameters you can set to Alpaga. However, it is important to have spectra with small enough acquisition time to make the spike detection easy. Moreover, it is important to have an important number of spectra to have well converged averaged spectra. To check the (total) time needed to have converged data, we recommend to check your final observable rather than the spectra.</p>
 <p>The <a class="reference internal" href="fitting_procedure.html#fitting-procedure-page"><span class="std std-ref">next section</span></a> is the fit of this average spectrum to find the intensity of the gaussian. Therefore, the input will be the x value (the wave number) and the y averaged one (the spectra value).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Release<span class="colon">:</span></dt>
+<dt class="field-odd">Release</dt>
 <dd class="field-odd"><p>1.2</p>
 </dd>
-<dt class="field-even">Date<span class="colon">:</span></dt>
+<dt class="field-even">Date</dt>
 <dd class="field-even"><p>Aug 22, 2025</p>
 </dd>
 </dl>
-</section>
-</section>
+</div>
+</div>
 
 
           </div>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
-              <img class="logo" src="_static/alpaga_logo.svg" alt="Logo of Alpaga"/>
+              <img class="logo" src="_static/alpaga_logo.svg" alt="Logo"/>
             </a></p>
 <h1 class="logo"><a href="index.html">Alpaga</a></h1>
 
@@ -113,7 +201,7 @@ These spikes are completely unwanted and can make the detection of the gaussian 
 </ul>
 
 
-<search id="searchbox" style="display: none" role="search">
+<div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -121,18 +209,18 @@ These spikes are completely unwanted and can make the detection of the gaussian 
       <input type="submit" value="Go" />
     </form>
     </div>
-</search>
+</div>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;L-GPL.
+      &copy;L-GPL.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="_sources/cleaning_averaging_spectra.rst.txt"

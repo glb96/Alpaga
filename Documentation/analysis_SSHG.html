@@ -1,17 +1,19 @@
+
 <!DOCTYPE html>
 
-<html lang="en" data-content_root="./">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>7. SSHG analysis &#8212; Alpaga 1.2 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
-    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <script src="_static/documentation_options.js?v=61243dd2"></script>
-    <script src="_static/doctools.js?v=9bcbadda"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -20,9 +22,8 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
-
   
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
   
@@ -36,21 +37,19 @@
             
   <blockquote>
 <div></div></blockquote>
-<section id="sshg-analysis">
-<span id="analysis-sshg-page"></span><h1><span class="section-number">7. </span>SSHG analysis<a class="headerlink" href="#sshg-analysis" title="Link to this heading">¶</a></h1>
+<div class="section" id="sshg-analysis">
+<span id="analysis-sshg-page"></span><h1><span class="section-number">7. </span>SSHG analysis<a class="headerlink" href="#sshg-analysis" title="Permalink to this heading">¶</a></h1>
 <p>Once the spectrum analysis for all the angles has been performed, see ref:<span class="incremental">polarisation_procedure_page</span>, several observables can be extracted from the angle-dependent intensity data. Many possible analyses can be made depending on what you are looking for. We are detailing here the analysis commonly used in the ONLI team of ILM.</p>
-<a class="reference internal image-reference" href="_images/alpaga_23.jpg"><img alt="_images/alpaga_23.jpg" class="align-right" src="_images/alpaga_23.jpg" style="width: 200px;" />
-</a>
+<a class="reference internal image-reference" href="_images/alpaga_23.jpg"><img alt="_images/alpaga_23.jpg" class="align-right" src="_images/alpaga_23.jpg" style="width: 200px;" /></a>
 <p>But, if you have developed your own code that extracts some observable from the intensity in function of the polarisation angle, please do not hesitate to contact us so that this code can be added in Alpaga!</p>
 <p>The <em>sshg_module</em> of Alpaga is designed to extract susceptibility tensor coefficient <span class="math notranslate nohighlight">\(\chi\)</span> from polarisation resolved SSHG experiments on a isotropic and achirale interface. For that, we extract these coefficients by fitting our experimental data with the theoretical equations ( !!!REF!!!) :</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}I_{P}(\gamma) &amp;\propto \lvert (a_2 \chi_{xxz} + a_3 \chi_{zxx} +a_4 \chi_{zzz}) cos^2(\gamma)+a_5 \chi_{zxx} sin^2(\gamma)  \rvert ^2 \\
 I_{S}(\gamma) &amp;\propto \lvert a_1 \chi_{xxz} sin(2\gamma)  \rvert ^2\end{split}\]</div>
 <p>Where <span class="math notranslate nohighlight">\(\gamma\)</span> is the incoming polarization angle and {S, P} are the output polarization angles.</p>
-<section id="a-i-coefficients">
-<h2><span class="section-number">7.1. </span><span class="math notranslate nohighlight">\(a_i\)</span> coefficients<a class="headerlink" href="#a-i-coefficients" title="Link to this heading">¶</a></h2>
-<a class="reference internal image-reference" href="_images/three_layer_model.jpg" id="ai-coeff-section"><img alt="_images/three_layer_model.jpg" class="align-right" id="ai-coeff-section" src="_images/three_layer_model.jpg" style="width: 300px;" />
-</a>
+<div class="section" id="a-i-coefficients">
+<h2><span class="section-number">7.1. </span><span class="math notranslate nohighlight">\(a_i\)</span> coefficients<a class="headerlink" href="#a-i-coefficients" title="Permalink to this heading">¶</a></h2>
+<a class="reference internal image-reference" href="_images/three_layer_model.jpg" id="ai-coeff-section"><img alt="_images/three_layer_model.jpg" class="align-right" id="ai-coeff-section" src="_images/three_layer_model.jpg" style="width: 300px;" /></a>
 <p>In order to extract the <span class="math notranslate nohighlight">\(\chi\)</span> coefficients, we first need a value of the ai coefficients. They are calculated from the three layer models <span id="id1">[<a class="reference internal" href="reference.html#id13" title="Pierre-François Brevet. Surface second harmonic generation. PPUR presses polytechniques, 1997.">1</a>]</span>, where an ‘interfacial’ layer produces the S-SHG signal. These ai coefficients contains the Fresnel transmission and reflexion coefficients at the different interfaces. In order to calculate them, we only need refractive indexes of the two bulk media at fundamental and harmonic frequencies, and the angle of incidence between the laser beam and the interface interface.</p>
 <dl class="py function">
 <dt class="sig sig-object py">
@@ -58,7 +57,7 @@ I_{S}(\gamma) &amp;\propto \lvert a_1 \chi_{xxz} sin(2\gamma)  \rvert ^2\end{spl
 <dd><p>From experimental angle of incidence and refractive index values of materials for fundamental and harmonic wavelength,
 this function return ai coefficients and the angle of the harmonic reflected wave. You can see Aurèlie Bruyere Thesis, p70 to 81, for details of the calculation.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>angle1</strong> (<em>float</em>) – experimental angle of incidence</p></li>
 <li><p><strong>n1</strong> (<em>float</em>) – refractive index of medium 1 for fundamental wavelength</p></li>
@@ -67,7 +66,7 @@ this function return ai coefficients and the angle of the harmonic reflected wav
 <li><p><strong>N2</strong> (<em>float</em>) – refractive index of medium 2 for harmonic wavelength</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><p><strong>ai</strong> – It contains value of ai coefficients and the angle of the harmonic reflected wave. Structure of the list : </p>
 <p>[a1,
 a2,
@@ -77,32 +76,32 @@ a5,
 reflected angle of reflected wave]</p>
 </p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list</p>
 </dd>
 </dl>
 </dd></dl>
 
-</section>
-<section id="theoretical-equation-for-sshg-intensities">
-<h2><span class="section-number">7.2. </span>Theoretical equation for SSHG intensities<a class="headerlink" href="#theoretical-equation-for-sshg-intensities" title="Link to this heading">¶</a></h2>
+</div>
+<div class="section" id="theoretical-equation-for-sshg-intensities">
+<h2><span class="section-number">7.2. </span>Theoretical equation for SSHG intensities<a class="headerlink" href="#theoretical-equation-for-sshg-intensities" title="Permalink to this heading">¶</a></h2>
 <p id="chi-coeff-section">Once the ai coefficients are calculated, one can calculate the intensity curves from some chi coefficients..</p>
 <dl class="py function">
 <dt class="sig sig-object py">
 <span class="sig-prename descclassname"><span class="pre">sshg_module.</span></span><span class="sig-name descname"><span class="pre">fit_polaS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chi_XXZ</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ai</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sshg_module.html#fit_polaS"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>It’s the function that defines the theoritical equation for S polarisation.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x</strong> (<em>list</em>) – The polarisation angle of the fundamental in degree. The angle shall be given in degrees!</p></li>
 <li><p><strong>chi_XXZ</strong> (<em>float</em>) – The value of chi_XXZ element</p></li>
 <li><p><strong>ai</strong> (<em>list</em>) – List of the ai elements with the same structure as the return of <em>sshg_module.ai_coeff</em>.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>y</strong> – The S polarised SSHG intensity</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list</p>
 </dd>
 </dl>
@@ -114,7 +113,7 @@ reflected angle of reflected wave]</p>
 <span class="sig-prename descclassname"><span class="pre">sshg_module.</span></span><span class="sig-name descname"><span class="pre">fit_polaP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chi_XXZ</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chi_ZXX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chi_ZZZ</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ai</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sshg_module.html#fit_polaP"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>It’s the function that defines the theoritical equation for P polarisation.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x</strong> (<em>list</em>) – The polarisation angle of the fundamental in degree. The angle shall be given in degrees!</p></li>
 <li><p><strong>chi_XXZ</strong> (<em>float</em>) – The value of chi_XXZ element</p></li>
@@ -123,10 +122,10 @@ reflected angle of reflected wave]</p>
 <li><p><strong>ai</strong> (<em>list</em>) – List of the ai elements with the same structure as the return of <em>sshg_module.ai_coeff</em>.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>y</strong> – The P polarised SSHG intensity</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>list</p>
 </dd>
 </dl>
@@ -134,11 +133,10 @@ reflected angle of reflected wave]</p>
 
 <p>It also exists <em>sshg_module.fit_pola45</em> function if you want to analyse some experiments with the outlet polarization angle fixed at 45°.
 These two functions are not the ones that make the fitting.  They just describe how the theoritical equation evolve with the <span class="math notranslate nohighlight">\(\gamma\)</span> angle.</p>
-<a class="reference internal image-reference" href="_images/alpaga_24.jpg"><img alt="_images/alpaga_24.jpg" class="align-center" src="_images/alpaga_24.jpg" style="width: 400px;" />
-</a>
-</section>
-<section id="fitting-procedure-to-obtain-chi-coefficients">
-<h2><span class="section-number">7.3. </span>Fitting procedure to obtain Chi coefficients<a class="headerlink" href="#fitting-procedure-to-obtain-chi-coefficients" title="Link to this heading">¶</a></h2>
+<a class="reference internal image-reference" href="_images/alpaga_24.jpg"><img alt="_images/alpaga_24.jpg" class="align-center" src="_images/alpaga_24.jpg" style="width: 400px;" /></a>
+</div>
+<div class="section" id="fitting-procedure-to-obtain-chi-coefficients">
+<h2><span class="section-number">7.3. </span>Fitting procedure to obtain Chi coefficients<a class="headerlink" href="#fitting-procedure-to-obtain-chi-coefficients" title="Permalink to this heading">¶</a></h2>
 <p>The previous functions for <span class="math notranslate nohighlight">\(a_i\)</span> and theoretical intensities are combined in a single function which allow to extract <span class="math notranslate nohighlight">\(\chi\)</span> coefficients from experimental data.
 This function uses the datas and experimental parameters (such as medium refractive indexes and incidence angle of the fundamental beam) and, by fitting, returns the chi coefficients and ai.</p>
 <p>It’s also important to note that with these equation there is two possible sets of coefficient that differs only for chi coefficient signs which are equivalent. We can distinguish the physical set by looking at the 45° polarisation.</p>
@@ -148,7 +146,7 @@ This function uses the datas and experimental parameters (such as medium refract
 <dd><p>From experimental angle of incidence, refractive index values of materials for fundamental and harmonic wavelength, polarisation angle and the SSHG gaussian intensity, the function returns ai coefficients and chi coefficients for an isotrope achiral interface.
 ref : Aurèlie Bruyere Thesis, p70 to 81</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>angle1</strong> (<em>float</em>) – experimental angle of incidence</p></li>
 <li><p><strong>n1</strong> (<em>float</em>) – refractive index of medium 1 for fundamntal wavelength</p></li>
@@ -161,7 +159,7 @@ ref : Aurèlie Bruyere Thesis, p70 to 81</p>
 <li><p><strong>XXZ</strong> (<em>float</em>) – This parameter allows you to fix the value of chi_xxz if, for exemple, your S polarisation is flat. It avoid fitting the noise and recover a non physical value for this element. By default, the value is set to ‘False’ : in this case chi_xxz is extracted by the fitting of S polarisation.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul>
 <li><p><strong>ai</strong> (<em>list</em>) – It contains value of ai coefficients and the angle of the harmonic reflected wave. Structure of the list : </p>
 <p>[a1,
@@ -187,25 +185,25 @@ chi_ZZset2]</p>
 
 <p>A tuto is written to show how to use the module, how to plot the fit results and see the influence of the choice of the set of <span class="math notranslate nohighlight">\(\chi\)</span> coefficients over the 45° polarisation.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Release<span class="colon">:</span></dt>
+<dt class="field-odd">Release</dt>
 <dd class="field-odd"><p>1.2</p>
 </dd>
-<dt class="field-even">Date<span class="colon">:</span></dt>
+<dt class="field-even">Date</dt>
 <dd class="field-even"><p>Aug 22, 2025</p>
 </dd>
 </dl>
-</section>
-</section>
+</div>
+</div>
 
 
           </div>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
-              <img class="logo" src="_static/alpaga_logo.svg" alt="Logo of Alpaga"/>
+              <img class="logo" src="_static/alpaga_logo.svg" alt="Logo"/>
             </a></p>
 <h1 class="logo"><a href="index.html">Alpaga</a></h1>
 
@@ -239,7 +237,7 @@ chi_ZZset2]</p>
 </ul>
 
 
-<search id="searchbox" style="display: none" role="search">
+<div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -247,18 +245,18 @@ chi_ZZset2]</p>
       <input type="submit" value="Go" />
     </form>
     </div>
-</search>
+</div>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &#169;L-GPL.
+      &copy;L-GPL.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="_sources/analysis_SSHG.rst.txt"
