@@ -30,227 +30,270 @@ from Alpaga.file_management import find_angle_iter_from_dir as find_angle_iter_f
 
 def clean_spectra_mean_n(L_y, L_mean_cleaning_n=[1, 1, 1, 3], L_mean_cleaning_evo_max=[2, 1.5, 1.4, 1.3]):
     """
-    Detect the spickes in the list of data *L_y* using local averaged method. This method aim to NOT remove something which is not a spick. Therefore, instead of a single rough treatment, it has be chosen to perform several 'small' treatment in order to affect as less as possible the spectra. 
+    Detect spikes in the list of data *L_y* using a local averaging method.  
+    This method is designed to avoid removing features that are not actual spikes.  
+    Instead of applying a single rough treatment, several small treatments are performed,  
+    so that the spectra are affected as little as possible.  
+
+    **Steps**
     
-    1) For a given *mean_cleaning_n* value (integer) and *mean_cleaning_evo_max* (float), this function will read the whole list *L_y* to clean. For a given L_y[k] value, it will compute the local average:
-    
-    ave_k = (L_y[k-mean_cleaning_n] + L_y[k-mean_cleaning_n+1] + .... L_y[k-1] + L_y[k+1] + L_y[k+2] ... + L_y[k+mean_cleaning_n])/(2*mean_cleaning_n) 
-    
-    In other words, the local average of size 2*mean_cleaning_n **without** the point k. 
-    
-    2) It compares if the  L_y[k] value is larger than mean_cleaning_evo_max x ave_k. If it is so, the k value is considerated as a spike. In this case, the L_y[k] value is set to ave_k **for the rest of the spick detection but not for the reste of the analysis**. The found spikes are stored using the list *L_population*. If L_population[k] = 0, it means that the k value has been detected to be a spike, otherwise it is set to 1. The averaging procedure will use this list to get ride of the spickes. 
-    
-    3) For every *mean_cleaning_n* and *mean_cleaning_evo_max* declred in the input argument *L_mean_cleaning_n* and *L_mean_cleaning_evo_max*, the point 1) and 2) are repeted -- with and update of the *L_y* value if spikes are detected. 
-    
-    Therefore, to found as many spike as possible, while avoiding the detection of ''false spickes'', it is recommanded to start with very tight parameters, and to deacrease the maximal deviation. For instance *L_mean_cleaning_n* = [1, 1, 1, 3], *L_mean_cleaning_evo_max* = [2, 1.5, 1.2, 1.1] performed 4 treatments. The first 3 treatment compute very local averaged: only the first closest neighbourgs are used to compute the average (thus 2 point: L_[k-1] and L_[k+1]). In the first treatment, if the L_y[k] value is larger then twice this local average, it is considerated as a spicked, and set to the averaged value. In the second, the L_y[k] value must be 1.5 larger and in the third treatment only 1.2 larger to be considerated as spicke. Finally, the last treatment use an average computed using 6 neigbors and a 1.1 maximal coefficiant. 
-    
-    This procedure has been built especially to get ride of spicke that spread over 2 or 3 points in a row -- even if it is very rare. We recommand to play a bit with these *L_mean_cleaning_n* and *L_mean_cleaning_evo_max* parameters to make sure the spickes are detected while the reste of the spectra remains untouched -- try something like L_mean_cleaning_n=[1, 1, 1, 3], L_mean_cleaning_evo_max=[2, 1.5, 1.1, 1.05] to see the effect of too strick parameters. 
-    
+    1) For given *mean_cleaning_n* (integer) and *mean_cleaning_evo_max* (float),  
+       the function scans the list *L_y* to clean.  
+       For a value L_y[k], it computes the local average:
+
+           ave_k = (L_y[k-mean_cleaning_n] + ... + L_y[k-1] + L_y[k+1] + ... + L_y[k+mean_cleaning_n]) / (2*mean_cleaning_n)
+
+       i.e. the local average over 2*mean_cleaning_n neighbors, **excluding** the point k.
+
+    2) The value L_y[k] is compared against mean_cleaning_evo_max × ave_k.  
+       If L_y[k] is larger, it is considered a spike.  
+       In this case, L_y[k] is replaced by ave_k **for the spike detection process only (not for the final analysis)**.  
+       Spikes are stored in the list *L_population*: if L_population[k] = 0, point k is a spike, otherwise it is 1.  
+       The averaging procedure will later use this list to remove the spikes.  
+
+    3) For every *mean_cleaning_n* and *mean_cleaning_evo_max* declared in the input arguments  
+       *L_mean_cleaning_n* and *L_mean_cleaning_evo_max*, steps (1) and (2) are repeated,  
+       updating *L_y* when spikes are detected.  
+
+    This multi-pass approach helps detect as many spikes as possible, while minimizing false positives.  
+    A recommended strategy is to start with stricter parameters, and progressively decrease the threshold.  
+    For example:  
+
+        L_mean_cleaning_n = [1, 1, 1, 3]  
+        L_mean_cleaning_evo_max = [2, 1.5, 1.2, 1.1]  
+
+    performs 4 treatments.  
+    The first 3 use only the two nearest neighbors (L_y[k-1] and L_y[k+1]) to compute the average.  
+    In the first pass, a point is flagged as a spike if it is twice this local average.  
+    In the second pass, the threshold is 1.5, then 1.2 in the third.  
+    The final pass uses 6 neighbors and a 1.1 threshold.  
+
+    This procedure was designed to catch spikes that may span 2–3 consecutive points (rare but possible).  
+    It is recommended to experiment with *L_mean_cleaning_n* and *L_mean_cleaning_evo_max*  
+    to ensure spikes are removed without altering the rest of the spectra.  
+    For instance, try:  
+
+        L_mean_cleaning_n = [1, 1, 1, 3]  
+        L_mean_cleaning_evo_max = [2, 1.5, 1.1, 1.05]  
+
+    to see the effect of overly strict parameters.  
+
     Parameters
     ----------
     L_y : list
-        The data to clean
-    L_mean_cleaning_n : list of int
-        [Optional] The list of the size to built the local average. The *L_mean_cleaning_n* and *L_mean_cleaning_evo_max* shall have the same length. 
-    L_mean_cleaning_evo_max : list of float
-        [Optional] The list of the maximal coefficiant used to found spike. These value should be larger then 1 or even 1.1, and less then 2 or 3. A L_y[k] value is detected as a spicke if L_y[k] > maximal coefficiant x local average. 
-    
+        Data to clean.  
+    L_mean_cleaning_n : list of int, optional
+        List of neighborhood sizes for computing local averages.  
+        Must have the same length as *L_mean_cleaning_evo_max*.  
+    L_mean_cleaning_evo_max : list of float, optional
+        List of maximum coefficients used for spike detection.  
+        Values should generally be between 1.1 and 2–3.  
+        A point is flagged as a spike if L_y[k] > coeff × local average.  
+
     Returns
     -------
     L_population : list
-         The list where is stored the found spicke. *L_population* have the same size of *L_y* and is initialize at 1. If a spicke is found at the position k, *L_population[k]* = 0.
-        
+        List of the same size as *L_y*, initialized to 1.  
+        If a spike is detected at position k, then L_population[k] = 0.  
+
     Examples
     --------
-    For pratical example, see the :ref:`alpaga.averaging_and_cleaning function<averaging_spectra_section>`       
-    
-    Note
-    ----
-    A fourier method to clean the spectra may be added if enough asked. However, for small acquisition time it may impact more the spectra.
-    
+    For practical usage, see :ref:`alpaga.averaging_and_cleaning function<averaging_spectra_section>`.  
+
+    Notes
+    -----
+    A Fourier-based cleaning method may be added in the future if requested.  
+    However, for short acquisition times, it may distort the spectra.
     """
-    
     L_y_clean = np.array(L_y)
     L_population = np.zeros(len(L_y)) + 1
-    
-    # redefine the value if old input type is used. 
+
+    # Redefine the value if the old input type is used.
     if isinstance(L_mean_cleaning_n, int):
         L_mean_cleaning_n = [L_mean_cleaning_n]
         if not isinstance(L_mean_cleaning_evo_max, int) and not isinstance(L_mean_cleaning_evo_max, float):
-            raise Exception('WARNING: if only one cleaning is required, both L_mean_cleaning_n and L_mean_cleaning_evo_max should be int or float. You should also defined them using list with only one argument. Example: L_mean_cleaning_n = [3] and L_mean_cleaning_evo_max = [1.4].')
+            raise Exception('WARNING: If only one cleaning is required, both L_mean_cleaning_n and L_mean_cleaning_evo_max should be int or float. You should also define them as a list with a single element. Example: L_mean_cleaning_n = [3] and L_mean_cleaning_evo_max = [1.4].')
         else:
             L_mean_cleaning_evo_max = [L_mean_cleaning_evo_max]
-            
-   
+
     if not isinstance(L_mean_cleaning_n, list) or not isinstance(L_mean_cleaning_evo_max, list):
-        raise Exception('WARNING: if several cleaning is required, both L_mean_cleaning_n and L_mean_cleaning_evo_max should be list')
+        raise Exception('WARNING: If several cleanings are required, both L_mean_cleaning_n and L_mean_cleaning_evo_max should be lists.')
 
     N_cleaning = len(L_mean_cleaning_n)
     for N_c in range(0, N_cleaning, 1):
         mean_cleaning_n_t = L_mean_cleaning_n[N_c]
-        #print('cleaning:', mean_cleaning_n_t, L_mean_cleaning_evo_max[N_c])
         if not isinstance(mean_cleaning_n_t, int):
-            raise Exception('WARNING: Every L_mean_cleaning_n elements should be int!')
+            raise Exception('WARNING: Every element of L_mean_cleaning_n should be an int!')
         for k in range(mean_cleaning_n_t, len(L_y)-mean_cleaning_n_t, 1):
-            # mean_t = np.mean(L_y_clean[k-mean_cleaning_n_t:k+mean_cleaning_n_t]) # mean with the point k
             mean_t = np.mean(np.append(L_y_clean[k-mean_cleaning_n_t:k], L_y_clean[k+1:k+1+mean_cleaning_n_t])) # mean without the point k
-            if L_y_clean[k] > mean_t*L_mean_cleaning_evo_max[N_c]:
-                #print('found pick at:', k, L_y_clean[k])
-                L_y_clean[k] =  mean_t
+            if L_y_clean[k] > mean_t * L_mean_cleaning_evo_max[N_c]:
+                L_y_clean[k] = mean_t
                 L_population[k] = 0
-                # print('spick')
-                        
-    return(L_population)
+
+    return L_population
+
 
 ############################################################################################
 
-def averaging_and_cleaning(name_file, N_iter, L_filename=False, extension='.dat', fct_name=standard_file_name, type_cleaning='mean', L_mean_cleaning_n=[1, 1, 1, 3], L_mean_cleaning_evo_max=[2, 1.5, 1.4, 1.3], show_spectra='average', figure_counter=1):
-    '''
-    For the set of acquisition with the names:
+def averaging_and_cleaning(name_file, N_iter, L_filename=False, extension='.dat',
+                           fct_name=standard_file_name, type_cleaning='mean',
+                           L_mean_cleaning_n=[1, 1, 1, 3], L_mean_cleaning_evo_max=[2, 1.5, 1.4, 1.3],
+                           show_spectra='average', figure_counter=1):
+    """
+    For a set of acquisitions with filenames:
     
-    *name_file* + '_' + i + *extension*,
+        *name_file* + '_' + i + *extension*,
     
-    return the mean spectra cleaned of the spickes. Today, only one type of averaging and cleaning is available through *type_cleaning*, it is 'mean'. 
+    return the mean spectra cleaned of spikes. Currently, only one type of averaging and cleaning is available through *type_cleaning*, which is 'mean'.
     
-    For every acquisition i, the spectrum is treated using the function alpaga.clean_spectra_mean_n with the optional argument *L_mean_cleaning_n* and *L_mean_cleaning_evo_max*, see :ref:`here<cleaning_spectra_section>` for more detail: the spickes are detected. Then, the average over all the acquisition is performed element per element without the spickes. 
+    Each acquisition i is processed using the function :func:`alpaga.clean_spectra_mean_n` 
+    with optional arguments *L_mean_cleaning_n* and *L_mean_cleaning_evo_max*, see :ref:`cleaning_averaging_spectra_page` 
+    for details. Spikes are detected for each spectrum, and the mean is computed element-wise over all acquisitions, ignoring the spikes.
     
-    For instance, let's assume that there are 4 acquisitions. For the k element (let s say it correspond to the wave-length 404 nm), if there is no spicke detected for all the 4 acquisitions, the averaging is the mean of every 4 acquisition k value. If the second acquisition has a spick at this particular k element, the averaging will not considere the second acquisition **only for the k element**. If all the 4 acquisitions have a spick at the k element, it means either:
+    Example:
+    If there are 4 acquisitions, for the k-th element (e.g., wavelength 404 nm):
     
-        - The detection of the spick is too strict and you should decrease the values used in *L_mean_cleaning_evo_max*. 
+        - If no spikes are detected for all 4 acquisitions, the average is the mean of all 4 values.
+        - If the second acquisition has a spike at this element, the average ignores the second acquisition **only for this element**.
+        - If all 4 acquisitions have a spike at this element, it may indicate:
+            * Detection parameters are too strict: decrease values in *L_mean_cleaning_evo_max*.
+            * Acquisition time per spectrum is too long, increasing spike probability.
+            * A serious detector issue or other abnormality (e.g., ISS data). 
     
-        - The acquisition time for every spectra is too long. Therefore, during one spectra acquisition you have a large number of spick, and thus a higher probability that every acquisition has a spick at a given location k. For instance, if you have only one acquisition, if there is a spick at element k, you cannot use it. With 2 acquisitions (with half the acquisition time for a single one, thus concerving the total acquisition time), the spick would impact only one spectra, and you can use the other one to have a meaningfull value for the element k. Repeating this proocedure up to 40-50 spectra, you have no chance to have a spick for every acquisition at the same element. 
+    In such cases, a warning is printed, and the mean value is used for that element, but acquisition parameters should be reconsidered.
     
-        - If for the whole 50-100 acquisitions you have spickes, it can means that the detector have a serious problem that you should fix. Or that you acquire datas from ISS -- in this case the Alpaga developpers wish you a good and safe trip. 
-    
-    If for an element k, every acquisition has a spick, a message is print to warn you. For this k element, the mean value of the averaged spectra is used. However, you should reconsider your acquisition parameter to avoid this situation.
-        
-    The function return the x axis, *L_x_axis* , found in the spectra file (the first colum) and the averaged spectra, *L_spectra_t* .
-    
-    *N_iter* set how many acquisitions has to be averaged. If *N_iter* is an int, the i goes from 1 to N_iter. If it is a list, the averaging is made over the iteration present in the list. Example: N_iter = [1, 3, 5] would average the acquisition 1, 3 and 5.
-    
-    The function can also print some figure to help you check its procedure. Set *show_spectra* to 'average' to have only final average spectra ploted, to 'all' to have also the spick detection for every iter. Set it to anything else if you do not want any plot. The initial number of the figure (plt.figure(K)) is given by the argument *figure_counter*.
-
     Parameters
     ----------
     name_file : str
-        The prefix to all the acquisition. Note that the path should be global and not relatif, see :ref:`file_management_page` for more information.
+        Prefix for all acquisition filenames. Use absolute paths; see :ref:`file_management_page` for more details.
     N_iter : int or list of int
-        x The size depend 
-    L_filename : bool or list
-        If defined to a list, should contain the list of the filename (absolute path) to treat. Works similarly with N_iter as if the filename are generated with fct_name.
+        Number of acquisitions to average. If a list is provided, only those iterations are processed.
+    L_filename : bool or list of str
+        If a list is provided, contains the absolute filenames to process, bypassing generated filenames.
     extension : str
-        [Optional] The extension of your data file, see :ref:`file_management_page` for more information.
+        [Optional] File extension for data files.
     fct_name : function
-        [Optional] The function used to built the name of a file given the prefixe, angle, iteration and extension. By default, the alpaga.standard_file_name function is used. 
-    type_cleaning: str
-        [Optional] The only possible value actually is 'mean'. 
-    L_mean_cleaning_n: list 
-        [Optional] see the :ref:`alpaga.clean_spectra_mean_n function<cleaning_spectra_section>`
-    L_mean_cleaning_evo_max: list
-        [Optional] see the :ref:`alpaga.clean_spectra_mean_n function<cleaning_spectra_section>` 
-    show_spectra: str
-        [Optional] 'average' to have only final average spectra ploted, 'all' to have also the spick detection for every iter. Set it to anything else if you do not want any plot.
-    figure_counter: int
-        [Optional] The number of the first figure plot.
+        [Optional] Function used to generate a filename from prefix, iteration, and extension. Defaults to :func:`alpaga.standard_file_name`.
+    type_cleaning : str
+        [Optional] Currently only 'mean' is supported.
+    L_mean_cleaning_n : list
+        [Optional] See :func:`alpaga.clean_spectra_mean_n` for details.
+    L_mean_cleaning_evo_max : list
+        [Optional] See :func:`alpaga.clean_spectra_mean_n` for details.
+    show_spectra : str
+        [Optional] 'average' plots only the final averaged spectra, 'all' also plots spike detection for each iteration. Any other value disables plotting.
+    figure_counter : int
+        [Optional] Number of the first figure for plotting.
+    
     Returns
     -------
-    L_x_axis: list
-        The x axis.
-    L_spectra_t: list
-        The averaged and cleaned datas.
-    figure_counter: int
-         The new value for your next figure number. 
-        
+    L_x_axis : list
+        X-axis values from the spectra files.
+    L_spectra_t : list
+        Averaged and cleaned spectra.
+    figure_counter : int
+        Updated figure counter for subsequent plots.
+    
     Examples
     --------
     ::
     
-       names = TOCHANGE
+       names = 'Spectra_4.0'
        N_iter = 4
-       L_lambda, L_spectra, _ = alpaga.averaging_and_cleaning(names, N_iter, extension='.dat', type_cleaning='mean', L_mean_cleaning_n=[1, 1, 1, 3], L_mean_cleaning_evo_max=[2, 1.5, 1.2, 1.1], show_spectra='all', figure_counter=10)
+       L_lambda, L_spectra, _ = alpaga.averaging_and_cleaning(
+           names, N_iter, extension='.dat', type_cleaning='mean',
+           L_mean_cleaning_n=[1, 1, 1, 3], L_mean_cleaning_evo_max=[2, 1.5, 1.2, 1.1],
+           show_spectra='all', figure_counter=10)
+    """
     
-    '''
     if not isinstance(L_filename, bool) and not L_filename:
-        raise Exception('WARNING: you have defined L_filename not correctly. It should be a list of string. Not empty!')
+        raise Exception('WARNING: L_filename is not defined correctly. It should be a non-empty list of strings!')
         
     if isinstance(N_iter, int):
-        L_iter = [k for k in range(1, N_iter+1, 1)]
-        if show_spectra=='all':
-            print('The averaging will be done for iter from 1 to ' + str(N_iter))
+        L_iter = [k for k in range(1, N_iter+1)]
+        if show_spectra == 'all':
+            print('Averaging will be done for iterations from 1 to', N_iter)
     elif isinstance(N_iter, list):
         L_iter = N_iter
-        if show_spectra=='all':
-            print('The averaging will be done for iter within', N_iter)
+        if show_spectra == 'all':
+            print('Averaging will be done for iterations:', N_iter)
         
     if not isinstance(L_filename, bool) and L_filename:
         name_file_t = L_filename[0]
     else: 
         name_file_t = fct_name(name_file, angle=False, iteration=str(L_iter[0]), extension=extension)
         
-    # spectra = np.loadtxt(name_file + '_' + str(1) + extension, skiprows=0)
     spectra = np.loadtxt(name_file_t)
     L_x_axis = spectra.T[0]
     n_lambda = len(L_x_axis)
         
-    # mean type cleaning: 
+    # Mean-type cleaning
     if type_cleaning == 'mean':
         L_population_t = np.zeros(n_lambda)
         L_spectra = np.zeros((len(L_iter), n_lambda))
         L_spectra_t = np.zeros(n_lambda)
         
-        for i in range(0, len(L_iter), 1):
+        for i in range(len(L_iter)):
             if not isinstance(L_filename, bool) and L_filename:
                 name_file_t = L_filename[0]
             else: 
                 name_file_t = fct_name(name_file, angle=False, iteration=str(L_iter[i]), extension=extension)
             print(name_file_t)
             spectra = np.loadtxt(name_file_t, skiprows=0)
+            
             if show_spectra == 'all':
                 plt.figure(figure_counter)
                 plt.title(name_file + '_' + str(L_iter[i]))
                 plt.plot(L_x_axis, spectra.T[1])
                 
-            L_population = clean_spectra_mean_n(spectra.T[1], L_mean_cleaning_n=L_mean_cleaning_n, L_mean_cleaning_evo_max=L_mean_cleaning_evo_max)
+            L_population = clean_spectra_mean_n(
+                spectra.T[1],
+                L_mean_cleaning_n=L_mean_cleaning_n,
+                L_mean_cleaning_evo_max=L_mean_cleaning_evo_max
+            )
+            
             if show_spectra == 'all':
                 plt.figure(figure_counter)
-                for n in range(0, len(L_population), 1):
+                for n in range(len(L_population)):
                     if L_population[n] == 0:
                         plt.plot([L_x_axis[n]], [spectra.T[1][n]], '*')
                 figure_counter += 1
+            
             L_spectra[i] = spectra.T[1]
-            for n in range(0, len(L_population), 1):
+            for n in range(len(L_population)):
                 if L_population[n] == 0:
                     L_spectra[i][n] = 0
-            L_population_t = L_population_t + L_population
+            L_population_t += L_population
             
         L_to_correct = []
-        for n in range(0, len(L_population_t), 1):
+        for n in range(len(L_population_t)):
             if L_population_t[n] == 0:
-                print('error: for files name: ' + name_file + ', a spick has been detected for all the iteration at the lambda: ' + str(L_x_axis[n]) + '. Be aware that the returned spectra at this lambda make no sens!')
+                print(f'Warning: For files with prefix {name_file}, a spike was detected at lambda {L_x_axis[n]} for all iterations! The returned value may not be meaningful.')
                 L_population_t[n] = 1
                 L_to_correct.append(n)
                     
-        for i in range(0, len(L_iter), 1):
-            L_spectra_t = L_spectra_t + L_spectra[i]
+        for i in range(len(L_iter)):
+            L_spectra_t += L_spectra[i]
                 
-                
-        L_spectra_t = L_spectra_t/L_population_t
+        L_spectra_t /= L_population_t
             
-        for n in L_to_correct: # to avoid 0 in the spectra
-            borne_min=n-1
-            borne_max=n+1
-            while L_spectra_t[borne_min] == 0 :
-                borne_min-=1
-            while L_spectra_t[borne_max] == 0 :
-                borne_max +=1
-                
-            L_spectra_t[n] = (L_spectra_t[borne_min] + L_spectra_t[borne_max])/2
-    if show_spectra == 'all' or show_spectra == 'average': 
+        for n in L_to_correct:  # Avoid zeros in spectra
+            borne_min = n - 1
+            borne_max = n + 1
+            while L_spectra_t[borne_min] == 0:
+                borne_min -= 1
+            while L_spectra_t[borne_max] == 0:
+                borne_max += 1
+            L_spectra_t[n] = (L_spectra_t[borne_min] + L_spectra_t[borne_max]) / 2
+    
+    if show_spectra in ['all', 'average']: 
         plt.figure(figure_counter)
         plt.title(name_file)
         plt.plot(L_x_axis, L_spectra_t)
         figure_counter += 1
-    return(L_x_axis, L_spectra_t, figure_counter)
+    
+    return L_x_axis, L_spectra_t, figure_counter
+
         
 ############################################################################################
 ################################# Fit and noise   ##########################################

@@ -5,15 +5,12 @@
 Cleaning and Averaging Spectra
 ===============================
 
-In this page, we will see how the cleaning and averaging procedure is performed. For the same experimental parameters (for instance the same fundamental polarisation angle), several acquisitions, *N_iter*, is made for a total acquisition time of :math:`T = \Delta t \times N\_iter`, where :math:`\Delta t` is the acquisition time for a single spectrum. 
+When repeating the same measurement, several spectra (*N_iter*) are acquired.  
+This improves statistics and helps remove unwanted artifacts such as spikes.
 
-But why not make only one spectrum with :math:`T = \Delta t`, instead of many with smaller acquisition time?
-
-
-
--------------------------------
-How to get ride of the spikes?
--------------------------------
+---------------------------------
+Why multiple short acquisitions?
+---------------------------------
 
 .. _cleaning_spectra_section:
 
@@ -21,21 +18,16 @@ How to get ride of the spikes?
    :width: 250
    :align: right
 
+Individual spectra often contain sudden spikes caused by detector instabilities or electronic noise.  
+These spikes are random, unwanted, and may distort the Gaussian signal.  
 
-The reason is that there are some 'spikes' in a spectrum, due to detection troubles, see Figure TOADD. Add: origine de ces spickes?
-These spikes are completely unwanted and can make the detection of the gaussian difficult. In the worst-case scenario, a pick right at the gaussian maximum can make the acquisition not exploitable. Since it is very hard to avoid them during the experiment, we have better to remove them during the treatment of the data.
-
-Therefore, Alpaga propose to detect the spike using the function:
+To deal with them, Alpaga provides:
 
 .. autofunction:: analyze_run.clean_spectra_mean_n
    :noindex:
 
-
-
-In order to help the detection of spike, it is better to have many acquisitions for small acquisition time, than few acquisition with large acquisition time. In the Figure TOADD is plotted the number of spikes found by the alpaga.clean_spectra_mean_n function for the same set of data, but with different acquisition time. @Antonin: je te laisse terminer ici. 
-
-
-Once the spikes have been detected, we have to choose how to deal with them.
+The method detects points that strongly deviate from the average across iterations, and replaces them with more reliable values.  
+Shorter acquisitions with more repetitions make spike detection easier.
 
 ------------------------
 Averaging procedure 
@@ -43,29 +35,23 @@ Averaging procedure
 
 .. _averaging_spectra_section:
 
-To average the *N_iter* spectra and remove the spikes, use the function:  
+Once cleaned, the spectra are averaged to obtain a stable signal:  
 
 .. autofunction:: analyze_run.averaging_and_cleaning
    :noindex:
 
+This function applies the cleaning step to all spectra, then returns the averaged result for each angle.  
 
 .. image:: _static/alpaga_16.jpg
    :width: 400
    :align: center
 
 ------------------------------
-Towards the gaussian intensity
+Towards the Gaussian intensity
 ------------------------------
 
+The procedure is not very sensitive to parameter tuning.  
+The key is to record many short spectra so that spikes can be removed and the average converges.  
 
-
-The cleaning and averaging procedure are not very sensitive to the numerical parameters you can set to Alpaga. However, it is important to have spectra with small enough acquisition time to make the spike detection easy. Moreover, it is important to have an important number of spectra to have well converged averaged spectra. To check the (total) time needed to have converged data, we recommend to check your final observable rather than the spectra. 
-
-The :ref:`next section<fitting_procedure_page>` is the fit of this average spectrum to find the intensity of the gaussian. Therefore, the input will be the x value (the wave number) and the y averaged one (the spectra value).  
-
-
-
-:Release: |release|
-:Date: |today|
-
-
+The next step is to fit this averaged spectrum to extract the Gaussian intensity  
+(:ref:`see fitting procedure<fitting_procedure_page>`).
