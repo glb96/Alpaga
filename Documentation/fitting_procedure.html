@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>4. Fitting the Gaussian &#8212; Alpaga 1.2 documentation</title>
+    <title>6. Fitting the Gaussian &#8212; Alpaga 1.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
@@ -15,8 +15,8 @@
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="5. Polarisation Procedure" href="polarisation_procedure.html" />
-    <link rel="prev" title="3. Cleaning and Averaging Spectra" href="cleaning_averaging_spectra.html" />
+    <link rel="next" title="7. Polarisation Procedure" href="polarisation_procedure.html" />
+    <link rel="prev" title="5. Cleaning and Averaging Spectra" href="cleaning_averaging_spectra.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -37,7 +37,7 @@
   <blockquote>
 <div></div></blockquote>
 <section id="fitting-the-gaussian">
-<span id="fitting-procedure-page"></span><h1><span class="section-number">4. </span>Fitting the Gaussian<a class="headerlink" href="#fitting-the-gaussian" title="Link to this heading">¶</a></h1>
+<span id="fitting-procedure-page"></span><h1><span class="section-number">6. </span>Fitting the Gaussian<a class="headerlink" href="#fitting-the-gaussian" title="Link to this heading">¶</a></h1>
 <p>In this page, we will see how to extract the Gaussian intensity from a spectrum. This procedure has been optimised in order to get the less possible choice to the operator, and to make this part the most reproducible as possible. Indeed, small change in this procedure parameters can lead to variation of the extracted intensity. Therefore, there are many methods available: it is up to you to choose the one you prefer, and to document which one you have picked!</p>
 <a class="reference internal image-reference" href="_images/alpaga_2.jpg"><img alt="_images/alpaga_2.jpg" class="align-right" src="_images/alpaga_2.jpg" style="width: 350px;" />
 </a>
@@ -49,7 +49,7 @@
 <p>If your curve is a Lorentzian, you can use the first step to get ride of the noise, then you will have to fit by yourself the intensity. Contact us if you want to implement this new fitting  procedure in Alpaga.</p>
 </div>
 <section id="remove-the-noise">
-<h2><span class="section-number">4.1. </span>Remove the noise<a class="headerlink" href="#remove-the-noise" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">6.1. </span>Remove the noise<a class="headerlink" href="#remove-the-noise" title="Link to this heading">¶</a></h2>
 <a class="reference internal image-reference" href="_images/alpaga_10.jpg" id="remove-noise-section"><img alt="_images/alpaga_10.jpg" class="align-left" id="remove-noise-section" src="_images/alpaga_10.jpg" style="width: 300px;" />
 </a>
 <p>The spectra will be cut into 3 areas using the x values. The first area and the last one will be used in order to define the noise, while the second one should contain the Gaussian. The first and last area should be large enough in order to be fitted meaningfully by a polynomial function. If this ‘noise’ area is too large, the part where the Gaussian is located may not be properly fitted and thus modify the final intensity. If this noise area is too small, the noise fit can make no sense. A simple way to check if the area is too small is to add or remove one point to the noise area: the final Gaussian intensity should not be affected.</p>
@@ -63,7 +63,7 @@
 </a>
 </section>
 <section id="gaussian-intensity-extraction">
-<h2><span class="section-number">4.2. </span>Gaussian intensity extraction<a class="headerlink" href="#gaussian-intensity-extraction" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">6.2. </span>Gaussian intensity extraction<a class="headerlink" href="#gaussian-intensity-extraction" title="Link to this heading">¶</a></h2>
 <p id="gaussian-fit-section">Now that we have removed the background, the Gaussian spectra should be much easier to fit. There are two ways to extract the Gaussian intensity: by a function fit, or by an integral procedure.</p>
 <ol class="arabic">
 <li><p>Gaussian fit</p>
@@ -93,7 +93,7 @@
 <p>The function to extract the Gaussian intensity uses the previous one, <em>alpaga.remove_noise</em>, to get ride of the noise. If you are working already with noise-free curve, this should not be a problem.</p>
 </section>
 <section id="towards-automating">
-<h2><span class="section-number">4.3. </span>Towards automating<a class="headerlink" href="#towards-automating" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">6.3. </span>Towards automating<a class="headerlink" href="#towards-automating" title="Link to this heading">¶</a></h2>
 <a class="reference internal image-reference" href="_images/alpaga_7.jpg"><img alt="_images/alpaga_7.jpg" class="align-right" src="_images/alpaga_7.jpg" style="width: 300px;" />
 </a>
 <p>The extraction of the intensity from the averaged spectra is maybe the part where the numerical parameters influence the more the result. Therefore, it is recommended to:</p>
@@ -137,23 +137,25 @@
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">1. Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="file_management.html">2. File management</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cleaning_averaging_spectra.html">3. Cleaning and Averaging Spectra</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">4. Fitting the Gaussian</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#remove-the-noise">4.1. Remove the noise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#gaussian-intensity-extraction">4.2. Gaussian intensity extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#towards-automating">4.3. Towards automating</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html#testing-your-installation">2. Testing your installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html#tutorials">3. Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_management.html">4. File management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cleaning_averaging_spectra.html">5. Cleaning and Averaging Spectra</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">6. Fitting the Gaussian</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#remove-the-noise">6.1. Remove the noise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gaussian-intensity-extraction">6.2. Gaussian intensity extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#towards-automating">6.3. Towards automating</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="polarisation_procedure.html">5. Polarisation Procedure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="analysis_SHS.html">6. SHS analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="analysis_SSHG.html">7. SSHG analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="python_advice.html">8. Python advice</a></li>
-<li class="toctree-l1"><a class="reference internal" href="experimental_advice.html">9. Experimental and procedure advice</a></li>
-<li class="toctree-l1"><a class="reference internal" href="for_developpers.html">10. For Developpers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="alpaga.html">11. Source code</a></li>
-<li class="toctree-l1"><a class="reference internal" href="devs_page.html">12. Alpaga’s developers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">13. Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="polarisation_procedure.html">7. Polarisation Procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis_SHS.html">8. SHS analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis_SSHG.html">9. SSHG analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_advice.html">10. Python advice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="experimental_advice.html">11. Experimental and procedure advice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="for_developpers.html">12. For Developpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="alpaga.html">13. Source code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devs_page.html">14. Alpaga’s developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">15. Reference</a></li>
 </ul>
 
 

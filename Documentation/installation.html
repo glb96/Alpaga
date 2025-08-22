@@ -14,7 +14,7 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="2. File management" href="file_management.html" />
+    <link rel="next" title="4. File management" href="file_management.html" />
     <link rel="prev" title="Alpaga" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -39,12 +39,12 @@
 <span id="installation-page"></span><h1><span class="section-number">1. </span>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h1>
 <a class="reference internal image-reference" href="_images/alpaga_22.jpg"><img alt="_images/alpaga_22.jpg" class="align-right" src="_images/alpaga_22.jpg" style="width: 200px;" />
 </a>
-<p>The <a class="extlink-alpaga_github reference external" href="https://github.com/glb96/Alpaga/">github page</a> provides the latest version.
+<p>The <a class="extlink-alpaga_github reference external" href="https://github.com/glb96/Alpaga/">GitHub page</a> provides the latest version.
 You can download the repository by clicking on the green <strong>[&lt;&gt; Code]</strong> button and then choosing either the Git method (clone) or downloading an archive (.zip).</p>
 <section id="installation-using-pip">
 <h2><span class="section-number">1.1. </span>Installation using pip<a class="headerlink" href="#installation-using-pip" title="Link to this heading">¶</a></h2>
 <p>Alpaga is a Python module that can be installed using pip.
-The package is provided as <em>alpaga.tar.gz</em>. Use:</p>
+The package is distributed as <em>alpaga.tar.gz</em>. Use:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">alpaga</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
 </pre></div>
 </div>
@@ -56,34 +56,39 @@ The package is provided as <em>alpaga.tar.gz</em>. Use:</p>
 </section>
 <section id="installation-using-conda">
 <h2><span class="section-number">1.2. </span>Installation using conda<a class="headerlink" href="#installation-using-conda" title="Link to this heading">¶</a></h2>
-<p>To install with the graphical Anaconda interface, open the Anaconda shell and run the same pip command.
+<p>To install with Anaconda, open the Anaconda Prompt (or terminal if Anaconda is in your PATH) and run the same pip command.
 Make sure to use the correct <em>alpaga.tar.gz</em> file — <em>i.e.</em> check that the path corresponds to its actual location on your computer.</p>
 <a class="reference internal image-reference" href="_images/anaconda_install_alpaga_visualization.png"><img alt="_images/anaconda_install_alpaga_visualization.png" class="align-center" src="_images/anaconda_install_alpaga_visualization.png" style="width: 500px;" />
 </a>
 </section>
-<section id="check-the-installation">
-<h2><span class="section-number">1.3. </span>Check the installation<a class="headerlink" href="#check-the-installation" title="Link to this heading">¶</a></h2>
+</section>
+<section id="testing-your-installation">
+<h1><span class="section-number">2. </span>Testing your installation<a class="headerlink" href="#testing-your-installation" title="Link to this heading">¶</a></h1>
 <p>To use Alpaga, import it in a Python environment with:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">Alpaga</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">Alpaga.alpaga</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">alpaga</span>
 </pre></div>
 </div>
 <p>Make sure you are not in the source code directory when importing, to ensure the installed package is used.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>You can run <code class="docutils literal notranslate"><span class="pre">print(alpaga)</span></code> to check from where Python is importing the package.</p>
+<p>You can run <code class="docutils literal notranslate"><span class="pre">print(Alpaga)</span></code> to check from where Python is importing the package.</p>
 </div>
-<p>The <em>alpaga</em> module contains the core functions.
-Other files are available in the package, in the directory <em>Data_tutorial</em>.
-This directory can be accessed with:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">Alpaga</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">Alpaga.Data_tutorial</span>
-<span class="n">Dir_tuto_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">Alpaga</span><span class="o">.</span><span class="n">Data_tutorial</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">Dir_tuto_file</span><span class="p">)</span>
+<p>If you want to perform tests, you can use the <em>test_your_installation.ipynb</em> Jupyter notebook located in the Tutorials directory.
+Just run the notebook; it should complete within a few minutes without printing any errors.</p>
+<p>If you have issues, make sure that Alpaga is correctly installed (import Alpaga works) in your Python environment.
+If you are stuck, please contact us using the GitHub page by raising an issue.</p>
+</section>
+<section id="tutorials">
+<h1><span class="section-number">3. </span>Tutorials<a class="headerlink" href="#tutorials" title="Link to this heading">¶</a></h1>
+<p>Tutorials are available in the Tutorials directory.
+Some pages of this wiki point to tutorials that help you understand how Alpaga works.
+Note that data is required to run these tutorials.
+They are stored within the Python module (in the <em>Data_tutorial</em> directory) and can be accessed through a helper function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Alpaga.Data_tutorial</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_tutorial_path</span>
+<span class="n">directory</span> <span class="o">=</span> <span class="n">get_tutorial_path</span><span class="p">(</span><span class="s2">&quot;SHS/Eau_polar_V&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>These data are used for the tutorials. See the next sections for details.</p>
+<p>You should not need to change any lines in the tutorials that point to the tutorial data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Release<span class="colon">:</span></dt>
 <dd class="field-odd"><p>1.2</p>
@@ -92,7 +97,6 @@ This directory can be accessed with:</p>
 <dd class="field-even"><p>Aug 22, 2025</p>
 </dd>
 </dl>
-</section>
 </section>
 
 
@@ -119,21 +123,22 @@ This directory can be accessed with:</p>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">1. Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#installation-using-pip">1.1. Installation using pip</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installation-using-conda">1.2. Installation using conda</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#check-the-installation">1.3. Check the installation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="file_management.html">2. File management</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cleaning_averaging_spectra.html">3. Cleaning and Averaging Spectra</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fitting_procedure.html">4. Fitting the Gaussian</a></li>
-<li class="toctree-l1"><a class="reference internal" href="polarisation_procedure.html">5. Polarisation Procedure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="analysis_SHS.html">6. SHS analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="analysis_SSHG.html">7. SSHG analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="python_advice.html">8. Python advice</a></li>
-<li class="toctree-l1"><a class="reference internal" href="experimental_advice.html">9. Experimental and procedure advice</a></li>
-<li class="toctree-l1"><a class="reference internal" href="for_developpers.html">10. For Developpers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="alpaga.html">11. Source code</a></li>
-<li class="toctree-l1"><a class="reference internal" href="devs_page.html">12. Alpaga’s developers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">13. Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#testing-your-installation">2. Testing your installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#tutorials">3. Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_management.html">4. File management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cleaning_averaging_spectra.html">5. Cleaning and Averaging Spectra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fitting_procedure.html">6. Fitting the Gaussian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="polarisation_procedure.html">7. Polarisation Procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis_SHS.html">8. SHS analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis_SSHG.html">9. SSHG analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_advice.html">10. Python advice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="experimental_advice.html">11. Experimental and procedure advice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="for_developpers.html">12. For Developpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="alpaga.html">13. Source code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devs_page.html">14. Alpaga’s developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">15. Reference</a></li>
 </ul>
 
 
