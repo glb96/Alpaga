@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>7. Polarisation Procedure &#8212; Alpaga 1.2 documentation</title>
+    <title>5. Polarisation Procedure &#8212; Alpaga 1.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
@@ -14,8 +14,8 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="8. SHS analysis" href="analysis_SHS.html" />
-    <link rel="prev" title="6. Fitting the Gaussian" href="fitting_procedure.html" />
+    <link rel="next" title="6. SHS analysis" href="analysis_SHS.html" />
+    <link rel="prev" title="4. Fitting the Gaussian" href="fitting_procedure.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -36,11 +36,11 @@
   <blockquote>
 <div></div></blockquote>
 <section id="polarisation-procedure">
-<span id="polarisation-procedure-page"></span><h1><span class="section-number">7. </span>Polarisation Procedure<a class="headerlink" href="#polarisation-procedure" title="Link to this heading">¶</a></h1>
+<span id="polarisation-procedure-page"></span><h1><span class="section-number">5. </span>Polarisation Procedure<a class="headerlink" href="#polarisation-procedure" title="Link to this heading">¶</a></h1>
 <p>This method regroups the different step presented in the previous part in order to automate them. The aim of this procedure is to literally ‘’press a button’’ to analyse your results so that you can have a coffee (or a tea (or a hot chocolate)) while the code is running. However, before achieving such dream, you should try the many parameters used. Many of them can be chosen automatically, but checking the different step by yourself is always a good behaviour.</p>
 <p>The function to use is <em>alpaga.polarisation_intensity</em>, and below is presented the different argument that can be passed, corresponding to the different procedure step.</p>
 <section id="overview-of-the-procedure">
-<h2><span class="section-number">7.1. </span>Overview of the procedure<a class="headerlink" href="#overview-of-the-procedure" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">5.1. </span>Overview of the procedure<a class="headerlink" href="#overview-of-the-procedure" title="Link to this heading">¶</a></h2>
 <blockquote>
 <div><ol class="arabic simple">
 <li><p>Open all the file and make sure they work using alpaga.find_angle_iter_from_dir ADD ref. Can be bypassed is you define your custom values.</p></li>
@@ -54,13 +54,13 @@
 <p>Below is presented the argument that you can pass to the function depending on what step it refers to. Many explanations are provided in other pages of the wiki, so if some argument feels unfamiliar to you, you may want to read the corresponding page.</p>
 </section>
 <section id="which-file-to-analyse">
-<h2><span class="section-number">7.2. </span>Which file to analyse?<a class="headerlink" href="#which-file-to-analyse" title="Link to this heading">¶</a></h2>
-<p>This method expects to analyse data with several ‘polarisation angle’. The expected data architecture and the function that will be used to open them are presented in the <a class="reference internal" href="file_management.html#file-management-page"><span class="std std-ref">File management</span></a> page. If you want to use all the data available in a given directory, you just have to set the <em>directory</em> argument – and maybe the <em>extention</em> if your data files are not in the .dat format. The others are there for more specific usage.</p>
+<h2><span class="section-number">5.2. </span>Which file to analyse?<a class="headerlink" href="#which-file-to-analyse" title="Link to this heading">¶</a></h2>
+<p>This method expects to analyse data with several ‘polarisation angle’. The expected data architecture and the function that will be used to open them are presented in the <a class="reference internal" href="file_management.html#file-management-page"><span class="std std-ref">File Management</span></a> page. If you want to use all the data available in a given directory, you just have to set the <em>directory</em> argument – and maybe the <em>extention</em> if your data files are not in the .dat format. The others are there for more specific usage.</p>
 <blockquote>
 <div><ul>
 <li><p><strong>directory</strong>: str or bool</p>
 <blockquote>
-<div><p>If string: The directory where is located the data you want to analyse. Please note that only one ‘experiment’ should be stored in this directory. See <a class="reference internal" href="file_management.html#file-management-page"><span class="std std-ref">File management</span></a> page.</p>
+<div><p>If string: The directory where is located the data you want to analyse. Please note that only one ‘experiment’ should be stored in this directory. See <a class="reference internal" href="file_management.html#file-management-page"><span class="std std-ref">File Management</span></a> page.</p>
 <p>If set to False: The procedure to find the files, the number of iterations and the list of angles is bypass. Therefore, you should provide these values using all the following argument: <em>prefix_file</em>, <em>L_files_angles</em>, <em>N_iter</em> and <em>extention</em>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -102,7 +102,7 @@
 </a>
 </section>
 <section id="averaging-the-acquisition">
-<h2><span class="section-number">7.3. </span>Averaging the acquisition<a class="headerlink" href="#averaging-the-acquisition" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">5.3. </span>Averaging the acquisition<a class="headerlink" href="#averaging-the-acquisition" title="Link to this heading">¶</a></h2>
 <p>As explained in the <a class="reference internal" href="cleaning_averaging_spectra.html#cleaning-averaging-spectra-page"><span class="std std-ref">Cleaning and Averaging Spectra</span></a> page, this step does not depend a lot on the parameter chosen. Therefore, try to clean the spectra for a single angle, the parameters found should be sufficient. The parameters set here are the same for every angle of the analysis.</p>
 <blockquote>
 <div><ul class="simple">
@@ -125,7 +125,7 @@
 </div></blockquote>
 </section>
 <section id="noise-removal-gaussian-fit-and-automatic-feedback">
-<h2><span class="section-number">7.4. </span>Noise removal, Gaussian fit and automatic feedback<a class="headerlink" href="#noise-removal-gaussian-fit-and-automatic-feedback" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">5.4. </span>Noise removal, Gaussian fit and automatic feedback<a class="headerlink" href="#noise-removal-gaussian-fit-and-automatic-feedback" title="Link to this heading">¶</a></h2>
 <p>The noise management and the extraction of the Gaussian are the numerical part where the parameters have the biggest impact on the result. Therefore, in this automatic function, several analyses can be performed in order to reduce the ‘operator choices’. The aim is to provide a robust and objective way of choosing the parameters, as well as saving time. Indeed, analysing your data with these ‘automatic’ parameters provide you better reproducibility compared to the case where you choose the parameter for every acquisition!</p>
 <a class="reference internal image-reference" href="_images/alpaga_beau_2.jpg"><img alt="_images/alpaga_beau_2.jpg" class="align-center" src="_images/alpaga_beau_2.jpg" style="width: 450px;" />
 </a>
@@ -241,7 +241,7 @@
 </dl>
 </section>
 <section id="how-the-data-are-saved">
-<h2><span class="section-number">7.5. </span>How the data are saved<a class="headerlink" href="#how-the-data-are-saved" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">5.5. </span>How the data are saved<a class="headerlink" href="#how-the-data-are-saved" title="Link to this heading">¶</a></h2>
 <p>The results and the input argument are saved using a dictionary. This dictionary can be saved in a ‘pickle’, that can be opened easily in python. To define the name of this file, use the argument <em>name_save_result</em>:</p>
 <blockquote>
 <div><ul>
@@ -318,7 +318,7 @@
 <p>If you want to have some example of plots using these results, see the notebook tutorial.</p>
 </section>
 <section id="some-other-parameters">
-<h2><span class="section-number">7.6. </span>Some other parameters<a class="headerlink" href="#some-other-parameters" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">5.6. </span>Some other parameters<a class="headerlink" href="#some-other-parameters" title="Link to this heading">¶</a></h2>
 <a class="reference internal image-reference" href="_images/alpaga_19.jpg"><img alt="_images/alpaga_19.jpg" class="align-left" src="_images/alpaga_19.jpg" style="width: 150px;" />
 </a>
 <p>While the function is running, several lines and plots are shown. Do not worry, they are here in case the execution crashes to help you find the error. If you are fast enough, you can even check that the procedure for every angle is well executed. If you want to have more time to see that, you can set the variable <em>waiting_time</em> to a float value. The code will stop from time to time. Note that this slows the procedure…</p>
@@ -365,28 +365,26 @@
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">1. Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html#testing-your-installation">2. Testing your installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html#tutorials">3. Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="file_management.html">4. File management</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cleaning_averaging_spectra.html">5. Cleaning and Averaging Spectra</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fitting_procedure.html">6. Fitting the Gaussian</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">7. Polarisation Procedure</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#overview-of-the-procedure">7.1. Overview of the procedure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#which-file-to-analyse">7.2. Which file to analyse?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#averaging-the-acquisition">7.3. Averaging the acquisition</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#noise-removal-gaussian-fit-and-automatic-feedback">7.4. Noise removal, Gaussian fit and automatic feedback</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#how-the-data-are-saved">7.5. How the data are saved</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#some-other-parameters">7.6. Some other parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_management.html">2. File Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cleaning_averaging_spectra.html">3. Cleaning and Averaging Spectra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fitting_procedure.html">4. Fitting the Gaussian</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">5. Polarisation Procedure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview-of-the-procedure">5.1. Overview of the procedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#which-file-to-analyse">5.2. Which file to analyse?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#averaging-the-acquisition">5.3. Averaging the acquisition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#noise-removal-gaussian-fit-and-automatic-feedback">5.4. Noise removal, Gaussian fit and automatic feedback</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-the-data-are-saved">5.5. How the data are saved</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#some-other-parameters">5.6. Some other parameters</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="analysis_SHS.html">8. SHS analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="analysis_SSHG.html">9. SSHG analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="python_advice.html">10. Python advice</a></li>
-<li class="toctree-l1"><a class="reference internal" href="experimental_advice.html">11. Experimental and procedure advice</a></li>
-<li class="toctree-l1"><a class="reference internal" href="for_developpers.html">12. For Developpers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="alpaga.html">13. Source code</a></li>
-<li class="toctree-l1"><a class="reference internal" href="devs_page.html">14. Alpaga’s developers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">15. Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis_SHS.html">6. SHS analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis_SSHG.html">7. SSHG analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_advice.html">8. Python advice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="experimental_advice.html">9. Experimental and procedure advice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="for_developpers.html">10. For Developpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="alpaga.html">11. Source code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devs_page.html">12. Alpaga’s developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">13. Reference</a></li>
 </ul>
 
 

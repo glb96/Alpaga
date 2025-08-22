@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>8. SHS analysis &#8212; Alpaga 1.2 documentation</title>
+    <title>6. SHS analysis &#8212; Alpaga 1.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
@@ -15,8 +15,8 @@
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="9. SSHG analysis" href="analysis_SSHG.html" />
-    <link rel="prev" title="7. Polarisation Procedure" href="polarisation_procedure.html" />
+    <link rel="next" title="7. SSHG analysis" href="analysis_SSHG.html" />
+    <link rel="prev" title="5. Polarisation Procedure" href="polarisation_procedure.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -37,15 +37,15 @@
   <blockquote>
 <div></div></blockquote>
 <section id="shs-analysis">
-<span id="analysis-shs-page"></span><h1><span class="section-number">8. </span>SHS analysis<a class="headerlink" href="#shs-analysis" title="Link to this heading">¶</a></h1>
+<span id="analysis-shs-page"></span><h1><span class="section-number">6. </span>SHS analysis<a class="headerlink" href="#shs-analysis" title="Link to this heading">¶</a></h1>
 <p>Once the spectrum analysis for all the angles has been performed, see ref:<span class="incremental">polarisation_procedure_page</span>, several observables can be extracted from the angle-dependent intensity data. Many possible analyses can be made depending on what you are looking for. We are detailling the two that are commonly used at your lab, ILM.</p>
 <a class="reference internal image-reference" href="_images/alpaga_18.jpg"><img alt="_images/alpaga_18.jpg" class="align-right" src="_images/alpaga_18.jpg" style="width: 200px;" />
 </a>
 <p>But, if you have developed your own code that extracts other observable from the intensity in function of the polarization angle data, please do not hesitate to contact us so that this code can be added in Alpaga!</p>
 <section id="theoritical-stuff">
-<h2><span class="section-number">8.1. </span>Theoritical stuff<a class="headerlink" href="#theoritical-stuff" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">6.1. </span>Theoritical stuff<a class="headerlink" href="#theoritical-stuff" title="Link to this heading">¶</a></h2>
 <section id="a-b-c-formalism">
-<h3><span class="section-number">8.1.1. </span>a, b ,c formalism<a class="headerlink" href="#a-b-c-formalism" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">6.1.1. </span>a, b ,c formalism<a class="headerlink" href="#a-b-c-formalism" title="Link to this heading">¶</a></h3>
 <p id="id1">One can show that the expression of the Second Harmonic Scattering (SHS) intensity resolved in polarization is (see for instance <span id="id2">[<a class="reference internal" href="reference.html#id4" title="Guillaume Le Breton. Second harmonic generation of non-resonant liquid: from the molecular response to the experimental measurement. PhD thesis, Université Claude Bernard-Lyon I, 2022.">5</a>]</span> Chp V or <span id="id3">[<a class="reference internal" href="reference.html#id2" title="Fabien Rondepierre. Corrélations orientationnelles des liquides explorées par diffusion de second harmonique. PhD thesis, Université Claude Bernard Lyon I, 2025.">7</a>]</span>  Chp II):</p>
 <div class="math notranslate nohighlight">
 \[I^{\Gamma}_{SHS}(\gamma) = a^{\Gamma}cos^4(\gamma) + b^{\Gamma} cos^2(\gamma)sin^2(\gamma) + c^{\Gamma}sin^4(\gamma)\]</div>
@@ -85,7 +85,7 @@
 </div>
 </section>
 <section id="i0-i2-i4-formalism">
-<h3><span class="section-number">8.1.2. </span>i0, i2, i4 formalism<a class="headerlink" href="#i0-i2-i4-formalism" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">6.1.2. </span>i0, i2, i4 formalism<a class="headerlink" href="#i0-i2-i4-formalism" title="Link to this heading">¶</a></h3>
 <p>Polarized-SHS resolved experiments can also be analyzed with Fourier series developments  see <span id="id8">[<a class="reference internal" href="reference.html#id9" title="Julien Duboisset and Pierre-François Brevet. Salt-induced long-to-short range orientational transition in water. Phys. Rev. Lett., 120:263001, Jun 2018. URL: https://link.aps.org/doi/10.1103/PhysRevLett.120.263001, doi:10.1103/PhysRevLett.120.263001.">12</a>]</span> :</p>
 <div class="math notranslate nohighlight">
 \[I^{\Gamma}_{SHS}(\gamma) = i_0^{\Gamma} + i_2^{\Gamma} cos(2\gamma) + i_4^{\Gamma}cos(4\gamma)\]</div>
@@ -132,7 +132,7 @@
 </section>
 </section>
 <section id="numerical-stuff">
-<h2><span class="section-number">8.2. </span>Numerical Stuff<a class="headerlink" href="#numerical-stuff" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">6.2. </span>Numerical Stuff<a class="headerlink" href="#numerical-stuff" title="Link to this heading">¶</a></h2>
 <p>All of these calculations are numericaly implemented in shs_module.analyse_polarization_SHS in V and H version:</p>
 <dl class="py function">
 <dt class="sig sig-object py">
@@ -216,28 +216,26 @@
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">1. Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html#testing-your-installation">2. Testing your installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html#tutorials">3. Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="file_management.html">4. File management</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cleaning_averaging_spectra.html">5. Cleaning and Averaging Spectra</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fitting_procedure.html">6. Fitting the Gaussian</a></li>
-<li class="toctree-l1"><a class="reference internal" href="polarisation_procedure.html">7. Polarisation Procedure</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">8. SHS analysis</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#theoritical-stuff">8.1. Theoritical stuff</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#a-b-c-formalism">8.1.1. a, b ,c formalism</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#i0-i2-i4-formalism">8.1.2. i0, i2, i4 formalism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_management.html">2. File Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cleaning_averaging_spectra.html">3. Cleaning and Averaging Spectra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fitting_procedure.html">4. Fitting the Gaussian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="polarisation_procedure.html">5. Polarisation Procedure</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">6. SHS analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#theoritical-stuff">6.1. Theoritical stuff</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#a-b-c-formalism">6.1.1. a, b ,c formalism</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#i0-i2-i4-formalism">6.1.2. i0, i2, i4 formalism</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#numerical-stuff">8.2. Numerical Stuff</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#numerical-stuff">6.2. Numerical Stuff</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="analysis_SSHG.html">9. SSHG analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="python_advice.html">10. Python advice</a></li>
-<li class="toctree-l1"><a class="reference internal" href="experimental_advice.html">11. Experimental and procedure advice</a></li>
-<li class="toctree-l1"><a class="reference internal" href="for_developpers.html">12. For Developpers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="alpaga.html">13. Source code</a></li>
-<li class="toctree-l1"><a class="reference internal" href="devs_page.html">14. Alpaga’s developers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">15. Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis_SSHG.html">7. SSHG analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_advice.html">8. Python advice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="experimental_advice.html">9. Experimental and procedure advice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="for_developpers.html">10. For Developpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="alpaga.html">11. Source code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devs_page.html">12. Alpaga’s developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">13. Reference</a></li>
 </ul>
 
 

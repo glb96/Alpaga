@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>9. SSHG analysis &#8212; Alpaga 1.2 documentation</title>
+    <title>7. SSHG analysis &#8212; Alpaga 1.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
@@ -15,8 +15,8 @@
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="10. Python advice" href="python_advice.html" />
-    <link rel="prev" title="8. SHS analysis" href="analysis_SHS.html" />
+    <link rel="next" title="8. Python advice" href="python_advice.html" />
+    <link rel="prev" title="6. SHS analysis" href="analysis_SHS.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -37,7 +37,7 @@
   <blockquote>
 <div></div></blockquote>
 <section id="sshg-analysis">
-<span id="analysis-sshg-page"></span><h1><span class="section-number">9. </span>SSHG analysis<a class="headerlink" href="#sshg-analysis" title="Link to this heading">¶</a></h1>
+<span id="analysis-sshg-page"></span><h1><span class="section-number">7. </span>SSHG analysis<a class="headerlink" href="#sshg-analysis" title="Link to this heading">¶</a></h1>
 <p>Once the spectrum analysis for all the angles has been performed, see ref:<span class="incremental">polarisation_procedure_page</span>, several observables can be extracted from the angle-dependent intensity data. Many possible analyses can be made depending on what you are looking for. We are detailing here the analysis commonly used in the ONLI team of ILM.</p>
 <a class="reference internal image-reference" href="_images/alpaga_23.jpg"><img alt="_images/alpaga_23.jpg" class="align-right" src="_images/alpaga_23.jpg" style="width: 200px;" />
 </a>
@@ -48,7 +48,7 @@
 I_{S}(\gamma) &amp;\propto \lvert a_1 \chi_{xxz} sin(2\gamma)  \rvert ^2\end{split}\]</div>
 <p>Where <span class="math notranslate nohighlight">\(\gamma\)</span> is the incoming polarization angle and {S, P} are the output polarization angles.</p>
 <section id="a-i-coefficients">
-<h2><span class="section-number">9.1. </span><span class="math notranslate nohighlight">\(a_i\)</span> coefficients<a class="headerlink" href="#a-i-coefficients" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">7.1. </span><span class="math notranslate nohighlight">\(a_i\)</span> coefficients<a class="headerlink" href="#a-i-coefficients" title="Link to this heading">¶</a></h2>
 <a class="reference internal image-reference" href="_images/three_layer_model.jpg" id="ai-coeff-section"><img alt="_images/three_layer_model.jpg" class="align-right" id="ai-coeff-section" src="_images/three_layer_model.jpg" style="width: 300px;" />
 </a>
 <p>In order to extract the <span class="math notranslate nohighlight">\(\chi\)</span> coefficients, we first need a value of the ai coefficients. They are calculated from the three layer models <span id="id1">[<a class="reference internal" href="reference.html#id13" title="Pierre-François Brevet. Surface second harmonic generation. PPUR presses polytechniques, 1997.">1</a>]</span>, where an ‘interfacial’ layer produces the S-SHG signal. These ai coefficients contains the Fresnel transmission and reflexion coefficients at the different interfaces. In order to calculate them, we only need refractive indexes of the two bulk media at fundamental and harmonic frequencies, and the angle of incidence between the laser beam and the interface interface.</p>
@@ -85,7 +85,7 @@ reflected angle of reflected wave]</p>
 
 </section>
 <section id="theoretical-equation-for-sshg-intensities">
-<h2><span class="section-number">9.2. </span>Theoretical equation for SSHG intensities<a class="headerlink" href="#theoretical-equation-for-sshg-intensities" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">7.2. </span>Theoretical equation for SSHG intensities<a class="headerlink" href="#theoretical-equation-for-sshg-intensities" title="Link to this heading">¶</a></h2>
 <p id="chi-coeff-section">Once the ai coefficients are calculated, one can calculate the intensity curves from some chi coefficients..</p>
 <dl class="py function">
 <dt class="sig sig-object py">
@@ -138,7 +138,7 @@ These two functions are not the ones that make the fitting.  They just describe 
 </a>
 </section>
 <section id="fitting-procedure-to-obtain-chi-coefficients">
-<h2><span class="section-number">9.3. </span>Fitting procedure to obtain Chi coefficients<a class="headerlink" href="#fitting-procedure-to-obtain-chi-coefficients" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">7.3. </span>Fitting procedure to obtain Chi coefficients<a class="headerlink" href="#fitting-procedure-to-obtain-chi-coefficients" title="Link to this heading">¶</a></h2>
 <p>The previous functions for <span class="math notranslate nohighlight">\(a_i\)</span> and theoretical intensities are combined in a single function which allow to extract <span class="math notranslate nohighlight">\(\chi\)</span> coefficients from experimental data.
 This function uses the datas and experimental parameters (such as medium refractive indexes and incidence angle of the fundamental beam) and, by fitting, returns the chi coefficients and ai.</p>
 <p>It’s also important to note that with these equation there is two possible sets of coefficient that differs only for chi coefficient signs which are equivalent. We can distinguish the physical set by looking at the 45° polarisation.</p>
@@ -219,25 +219,23 @@ chi_ZZset2]</p>
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">1. Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html#testing-your-installation">2. Testing your installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html#tutorials">3. Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="file_management.html">4. File management</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cleaning_averaging_spectra.html">5. Cleaning and Averaging Spectra</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fitting_procedure.html">6. Fitting the Gaussian</a></li>
-<li class="toctree-l1"><a class="reference internal" href="polarisation_procedure.html">7. Polarisation Procedure</a></li>
-<li class="toctree-l1"><a class="reference internal" href="analysis_SHS.html">8. SHS analysis</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">9. SSHG analysis</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#a-i-coefficients">9.1. <span class="math notranslate nohighlight">\(a_i\)</span> coefficients</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#theoretical-equation-for-sshg-intensities">9.2. Theoretical equation for SSHG intensities</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#fitting-procedure-to-obtain-chi-coefficients">9.3. Fitting procedure to obtain Chi coefficients</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_management.html">2. File Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cleaning_averaging_spectra.html">3. Cleaning and Averaging Spectra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fitting_procedure.html">4. Fitting the Gaussian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="polarisation_procedure.html">5. Polarisation Procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis_SHS.html">6. SHS analysis</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">7. SSHG analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#a-i-coefficients">7.1. <span class="math notranslate nohighlight">\(a_i\)</span> coefficients</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#theoretical-equation-for-sshg-intensities">7.2. Theoretical equation for SSHG intensities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fitting-procedure-to-obtain-chi-coefficients">7.3. Fitting procedure to obtain Chi coefficients</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="python_advice.html">10. Python advice</a></li>
-<li class="toctree-l1"><a class="reference internal" href="experimental_advice.html">11. Experimental and procedure advice</a></li>
-<li class="toctree-l1"><a class="reference internal" href="for_developpers.html">12. For Developpers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="alpaga.html">13. Source code</a></li>
-<li class="toctree-l1"><a class="reference internal" href="devs_page.html">14. Alpaga’s developers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">15. Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_advice.html">8. Python advice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="experimental_advice.html">9. Experimental and procedure advice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="for_developpers.html">10. For Developpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="alpaga.html">11. Source code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devs_page.html">12. Alpaga’s developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">13. Reference</a></li>
 </ul>
 
 
