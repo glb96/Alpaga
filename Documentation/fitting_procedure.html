@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>4. Fitting the Gaussian &#8212; Alpaga 1.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=61243dd2"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="5. Polarisation Procedure" href="polarisation_procedure.html" />
+    <link rel="prev" title="3. Cleaning and Averaging Spectra" href="cleaning_averaging_spectra.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <blockquote>
+<div></div></blockquote>
+<section id="fitting-the-gaussian">
+<span id="fitting-procedure-page"></span><h1><span class="section-number">4. </span>Fitting the Gaussian<a class="headerlink" href="#fitting-the-gaussian" title="Link to this heading">¶</a></h1>
+<p>In this page, we will see how to extract the Gaussian intensity from a spectrum. This procedure has been optimised in order to get the less possible choice to the operator, and to make this part the most reproducible as possible. Indeed, small change in this procedure parameters can lead to variation of the extracted intensity. Therefore, there are many methods available: it is up to you to choose the one you prefer, and to document which one you have picked!</p>
+<a class="reference internal image-reference" href="_images/alpaga_2.jpg"><img alt="_images/alpaga_2.jpg" class="align-right" src="_images/alpaga_2.jpg" style="width: 350px;" />
+</a>
+<p>First, the background around your Gaussian is most probably not flat. Indeed, due to fluorescence of your sample for instance, you can have a large noise which can make the Gaussian intensity extraction more difficult. Therefore, the first thing to do is to remove this noise.</p>
+<p>Then, the extraction of the intensity can be made. Several methods, fit or integral, can be used.</p>
+<p>In this page, it is assumed that the averaged and cleaned spectrum is given (called y value) as input as well as the wave number (called x values), see <a class="reference internal" href="cleaning_averaging_spectra.html#cleaning-averaging-spectra-page"><span class="std std-ref">Cleaning and Averaging Spectra</span></a> for more information. Note that the value and the unit of the x and y list does not matter for this analysis as long as the parameters respect the same unit and range.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If your curve is a Lorentzian, you can use the first step to get ride of the noise, then you will have to fit by yourself the intensity. Contact us if you want to implement this new fitting  procedure in Alpaga.</p>
+</div>
+<section id="remove-the-noise">
+<h2><span class="section-number">4.1. </span>Remove the noise<a class="headerlink" href="#remove-the-noise" title="Link to this heading">¶</a></h2>
+<a class="reference internal image-reference" href="_images/alpaga_10.jpg" id="remove-noise-section"><img alt="_images/alpaga_10.jpg" class="align-left" id="remove-noise-section" src="_images/alpaga_10.jpg" style="width: 300px;" />
+</a>
+<p>The spectra will be cut into 3 areas using the x values. The first area and the last one will be used in order to define the noise, while the second one should contain the Gaussian. The first and last area should be large enough in order to be fitted meaningfully by a polynomial function. If this ‘noise’ area is too large, the part where the Gaussian is located may not be properly fitted and thus modify the final intensity. If this noise area is too small, the noise fit can make no sense. A simple way to check if the area is too small is to add or remove one point to the noise area: the final Gaussian intensity should not be affected.</p>
+<p>&#64;Antonin: je te laisse étoffer cette explication en rajoutant des figures?</p>
+<p>For the order of the polynomial function  used to fit the noise, we recommend to use order 2, 3, or 4. We do not recommend to use less since the noise is often not a straight line. Higher term may work, but it can lead to wiggling in the Gaussian area.</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">analyze_run.</span></span><span class="sig-name descname"><span class="pre">remove_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l_cut</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[380,</span> <span class="pre">395,</span> <span class="pre">419,</span> <span class="pre">433]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order_fit_noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_fit_noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_spectra</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figure_counter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analyze_run.html#remove_noise"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Remove the noise of a spectra to make the gaussian fit easier.</p>
+<p>The x axis is given by <em>L_x</em> and the y axis <em>L_y</em>. Using the list <em>l_cut</em>, the list is cutted in 3 areas. From the x value <em>l_cut[0]</em> to <em>l_cut[1]</em> is define the first area, from <em>l_cut[1]</em> to <em>l_cut[2]</em> the second and <em>l_cut[2]</em> to <em>l_cut[3]</em> the last one. The second area is the target area where the gaussian should be. The first and last area will be used to define the noise in the second area using a polynomial fit.</p>
+<p>This function will first find the element of the x axis to create the 3 areas. In order to get the elements to recreate these area, set the optional parameter return_boundary to True. It will return the list <em>x_cut</em> which can be use as follow to define the 3 areas:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">L_y_noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">L_y</span><span class="p">[</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">L_y</span><span class="p">[</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span> <span class="c1"># to define the first and last area</span>
+<span class="n">L_y_target</span> <span class="o">=</span> <span class="n">L_y</span><span class="p">[</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span><span class="n">x_cut</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span> <span class="c1"># to define the second area</span>
+</pre></div>
+</div>
+<p>Then, the first and last part are fitted using polynomial function up to the order given by the optional parameter <em>order_fit_noise</em>. To make this function return the fitted noise, set the optional parameter <em>return_fit_noise</em> to True. It will return the list <em>L_y_noise_fit</em> which is the polynomial function calculated throughout the 3 areas.</p>
+<p>Finally, it substracts the fitted noise to all the 3 areas. Therefore, the first and last area should be close to zero, while the second area should contain a nice gaussian. If it is not the case, you should try different <em>l_cut</em> value in order to get the best noise fit as possible.</p>
+<p>In order to plot the different areas and the polynomial fit, set <em>show_spectra</em> to ‘all’. The initial number of the figure (plt.figure(K)) is given by the argument <em>figure_counter</em>.</p>
+<p>The first returned list is the x axis starting from the l_cut[0] until l_cut[2], <em>L_x_cleaned</em>.
+The second returned list is  the y value where the noise has been substracted, <em>L_y_noise_fit</em>. Its size is the same as the returned x axis.</p>
+<p>If return_fit_noise is set to True, the list <em>L_y_noise_fit</em> containing the polynome calculated within the 3 areas is returned.</p>
+<p>If return_boundary is set to True, the list <em>x_cut</em>  containing the positions of the l_cut values in the original x axis is returned – see above.</p>
+<p>In any case, the last returned value is an int, which is the next figure number that you can use – without interfering with the function plots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>L_x</strong> (<em>list</em>) – The x axis that will be used to define the 3 areas.</p></li>
+<li><p><strong>L_y</strong> (<em>list</em>) – The y axis where the noise should be remove</p></li>
+<li><p><strong>l_cut</strong> (<em>list</em><em> of </em><em>float</em>) – [Optional] Define the 3 areas using the value of <em>L_x</em>. <em>l_cut</em> should contained the <strong>value</strong> to define the different areas, not the element number. See the example.</p></li>
+<li><p><strong>order_fit_noise</strong> (<em>int</em>) – [Optional] The polynome order used for the noise fit. It is recommanded to used 2, 3 or 4. The polynome order has very small impact in the result if the <em>l_cut</em> parameter is well defined.</p></li>
+<li><p><strong>return_fit_noise</strong> (<em>bool</em>) – [Optional] If set to True, return the noise fitted by a polynomial, <em>L_y_noise_fit</em>. Return a list of values, not the function.</p></li>
+<li><p><strong>return_boundary</strong> (<em>bool</em>) – [Optional] If set to True, return the <em>x_axis</em> which contains the element number to define the boundary of the 3 areas from the initial <em>L_x</em> list.</p></li>
+<li><p><strong>show_spectra</strong> (<em>str</em>) – [Optional] If set to ‘all’, print the 3 area and the polynomial fit.</p></li>
+<li><p><strong>figure_counter</strong> (<em>int</em>) – [Optional] The number of the first figure plot.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>L_x_cleaned</strong> (<em>list</em>) – The x axis containing only theData_tutorial 3 areas.</p></li>
+<li><p><strong>L_y_cleaned</strong> (<em>list</em>) – The y values without the noise fit. Have the same size as  L_x_cleaned.</p></li>
+<li><p><strong>L_y_noise_fit</strong> (<em>list</em>) – The noise fitted by a polynomial. Is returned if <em>return_fit_noise</em> is set to True.</p></li>
+<li><p><strong>x_cut</strong> (<em>list</em>) – The element position to define the boundary of the 3 areas from the initial <em>L_x</em> list. Is returned if <em>return_boundary</em> is set to True.</p></li>
+<li><p><strong>figure_counter</strong> (<em>int</em>) – The new value for your next figure number.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>See the tutorial for precise examples. Below is shown how the results will be returned depending on the optional parameters:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">L_y_cleaned</span><span class="p">,</span> <span class="n">figure_counter</span> <span class="o">=</span> <span class="n">alpaga</span><span class="o">.</span><span class="n">remove_noise</span><span class="p">(</span><span class="n">L_lambda</span><span class="p">,</span> <span class="n">L_spectra</span><span class="p">,</span> <span class="n">l_cut</span><span class="o">=</span><span class="n">l_cut</span><span class="p">,</span> <span class="n">order_fit_noise</span><span class="o">=</span><span class="n">order_fit_noise</span><span class="p">,</span> <span class="n">return_fit_noise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_boundary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_spectra</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">figure_counter</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">L_y_cleaned</span><span class="p">,</span> <span class="n">L_y_noise_fit</span><span class="p">,</span> <span class="n">figure_counter</span> <span class="o">=</span> <span class="n">alpaga</span><span class="o">.</span><span class="n">remove_noise</span><span class="p">(</span><span class="n">L_lambda</span><span class="p">,</span> <span class="n">L_spectra</span><span class="p">,</span> <span class="n">l_cut</span><span class="o">=</span><span class="n">l_cut</span><span class="p">,</span> <span class="n">order_fit_noise</span><span class="o">=</span><span class="n">order_fit_noise</span><span class="p">,</span> <span class="n">return_fit_noise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_boundary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_spectra</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">figure_counter</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">L_y_cleaned</span><span class="p">,</span> <span class="n">x_cut</span><span class="p">,</span> <span class="n">figure_counter</span> <span class="o">=</span> <span class="n">alpaga</span><span class="o">.</span><span class="n">remove_noise</span><span class="p">(</span><span class="n">L_lambda</span><span class="p">,</span> <span class="n">L_spectra</span><span class="p">,</span> <span class="n">l_cut</span><span class="o">=</span><span class="n">l_cut</span><span class="p">,</span> <span class="n">order_fit_noise</span><span class="o">=</span><span class="n">order_fit_noise</span><span class="p">,</span> <span class="n">return_fit_noise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_boundary</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_spectra</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">figure_counter</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">L_y_cleaned</span><span class="p">,</span> <span class="n">L_y_noise_fit</span><span class="p">,</span> <span class="n">x_cut</span><span class="p">,</span> <span class="n">figure_counter</span> <span class="o">=</span> <span class="n">alpaga</span><span class="o">.</span><span class="n">remove_noise</span><span class="p">(</span><span class="n">L_lambda</span><span class="p">,</span> <span class="n">L_spectra</span><span class="p">,</span> <span class="n">l_cut</span><span class="o">=</span><span class="n">l_cut</span><span class="p">,</span> <span class="n">order_fit_noise</span><span class="o">=</span><span class="n">order_fit_noise</span><span class="p">,</span> <span class="n">return_fit_noise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_boundary</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show_spectra</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">figure_counter</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that the argument should be defined before in the code – see the tutorial.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the noise removal procedure has worked well, the first and last area should be flat and in average zero. The most important is that there is no curvature: otherwise the Gaussian fit below would return wrong value. If you struggle to have a flat first and last area, try to reduce them – for instance set the first and last area to 10 nm.</p>
+</div>
+<a class="reference internal image-reference" href="_images/gaussian_distribution_meme.png"><img alt="_images/gaussian_distribution_meme.png" class="align-right" src="_images/gaussian_distribution_meme.png" style="width: 200px;" />
+</a>
+</section>
+<section id="gaussian-intensity-extraction">
+<h2><span class="section-number">4.2. </span>Gaussian intensity extraction<a class="headerlink" href="#gaussian-intensity-extraction" title="Link to this heading">¶</a></h2>
+<p id="gaussian-fit-section">Now that we have removed the background, the Gaussian spectra should be much easier to fit. There are two ways to extract the Gaussian intensity: by a function fit, or by an integral procedure.</p>
+<ol class="arabic">
+<li><p>Gaussian fit</p>
+<blockquote>
+<div><p>This method will fit the curve with a Gaussian function:</p>
+<div class="math notranslate nohighlight">
+\[f(x) = I_0 \exp \left[ - \left( \frac{ x - \lambda_0}{w_0} \right)^2 \right]\]</div>
+<p>and return the intensity <span class="math notranslate nohighlight">\(I_0\)</span>, the position of the maximum <span class="math notranslate nohighlight">\(\lambda_0\)</span> and the waist <span class="math notranslate nohighlight">\(w_0\)</span>. This f(x) function is defined as the <em>alpaga.fit_gausse</em> function.</p>
+</div></blockquote>
+</li>
+<li><dl>
+<dt>Integral method</dt><dd><p>This method assumes that the position of the maximum and the waist is known, and extract the intensity using the value of the integral:</p>
+<div class="math notranslate nohighlight">
+\[f(x) = I_0 \exp \left[ - \left( \frac{ x - \lambda_0}{w_0} \right)^2 \right]
+\int_{-\infty}^{+ \infty} f(x) dx = I_0 w_0 \sqrt \pi\]</div>
+<p>The integral is performed in the <em>alpaga.intensity_from_gaussian_integral</em> function, and return the intensity.</p>
+</dd>
+</dl>
+</li>
+</ol>
+<a class="reference internal image-reference" href="_images/alpaga_3.jpg"><img alt="_images/alpaga_3.jpg" class="align-center" src="_images/alpaga_3.jpg" style="width: 300px;" />
+</a>
+<p>The function alpaga.fit_gausse defines the gaussian described in the first method. It is not the function that perform the fit, see bellow, but the one that returns a gaussian value for given x and all the other gaussian parameters. You may use this function to check how the ‘’gaussian’’ intensity is defined in Alpaga.</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">analyze_run.</span></span><span class="sig-name descname"><span class="pre">fit_gausse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">waist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analyze_run.html#fit_gausse"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Function used to define the ‘gaussian shape’ in Alpaga.</p>
+<p>y = intensity*np.exp(-((x-lambda_0)/waist)**2)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>list</em>) – The x values</p></li>
+<li><p><strong>intensity</strong> (<em>float</em>) – The gaussian intensity, the parameter targeted by the whole procedure.</p></li>
+<li><p><strong>lambda_0</strong> (<em>float</em>) – The position of the gaussian maximum.</p></li>
+<li><p><strong>waist</strong> (<em>float</em>) – The waist of the gaussian.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>y</strong> – The gaussian intensity</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>And here is the function used to extract the intensity from the integral method:</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">analyze_run.</span></span><span class="sig-name descname"><span class="pre">intensity_from_gaussian_integral</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L_x_cleaned</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_y_cleaned</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">waist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analyze_run.html#intensity_from_gaussian_integral"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Extract the gaussian intensity using integration method. The integral is made using the numpy.trapz function. Then, the intensity is given by:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">I0</span> <span class="o">=</span> <span class="n">integral_value</span><span class="o">/</span><span class="p">(</span><span class="n">waist</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Note that in this procedure there is not yet uncertitude calculations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>L_x_cleaned</strong> (<em>list</em>) – The x-axis used to compute the integral. This axis should contain at least the gaussian.</p></li>
+<li><p><strong>L_y_cleaned</strong> (<em>list</em>) – The y-axis used to compute the integral. Usually, this value is the output obtained by the <a class="reference internal" href="#remove-noise-section"><span class="std std-ref">alpaga.remove_noise function</span></a>. Appart from the gaussian curve, the rest of the value should be as close to zero as possible. Since the integration is made over the full list, the other values can affect the final intensity if they are not in average zero.</p></li>
+<li><p><strong>lambda_0</strong> (<em>float</em>) – Useless. This input is still in the code for coherence with the other possible method.</p></li>
+<li><p><strong>waist</strong> (<em>float</em>) – The waist of the gaussian. Used to extract the gaussian intensity from the integral value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>I0</strong> – The computed gaussian intensity</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>The Gaussian fit is the more versatile method: it can give you the intensity, along with important information: the waist and the maximum position. However, since this method uses a fit through all the curve, it can have an error if the intensity is small.</p>
+<p>On the other hand, the integral method seems more robust to extract the intensity, but it requires to know the waist. For ‘easy-to-fit Gaussian curve’, the two method return the same result. It is not clear which method is the most precise, therefore they are both always available.</p>
+<p>The function to extract the Gaussian intensity uses the previous one, <em>alpaga.remove_noise</em>, to get ride of the noise. If you are working already with noise-free curve, this should not be a problem.</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">analyze_run.</span></span><span class="sig-name descname"><span class="pre">fit_gaussian_from_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l_cut</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[380,</span> <span class="pre">395,</span> <span class="pre">419,</span> <span class="pre">433]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order_fit_noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method_fit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fit_gauss'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds_fit_gausse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">([0,</span> <span class="pre">395,</span> <span class="pre">1],</span> <span class="pre">[inf,</span> <span class="pre">410,</span> <span class="pre">25])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_0_ref</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">403</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">waist_ref</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclu_zone</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_spectra</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figure_counter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analyze_run.html#fit_gaussian_from_noise"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>This method returns the intensity <em>I0</em>, the position of the maxima <em>lambda_0</em> and the waist <em>waist</em> for the gaussian in <em>L_y</em>. First, it removes the noise using the <a class="reference internal" href="#remove-noise-section"><span class="std std-ref">alpaga.remove_noise function</span></a>, then it extracts the intensity. Two method are available to extract the intensity:</p>
+<ol class="arabic">
+<li><p>If <em>method_fit</em> is set to ‘fit_gauss’:</p>
+<blockquote>
+<div><p>The intensity is extracted using the <em>scipy.optimize.curve_fit</em> function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="p">,</span> <span class="n">q</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">fit_gausse</span><span class="p">,</span> <span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">L_y_cleaned</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds_fit_gausse</span><span class="p">)</span>
+<span class="n">I0</span><span class="p">,</span> <span class="n">lambda_0</span><span class="p">,</span> <span class="n">waist</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Where the function fit_gausse is defined here ADDREF, the x and y input are the output of the cleaning procedure, see the <a class="reference internal" href="#remove-noise-section"><span class="std std-ref">alpaga.remove_noise function</span></a> and the bounds are given by the optional parameter <em>bounds_fit_gausse</em>. This method returns the intensity <em>I0</em>, the position of the maxima <em>lambda_0</em> and the waist <em>waist</em>. This make this approach the more polyvalent, and should be used in the first place to caracterise your experimental laser conditions – <em>i.e.</em> <em>lambda_0</em> and <em>waist</em>.</p>
+</div></blockquote>
+</li>
+<li><p>If <em>method_fit</em> is set to ‘fit_gauss_w_exclu’:</p>
+<blockquote>
+<div><p>It is the same method as before but with an exclusion zone (for exemple if an Hyper Raman band is close to your SHG signal). You have to add the exclusion zone with the parameter exclu_zone = [ X min of zone ; X max of zone ].</p>
+</div></blockquote>
+</li>
+<li><p>If <em>method_fit</em> is set to ‘integral_gauss’:</p>
+<blockquote>
+<div><p>The intensity is extracted using the function alpaga.intensity_from_gaussian_integral ADDREF:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">I0</span> <span class="o">=</span> <span class="n">intensity_from_gaussian_integral</span><span class="p">(</span><span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">L_y_cleaned</span><span class="p">,</span> <span class="n">lambda_0</span><span class="p">,</span> <span class="n">waist</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Where the <em>lambda_0</em> and <em>waist</em> are given by the optimal parameters <em>lambda_0_ref</em> and <em>waist_ref</em>. Note that the <em>lambda_0_ref</em> has no impact on the result – I0. It is just usefull for the plots.</p>
+</div></blockquote>
+</li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>L_x</strong> (<em>list</em>) – The x axis, used for the noise removal, see the <a class="reference internal" href="#remove-noise-section"><span class="std std-ref">alpaga.remove_noise function</span></a>, and the fit parameters.</p></li>
+<li><p><strong>L_y</strong> (<em>list</em>) – The y axis where the gaussian intensity should be extracted.</p></li>
+<li><p><strong>l_cut</strong> (<em>list</em><em> of </em><em>float</em>) – [Optional] Parameters used for the fit removal, see the <a class="reference internal" href="#remove-noise-section"><span class="std std-ref">alpaga.remove_noise function</span></a>.</p></li>
+<li><p><strong>order_fit_noise</strong> (<em>int</em>) – [Optional] Parameters used for the fit removal, see the <a class="reference internal" href="#remove-noise-section"><span class="std std-ref">alpaga.remove_noise function</span></a>.</p></li>
+<li><p><strong>method_fit</strong> (<em>str</em>) – [Optional] The method to use to extract the intensity once the noise has been removed.</p></li>
+<li><p><strong>bounds_fit_gausse</strong> (<em>list</em>) – [Optional] Defines the bounds for the free parameters used in the ‘fit_gauss’ method – see <em>method_fit</em> argument. You should try to narrow down the possible value of the parameters to avoid trouble if the gaussian intensity is low. Indeed, sometimes the fit will increase the waist instead of decreasing the intensity <em>I0</em>. For exemple, if you want to restrict the value of <em>lambda_0</em> within 401 and 405, and the value of the waist from 2 to 3, use: <em>bounds_fit_gausse</em> = ([0, 401, 1], [np.inf, 405, 3]). See the documentation of the <em>scipy.optimize.curve_fit</em> function for more information.</p></li>
+<li><p><strong>lambda_0_ref</strong> (<em>float</em>) – [Optional] The <em>lambda_0</em> value used for the ‘integral_gauss’ method – see <em>method_fit</em> argument. This parameter has no impact on the result, but on the plot that can be draw to check the procedure.</p></li>
+<li><p><strong>waist_ref</strong> (<em>float</em>) – [Optional] The <em>waist</em> value used for the ‘integral_gauss’ method – see <em>method_fit</em> argument. This parameter has an important influence on the <em>I0</em> value. Choose it wisely – see <a class="reference internal" href="polarisation_procedure.html#polarisation-procedure-page"><span class="std std-ref">Polarisation Procedure</span></a>.</p></li>
+<li><p><strong>exclu_zone</strong> (<em>list</em><em> of </em><em>float</em>) – [Optional] Couple of float defining the excluding zone during gaussian fit, if method_fit is set to ‘fit_gauss_w_exclu’</p></li>
+<li><p><strong>show_spectra</strong> (<em>str</em>) – [Optional] If set to ‘all’, prints figures to check the results. Otherwise no figure is plotted.</p></li>
+<li><p><strong>figure_counter</strong> (<em>int</em>) – [Optional] The number of the first figure plot.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>L_para_gauss</strong> (<em>list</em>) – The list of parameters to define the Gaussian: [I0, lambda_0, waist]. I0 is the Gaussian intensity, lambda_0 the value of the center wave-length and waist the waist of the Gaussian.</p></li>
+<li><p><strong>L_err</strong> (<em>list</em>) – The list of associated error for the Gaussian parameters: [err_I0, err_lambda_0, err_waist]. Note that not there is no associated error defined for the integral calculation method. The error list is still retrun but with zero values.</p></li>
+<li><p><strong>figure_counter</strong> (<em>int</em>) – The new value for your next figure number.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>See the tutorial for more examples. Here is the full procedure step by step:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># define the directory where the data are.</span>
+<span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">WORK_DIR</span><span class="p">,</span> <span class="s1">&#39;Eau_V_Spectres&#39;</span><span class="p">)</span>
+
+<span class="c1"># Find the Alpaga friendly parameters that describe the datas</span>
+<span class="n">prefix_file</span><span class="p">,</span> <span class="n">L_files_angles</span><span class="p">,</span> <span class="n">N_iter</span><span class="p">,</span> <span class="n">extension</span> <span class="o">=</span> <span class="n">alpaga</span><span class="o">.</span><span class="n">find_angle_iter_from_dir</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+
+<span class="c1"># Update the name to treat only one acquisition.</span>
+<span class="n">names</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">prefix_file</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">L_files_angles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Cleans the acquisition from the spikes and averges it over the N_iter</span>
+<span class="n">L_lambda</span><span class="p">,</span> <span class="n">L_spectra</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">alpaga</span><span class="o">.</span><span class="n">averaging_and_cleaning</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">N_iter</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;.dat&#39;</span><span class="p">,</span> <span class="n">type_cleaning</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">L_mean_cleaning_n</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">L_mean_cleaning_evo_max</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">],</span> <span class="n">show_spectra</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">figure_counter</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Remove the noise and return the gaussian parameters</span>
+<span class="n">intensity</span><span class="p">,</span> <span class="n">lambda_0</span><span class="p">,</span> <span class="n">omega</span><span class="p">,</span> <span class="n">figure_counter</span> <span class="o">=</span> <span class="n">Alpaga</span><span class="o">.</span><span class="n">analyze_run</span><span class="o">.</span><span class="n">fit_gaussian_from_noise</span><span class="p">(</span><span class="n">L_lambda</span><span class="p">,</span> <span class="n">L_spectra</span><span class="p">,</span> <span class="n">l_cut</span><span class="o">=</span><span class="p">[</span><span class="mi">380</span><span class="p">,</span> <span class="mi">399</span><span class="p">,</span> <span class="mi">414</span><span class="p">,</span> <span class="mi">431</span><span class="p">],</span> <span class="n">order_fit_noise</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">bounds_fit_gausse</span><span class="o">=</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">395</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="mi">410</span><span class="p">,</span> <span class="mi">25</span><span class="p">]),</span> <span class="n">show_spectra</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">intensity</span><span class="p">,</span> <span class="n">lambda_0</span><span class="p">,</span> <span class="n">omega</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="towards-automating">
+<h2><span class="section-number">4.3. </span>Towards automating<a class="headerlink" href="#towards-automating" title="Link to this heading">¶</a></h2>
+<a class="reference internal image-reference" href="_images/alpaga_7.jpg"><img alt="_images/alpaga_7.jpg" class="align-right" src="_images/alpaga_7.jpg" style="width: 300px;" />
+</a>
+<p>The extraction of the intensity from the averaged spectra is maybe the part where the numerical parameters influence the more the result. Therefore, it is recommended to:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Try several parameters to see how it fits <strong>your</strong> data. Certain samples may be much easier to fit than others.</p></li>
+<li><p>Use the <strong>same parameters</strong> for all your acquisition.</p></li>
+</ol>
+</div></blockquote>
+<p>The full automatic procedure is presented in the ref:<span class="incremental">polarisation_procedure_page</span>. It combines what has been presented in <a class="reference internal" href="file_management.html#file-management-page"><span class="std std-ref">File Management</span></a> , <a class="reference internal" href="cleaning_averaging_spectra.html#cleaning-averaging-spectra-page"><span class="std std-ref">Cleaning and Averaging Spectra</span></a> and in this page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Release<span class="colon">:</span></dt>
+<dd class="field-odd"><p>1.2</p>
+</dd>
+<dt class="field-even">Date<span class="colon">:</span></dt>
+<dd class="field-even"><p>Aug 22, 2025</p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/alpaga_logo.svg" alt="Logo of Alpaga"/>
+            </a></p>
+<h1 class="logo"><a href="index.html">Alpaga</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">1. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_management.html">2. File Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cleaning_averaging_spectra.html">3. Cleaning and Averaging Spectra</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">4. Fitting the Gaussian</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#remove-the-noise">4.1. Remove the noise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gaussian-intensity-extraction">4.2. Gaussian intensity extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#towards-automating">4.3. Towards automating</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="polarisation_procedure.html">5. Polarisation Procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis_SHS.html">6. SHS analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis_SSHG.html">7. SSHG analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_advice.html">8. Python advice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="experimental_advice.html">9. Experimental and procedure advice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="for_developpers.html">10. For Developpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="alpaga.html">11. Source code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="devs_page.html">12. Alpaga’s developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">13. Reference</a></li>
+</ul>
+
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;L-GPL.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/fitting_procedure.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

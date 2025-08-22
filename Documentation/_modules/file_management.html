@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>file_management &#8212; Alpaga 1.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <script src="../_static/documentation_options.js?v=61243dd2"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for file_management</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="c1"># Alpaga</span>
+<span class="c1"># AnaLyse en PolArisation de la Generation de second hArmonique </span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span> 
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">curve_fit</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1">############################################################################################</span>
+<span class="c1">################################# File management  #########################################</span>
+<span class="c1">############################################################################################ </span>
+
+<div class="viewcode-block" id="standard_file_name">
+<a class="viewcode-back" href="../file_management.html#file_management.standard_file_name">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">standard_file_name</span><span class="p">(</span><span class="n">prefixe</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">iteration</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;.dat&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Define how to built the file name of an acquisition. </span>
+<span class="sd">    </span>
+<span class="sd">    You may define your own function if your file does not follow the same structure. However, we warmly recommend to use the same input/output for this function as follow:</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    prefixe : str</span>
+<span class="sd">        The prefix </span>
+<span class="sd">    angle : str or bool</span>
+<span class="sd">        [Optional] If not bool, update the name of the file with this &#39;angle&#39; value.</span>
+<span class="sd">    iteration : str or bool</span>
+<span class="sd">        [Optional] If not bool, update the name of the file with this &#39;iteration&#39; value.</span>
+<span class="sd">    extension : str</span>
+<span class="sd">        [Optional] The extension of the spectra file. Default value: &#39;.dat&#39;    </span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        the name of the file. </span>
+<span class="sd">    </span>
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    For this standard function, if the input is:</span>
+<span class="sd">    *prefixe* = &#39;polarV&#39;</span>
+<span class="sd">    *angle* = &#39;42.0&#39;</span>
+<span class="sd">    *iteration* = &#39;4&#39;</span>
+<span class="sd">    *extension* = &#39;.dat&#39;</span>
+<span class="sd">    output is: &#39;polarV_42.0_4.dat&#39;</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">prefixe</span> <span class="o">+</span> <span class="n">extension</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">prefixe</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">iteration</span> <span class="o">+</span> <span class="n">extension</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">prefixe</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">angle</span> <span class="o">+</span> <span class="n">extension</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">prefixe</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">angle</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">iteration</span> <span class="o">+</span> <span class="n">extension</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+
+<span class="c1">############################################################################################ </span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">third_floor_file_name_builder</span><span class="p">(</span><span class="n">prefixe</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">iteration</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;.dat&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    The function used to build the name of the file generated by the 3rd floor room.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span> <span class="c1"># case where no angle is given </span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span> <span class="c1"># case where no iteration is given </span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">prefixe</span> <span class="o">+</span> <span class="n">extension</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># case where an iteration is given </span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">prefixe</span> <span class="o">+</span> <span class="s1">&#39;_acq&#39;</span> <span class="o">+</span> <span class="n">iteration</span> <span class="o">+</span> <span class="n">extension</span>
+    <span class="k">else</span><span class="p">:</span> <span class="c1"># case where an angle is given </span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>  <span class="c1"># case where no iteration is given </span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">prefixe</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">angle</span> <span class="o">+</span> <span class="n">extension</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># case where an iteration is given </span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">prefixe</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">angle</span> <span class="o">+</span> <span class="s1">&#39;_acq&#39;</span> <span class="o">+</span> <span class="n">iteration</span> <span class="o">+</span> <span class="n">extension</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+<span class="c1">############################################################################################ </span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">transform_name_file</span><span class="p">(</span><span class="n">name_t</span><span class="p">,</span> <span class="n">extension</span><span class="p">,</span> <span class="n">type_file</span><span class="o">=</span><span class="s1">&#39;single&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Internal function of Alpaga.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    directory : str</span>
+<span class="sd">        The directory where is stored the datas</span>
+<span class="sd">    extension : str</span>
+<span class="sd">        [Optional] The extension of the spectra file. Default value: &#39;.dat&#39;</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    prefix_file : str</span>
+<span class="sd">    For a given input name, *name_t*, cut the name into parts to fit the two possible templates depending on the argument *type_file*. In any case, the extension of the file should match the one given in input *extension*. </span>
+<span class="sd">    </span>
+<span class="sd">    if *type_file* = &#39;single&#39;, the template is: prefix + _ + iter + extension. In this case, this function return: prefix, iter and extension.</span>
+<span class="sd">    </span>
+<span class="sd">    if *type_file* = &#39;angle&#39;, the template is: prefix + _ + angle + _ + iter + extension. In this case, this function return: prefix, angle, iter and extension. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">type_file</span><span class="o">==</span><span class="s1">&#39;single&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name_t</span><span class="p">[</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">extension</span><span class="p">):]</span> <span class="o">!=</span> <span class="n">extension</span><span class="p">:</span> 
+            <span class="n">output</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">trotter</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">prefix_file</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="n">number_iter</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">extension</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
+            <span class="k">while</span> <span class="n">trotter</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span> <span class="c1"># this loop goes from the end of the file name to the begining since the important value for the code, angle and iter, are located at the end. </span>
+                <span class="k">if</span> <span class="n">name_t</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;_&#39;</span><span class="p">:</span>
+                    <span class="n">trotter</span> <span class="o">+=</span> <span class="mi">1</span> 
+                <span class="k">elif</span> <span class="n">trotter</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">number_iter</span> <span class="o">+=</span> <span class="n">name_t</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;WARNING: problem code!!! The file name &#39;</span> <span class="o">+</span> <span class="n">name_t</span> <span class="o">+</span> <span class="s1">&#39; is not standard! It should be: prefix_iter.dat&#39;</span><span class="p">)</span>
+                <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">-</span> <span class="mi">1</span>
+                
+            <span class="n">prefix_file</span> <span class="o">=</span> <span class="n">name_t</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">number_iter</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">number_iter</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="c1"># the iter value are created in the opposite direction. The real angle value is the opposite</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="p">[</span><span class="n">prefix_file</span><span class="p">,</span> <span class="n">number_iter</span><span class="p">]</span>
+        
+    <span class="k">elif</span> <span class="n">type_file</span><span class="o">==</span><span class="s1">&#39;angle&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name_t</span><span class="p">[</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">extension</span><span class="p">):]</span> <span class="o">!=</span> <span class="n">extension</span><span class="p">:</span> 
+            <span class="n">output</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">trotter</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">prefix_file</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="n">angle_t</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+            <span class="n">number_iter</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">extension</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
+            <span class="k">while</span> <span class="n">trotter</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span> <span class="c1"># this loop goes from the end of the file name to the begining since the important value for the code, angle and iter, are located at the end. </span>
+                <span class="k">if</span> <span class="n">name_t</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;_&#39;</span><span class="p">:</span>
+                    <span class="n">trotter</span> <span class="o">+=</span> <span class="mi">1</span> 
+                <span class="k">elif</span> <span class="n">trotter</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">number_iter</span> <span class="o">+=</span> <span class="n">name_t</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+                <span class="k">elif</span> <span class="n">trotter</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>    
+                    <span class="n">angle_t</span> <span class="o">+=</span> <span class="n">name_t</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;WARNING: problem code!!! The file name &#39;</span> <span class="o">+</span> <span class="n">name_t</span> <span class="o">+</span> <span class="s1">&#39; is not standard! It should be: prefix_angle_iter.dat&#39;</span><span class="p">)</span>
+                <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">-</span> <span class="mi">1</span>
+                
+            <span class="n">prefix_file</span> <span class="o">=</span> <span class="n">name_t</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+            <span class="c1"># angle_t = float(angle_t[::-1]) # the angle are created in the opposite direction. The real angle value is the opposite</span>
+            <span class="n">angle_t</span> <span class="o">=</span> <span class="n">angle_t</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># the angle are created in the opposite direction. The real angle value is the opposite</span>
+            <span class="n">number_iter</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">number_iter</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="c1"># the iter value are created in the opposite direction. The real angle value is the opposite</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="p">[</span><span class="n">prefix_file</span><span class="p">,</span> <span class="n">angle_t</span><span class="p">,</span> <span class="n">number_iter</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;WARNING: type_file can only be &quot;single&quot; or &quot;angle&quot;.&#39;</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+<span class="c1">############################################################################################</span>
+
+<div class="viewcode-block" id="find_file_iter_from_dir">
+<a class="viewcode-back" href="../file_management.html#file_management.find_file_iter_from_dir">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_file_iter_from_dir</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;.dat&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the prefix (*prefix_file*), the number of iter (*N_iter*) and the extension (*extension*) of a single acquisition located in the repertory *directory*. </span>
+<span class="sd">    </span>
+<span class="sd">    The expected name of the file is: \n</span>
+<span class="sd">    directory + prefix + _ + i + extension \n</span>
+<span class="sd">    Where i goes from 1 to *N_iter*. </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    directory : str</span>
+<span class="sd">        The directory where is stored the datas</span>
+<span class="sd">    extension : str</span>
+<span class="sd">        [Optional] The extension of the spectra file. Default value: &#39;.dat&#39;</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    prefix_file : str</span>
+<span class="sd">         The prefixe shared by all the spectra iteration. </span>
+<span class="sd">    N_iter : int</span>
+<span class="sd">         The number of iter found for this prefixe. Alpaga has check that all the iter are present to avoid &#39;File not found&#39; error later on. </span>
+<span class="sd">    extension : str</span>
+<span class="sd">        The extension of the detected spectra file. Same value as in the input</span>
+<span class="sd">        </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Let&#39;s assume that in the directory /home/lama/Datas/Water_acquisition/Test_120sec TOCHANGE, is located the spectra: water_1.dat, water_2.dat, water_3.dat. The prefix of these file is &#39;water&#39;, the total number of iter is *N_iter* = 3, and the extension is .dat . In order to get automatically theses information, use: ::</span>
+<span class="sd">    </span>
+<span class="sd">       directory = &#39;/home/lama/Datas/Water_acquisition/Test_120sec&#39;</span>
+<span class="sd">       prefix, N_iter, extension = alpaga.find_file_iter_from_dir(directory)</span>
+<span class="sd">       print(&#39;The prefix for all the file is: &quot;&#39; + prefix + &#39;&quot; with &#39; + str(N_iter) + &#39; iter. The extension is: &#39; + extension)</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;I will look at file with the extension &#39;</span> <span class="o">+</span> <span class="n">extension</span> <span class="o">+</span> <span class="s1">&#39; in the directory &#39;</span> <span class="o">+</span> <span class="n">directory</span> <span class="o">+</span> <span class="s1">&#39; for single acquisition. The type of the files should be: prefix_iter.extension&#39;</span><span class="p">)</span>
+    <span class="n">all_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+    
+    <span class="n">L_files_iter</span><span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">prefix_file_old</span> <span class="o">=</span> <span class="kc">False</span>
+    
+    <span class="k">for</span> <span class="n">KKK</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_file</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">name_t</span> <span class="o">=</span> <span class="n">all_file</span><span class="p">[</span><span class="n">KKK</span><span class="p">]</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">transform_name_file</span><span class="p">(</span><span class="n">name_t</span><span class="p">,</span> <span class="n">extension</span><span class="p">,</span> <span class="n">type_file</span><span class="o">=</span><span class="s1">&#39;single&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">output</span><span class="p">:</span> <span class="c1"># False would mean that the file tested is not valid, and thus skiped. For instance bad format file.         </span>
+            <span class="n">prefix_file</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">number_iter</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">prefix_file_old</span><span class="p">:</span>
+                <span class="n">prefix_file_old</span> <span class="o">=</span> <span class="n">prefix_file</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">prefix_file_old</span> <span class="o">!=</span> <span class="n">prefix_file</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;There are other file with the same extension but not the same prefix name. Please move these file, or do not use this module to creat the list! If you are looking for angle depend value, use the find_angle_iter_from_dir function.&#39;</span><span class="p">)</span>
+               
+            <span class="n">L_files_iter</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">number_iter</span><span class="p">)</span>
+       
+    <span class="n">N_iter</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">L_files_iter</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">N_iter</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;WARNING: I have not found any file with the good name type in this directory. Please check!&#39;</span><span class="p">)</span>
+        
+    <span class="c1"># check the number of iter:</span>
+    <span class="n">L_files_iter</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">L_files_iter</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">L_files_iter</span><span class="p">)</span> <span class="o">!=</span> <span class="n">L_files_iter</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;WARNING: There is not enough iter for this file. Please check that there are all the iter.&#39;</span><span class="p">)</span>
+        
+    <span class="n">N_iter</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">L_files_iter</span><span class="p">)</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">prefix_file</span><span class="p">,</span> <span class="n">N_iter</span><span class="p">,</span> <span class="n">extension</span><span class="p">)</span></div>
+
+    
+<span class="c1">############################################################################################</span>
+
+<div class="viewcode-block" id="find_angle_iter_from_dir">
+<a class="viewcode-back" href="../file_management.html#file_management.find_angle_iter_from_dir">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_angle_iter_from_dir</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;.dat&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the prefix (*prefix_file*), the list of the angle (*L_files_angles*) the number of iter (*N_iter*) and the extension (*extension*) of an acquisition located in the repertory *directory*.</span>
+<span class="sd">    </span>
+<span class="sd">    The expected name of the file is: \n</span>
+<span class="sd">    directory + prefix + _ + k + _ + i + extension \n</span>
+<span class="sd">    Where k goes within all the value of *L_files_angles*. k can be a float (please try to avoid very long decimal angle value) and where i goes from 1 to *N_iter*. </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    directory : str</span>
+<span class="sd">        The directory where is stored the datas</span>
+<span class="sd">    extension : str</span>
+<span class="sd">        [Optional] The extension of the spectra file. Default value: &#39;.dat&#39;</span>
+<span class="sd">    </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    prefix_file : str</span>
+<span class="sd">         The prefixe shared by all the spectra iteration. </span>
+<span class="sd">    L_files_angles: list of str</span>
+<span class="sd">         The list of the angle found. *L_files_angles* is a list of string -- to avoid bad behavior if your angles has a name like 4.10. </span>
+<span class="sd">    N_iter : int</span>
+<span class="sd">         The number of iter found for this prefixe. Alpaga has check that all the iter are present for all the angle to avoid &#39;File not found&#39; error later on. </span>
+<span class="sd">    extension : str</span>
+<span class="sd">        The extension of the detected spectra file. Same value as in the input</span>
+<span class="sd">        </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Let&#39;s assume that in the directory /home/lama/Datas/Water_acquisition/Test_120sec TOCHANGE, is located the spectra: water_4.0_1.dat, water_4.0_2.dat, water_15.0_2.dat, water_15.0_2.dat. The prefix of these file is &#39;water&#39;, the total number of iter is *N_iter* = 2, the list of angle is *L_files_angles* = [4.0, 15.0] and the extension is .dat . In order to get automatically theses information, use: ::</span>
+<span class="sd">    </span>
+<span class="sd">       directory = &#39;/home/lama/Datas/Water_acquisition/Test_120sec&#39;</span>
+<span class="sd">       prefix, L_files_angles, N_iter, extension = alpaga.find_angle_iter_from_dir(directory)</span>
+<span class="sd">       print(&#39;The prefix for all the file is: &quot;&#39; + prefix + &#39;&quot; with &#39; + str(N_iter) + &#39; iter. The angle found are &#39; + str(L_files_angles) + &#39;. The extension is: &#39; + extension)</span>
+<span class="sd">       </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;I will look at file with the extension &#39;</span> <span class="o">+</span> <span class="n">extension</span> <span class="o">+</span> <span class="s1">&#39; in the directory &#39;</span> <span class="o">+</span> <span class="n">directory</span> <span class="o">+</span> <span class="s1">&#39;for angle dependent values. The type of the files should be: prefix_angle_iter.extension&#39;</span><span class="p">)</span>
+    <span class="n">all_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+    
+    <span class="n">L_files_angles</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">L_files_iter</span><span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">prefix_file_old</span> <span class="o">=</span> <span class="kc">False</span>
+    
+    <span class="k">for</span> <span class="n">KKK</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_file</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">name_t</span> <span class="o">=</span> <span class="n">all_file</span><span class="p">[</span><span class="n">KKK</span><span class="p">]</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">transform_name_file</span><span class="p">(</span><span class="n">name_t</span><span class="p">,</span> <span class="n">extension</span><span class="p">,</span> <span class="n">type_file</span><span class="o">=</span><span class="s1">&#39;angle&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">output</span><span class="p">:</span> <span class="c1"># False would mean that the file tested is not valid, and thus skiped. For instance bad format file.           </span>
+            <span class="n">prefix_file</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">angle_t</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">number_iter</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+          
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prefix_file_old</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">prefix_file_old</span> <span class="o">!=</span> <span class="n">prefix_file</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;WARNING: the prefix to name the different file in the directory&#39;</span> <span class="o">+</span> <span class="n">directory</span> <span class="o">+</span> <span class="s1">&#39; are not the same! Please move the other spectra files!!!&#39;</span><span class="p">)</span>
+            <span class="n">prefix_file_old</span> <span class="o">=</span> <span class="n">prefix_file</span>
+            
+            <span class="c1"># print(prefix_file, angle_t, number_iter)</span>
+            <span class="k">if</span> <span class="n">L_files_angles</span><span class="p">:</span> <span class="c1"># if there are already other file in the list</span>
+                <span class="n">is_found</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">angle_tt</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">angle_t</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">L_files_angles</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">angle_test</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">L_files_angles</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">angle_test</span><span class="o">-</span><span class="n">angle_tt</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.01</span><span class="p">:</span> <span class="c1"># to avoid stupid float comparaison crashes</span>
+                        <span class="n">L_files_iter</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">number_iter</span><span class="p">)</span>
+                        <span class="n">is_found</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">is_found</span><span class="p">:</span>
+                    <span class="c1"># print(&#39;not found:&#39;, angle_t)</span>
+                    <span class="n">L_files_angles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">angle_t</span><span class="p">)</span>
+                    <span class="n">L_files_iter</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">number_iter</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span> <span class="c1"># if the list is empty, add directly this file</span>
+                <span class="n">L_files_angles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">angle_t</span><span class="p">)</span>
+                <span class="n">L_files_iter</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">number_iter</span><span class="p">])</span>
+
+    <span class="n">N_angle</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">L_files_angles</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">N_angle</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;WARNING: I have not found any file with the good name type in this directory. Please check!&#39;</span><span class="p">)</span>
+        
+    <span class="c1"># check the number of iter:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">L_files_iter</span><span class="p">)</span> <span class="o">!=</span> <span class="n">N_angle</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;WARNING: Bug, please check this line and above. Should be a code problem...&#39;</span><span class="p">)</span>
+    <span class="n">to_check_iter</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">L_files_iter</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_check_iter</span><span class="p">)</span> <span class="o">!=</span> <span class="n">to_check_iter</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;WARNING: There is not enough iter for the angle: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">L_files_angles</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;. Please check that for every angle there is the same number of iter!&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N_angle</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">L_files_iter</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_check_iter</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;WARNING: There is not enough iter for the angle: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">L_files_angles</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;. Please check that for every angle there is the same number of iter!&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">kkk</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_check_iter</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">temp</span><span class="p">[</span><span class="n">kkk</span><span class="p">]</span> <span class="o">!=</span> <span class="n">to_check_iter</span><span class="p">[</span><span class="n">kkk</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;WARNING: There is not enough iter for the angle: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">L_files_angles</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;. Please check that for every angle there is the same number of iter!&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># sort the angle values:</span>
+    <span class="n">L_files_angles_float</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">L_files_angles</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">L_files_angles</span><span class="p">))]</span>
+    <span class="n">L_element</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">L_files_angles_float</span><span class="p">)</span>
+    <span class="n">L_files_angles_sorted</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">L_files_angles</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">L_files_angles_sorted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">L_files_angles</span><span class="p">[</span><span class="n">L_element</span><span class="p">[</span><span class="n">k</span><span class="p">]])</span>
+    
+    <span class="n">L_files_angles</span> <span class="o">=</span> <span class="n">L_files_angles_sorted</span>
+    <span class="n">N_iter</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_check_iter</span><span class="p">)</span> 
+    <span class="k">return</span><span class="p">(</span><span class="n">prefix_file</span><span class="p">,</span> <span class="n">L_files_angles</span><span class="p">,</span> <span class="n">N_iter</span><span class="p">,</span> <span class="n">extension</span><span class="p">)</span></div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/alpaga_logo.svg" alt="Logo of Alpaga"/>
+            </a></p>
+<h1 class="logo"><a href="../index.html">Alpaga</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">1. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../file_management.html">2. File Management</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleaning_averaging_spectra.html">3. Cleaning and Averaging Spectra</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fitting_procedure.html">4. Fitting the Gaussian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../polarisation_procedure.html">5. Polarisation Procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis_SHS.html">6. SHS analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis_SSHG.html">7. SSHG analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python_advice.html">8. Python advice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../experimental_advice.html">9. Experimental and procedure advice</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../for_developpers.html">10. For Developpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../alpaga.html">11. Source code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../devs_page.html">12. Alpaga’s developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">13. Reference</a></li>
+</ul>
+
+
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;L-GPL.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
