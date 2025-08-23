@@ -309,72 +309,77 @@ def averaging_and_cleaning(name_file, N_iter, L_filename=False, extension='.dat'
 
 def remove_noise(L_x, L_y, l_cut=[380, 395, 419, 433], order_fit_noise=4, return_fit_noise=False, return_boundary=False, show_spectra=False , figure_counter=1):
     '''
-    Remove the noise of a spectra to make the gaussian fit easier. 
+    Remove the noise from a spectrum to make the Gaussian fit easier.
     
-    The x axis is given by *L_x* and the y axis *L_y*. Using the list *l_cut*, the list is cutted in 3 areas. From the x value *l_cut[0]* to *l_cut[1]* is define the first area, from *l_cut[1]* to *l_cut[2]* the second and *l_cut[2]* to *l_cut[3]* the last one. The second area is the target area where the gaussian should be. The first and last area will be used to define the noise in the second area using a polynomial fit. 
+    The x-axis is given by *L_x* and the y-axis by *L_y*. Using the list *l_cut*, the spectrum is divided into three areas. 
+    The first area is from *l_cut[0]* to *l_cut[1]*, the second from *l_cut[1]* to *l_cut[2]*, and the third from *l_cut[2]* to *l_cut[3]*. 
+    The second area is the target area where the Gaussian is expected. The first and third areas are used to define the noise in the target area using a polynomial fit.
     
-    This function will first find the element of the x axis to create the 3 areas. In order to get the elements to recreate these area, set the optional parameter return_boundary to True. It will return the list *x_cut* which can be use as follow to define the 3 areas: ::
+    This function first identifies the elements of the x-axis that correspond to the three areas. 
+    To obtain these elements, set the optional parameter *return_boundary* to True. The function will then return the list *x_cut*, which can be used as follows to define the three areas: ::
         
-        L_y_noise = np.append(L_y[x_cut[0]:x_cut[1]], L_y[x_cut[2]:x_cut[3]]) # to define the first and last area
-        L_y_target = L_y[x_cut[1]:x_cut[2]] # to define the second area
+        L_y_noise = np.append(L_y[x_cut[0]:x_cut[1]], L_y[x_cut[2]:x_cut[3]])  # first and last areas
+        L_y_target = L_y[x_cut[1]:x_cut[2]]  # middle area containing the Gaussian
     
-    Then, the first and last part are fitted using polynomial function up to the order given by the optional parameter *order_fit_noise*. To make this function return the fitted noise, set the optional parameter *return_fit_noise* to True. It will return the list *L_y_noise_fit* which is the polynomial function calculated throughout the 3 areas. 
+    Next, the first and last areas are fitted using a polynomial of order specified by the optional parameter *order_fit_noise*. 
+    To obtain the fitted noise, set *return_fit_noise* to True. The function will then return *L_y_noise_fit*, which contains the polynomial values calculated over all three areas.
     
-    Finally, it substracts the fitted noise to all the 3 areas. Therefore, the first and last area should be close to zero, while the second area should contain a nice gaussian. If it is not the case, you should try different *l_cut* value in order to get the best noise fit as possible. 
+    Finally, the fitted noise is subtracted from all three areas. The first and last areas should be close to zero, while the middle area should contain a clean Gaussian. 
+    If this is not the case, try adjusting the *l_cut* values to achieve a better noise fit.
     
-    In order to plot the different areas and the polynomial fit, set *show_spectra* to 'all'. The initial number of the figure (plt.figure(K)) is given by the argument *figure_counter*.
+    To plot the three areas and the polynomial fit, set *show_spectra* to 'all'. The initial figure number is given by *figure_counter*.
     
-    The first returned list is the x axis starting from the l_cut[0] until l_cut[2], *L_x_cleaned*.
-    The second returned list is  the y value where the noise has been substracted, *L_y_noise_fit*. Its size is the same as the returned x axis.
+    The first returned list is *L_x_cleaned*, the x-axis starting from *l_cut[0]* to *l_cut[3]*.
+    The second returned list is *L_y_cleaned*, the y-values with the noise subtracted, matching the size of *L_x_cleaned*.
     
-    If return_fit_noise is set to True, the list *L_y_noise_fit* containing the polynome calculated within the 3 areas is returned.
+    If *return_fit_noise* is True, the list *L_y_noise_fit* containing the polynomial fit is returned.
     
-    If return_boundary is set to True, the list *x_cut*  containing the positions of the l_cut values in the original x axis is returned -- see above.
+    If *return_boundary* is True, the list *x_cut*, containing the positions of the *l_cut* values in the original x-axis, is returned.
     
-    In any case, the last returned value is an int, which is the next figure number that you can use -- without interfering with the function plots. 
+    In all cases, the last returned value is an integer, the next figure number for plotting, ensuring no conflicts with existing figures.
     
     Parameters
     ----------
     L_x: list
-        The x axis that will be used to define the 3 areas. 
-    L_y : list
-       The y axis where the noise should be remove
+        The x-axis used to define the three areas.
+    L_y: list
+        The y-axis from which the noise will be removed.
     l_cut: list of float
-        [Optional] Define the 3 areas using the value of *L_x*. *l_cut* should contained the **value** to define the different areas, not the element number. See the example.
+        [Optional] Defines the three areas based on the values in *L_x*. Use actual x-values, not indices.
     order_fit_noise: int
-        [Optional] The polynome order used for the noise fit. It is recommanded to used 2, 3 or 4. The polynome order has very small impact in the result if the *l_cut* parameter is well defined. 
+        [Optional] Polynomial order for fitting the noise. Recommended values are 2, 3, or 4. The order has minimal impact if *l_cut* is well chosen.
     return_fit_noise: bool
-        [Optional] If set to True, return the noise fitted by a polynomial, *L_y_noise_fit*. Return a list of values, not the function.
-    return_boundary: bool 
-        [Optional] If set to True, return the *x_axis* which contains the element number to define the boundary of the 3 areas from the initial *L_x* list. 
+        [Optional] If True, returns the noise fitted by a polynomial, *L_y_noise_fit*.
+    return_boundary: bool
+        [Optional] If True, returns *x_cut*, containing the element positions for defining the three areas.
     show_spectra: str
-        [Optional] If set to 'all', print the 3 area and the polynomial fit.
+        [Optional] If 'all', plots the areas and polynomial fit.
     figure_counter: int
-        [Optional] The number of the first figure plot.
+        [Optional] The starting figure number for plots.
+    
     Returns
     -------
     L_x_cleaned: list
-        The x axis containing only theData_tutorial 3 areas.
+        The x-axis corresponding to the three areas.
     L_y_cleaned: list
-        The y values without the noise fit. Have the same size as  L_x_cleaned.
+        The y-values with noise removed, same length as *L_x_cleaned*.
     L_y_noise_fit: list
-        The noise fitted by a polynomial. Is returned if *return_fit_noise* is set to True.
+        The polynomial-fitted noise, returned if *return_fit_noise* is True.
     x_cut: list
-        The element position to define the boundary of the 3 areas from the initial *L_x* list. Is returned if *return_boundary* is set to True.
+        Positions defining the boundaries of the three areas, returned if *return_boundary* is True.
     figure_counter: int
-         The new value for your next figure number. 
-            
+        The next figure number for plotting.
+    
     Examples
     --------
-    See the tutorial for precise examples. Below is shown how the results will be returned depending on the optional parameters:
-    ::
+    See the tutorial for detailed examples. Example outputs depending on optional parameters: ::
     
         L_x_cleaned, L_y_cleaned, figure_counter = alpaga.remove_noise(L_lambda, L_spectra, l_cut=l_cut, order_fit_noise=order_fit_noise, return_fit_noise=False, return_boundary=False, show_spectra='all', figure_counter=1)
         L_x_cleaned, L_y_cleaned, L_y_noise_fit, figure_counter = alpaga.remove_noise(L_lambda, L_spectra, l_cut=l_cut, order_fit_noise=order_fit_noise, return_fit_noise=True, return_boundary=False, show_spectra='all', figure_counter=1)
         L_x_cleaned, L_y_cleaned, x_cut, figure_counter = alpaga.remove_noise(L_lambda, L_spectra, l_cut=l_cut, order_fit_noise=order_fit_noise, return_fit_noise=False, return_boundary=True, show_spectra='all', figure_counter=1)
         L_x_cleaned, L_y_cleaned, L_y_noise_fit, x_cut, figure_counter = alpaga.remove_noise(L_lambda, L_spectra, l_cut=l_cut, order_fit_noise=order_fit_noise, return_fit_noise=True, return_boundary=True, show_spectra='all', figure_counter=1)
     
-    Note that the argument should be defined before in the code -- see the tutorial.
+    Note: All arguments must be defined prior in the code, see the tutorial.
     '''
     # find where to make the cut to define the noise
     N_lambda = len(L_x)
@@ -386,8 +391,6 @@ def remove_noise(L_x, L_y, l_cut=[380, 395, 419, 433], order_fit_noise=4, return
             x_cut[trotter] = int(KKK)
             trotter += 1
         KKK += 1
-        
-    #print(x_cut)
     L_x_cleaned = L_x[x_cut[0]:x_cut[3]]
     # Fit the noise:
     L_x_noise = np.append(L_x[x_cut[0]:x_cut[1]], L_x[x_cut[2]:x_cut[3]])
@@ -396,7 +399,6 @@ def remove_noise(L_x, L_y, l_cut=[380, 395, 419, 433], order_fit_noise=4, return
     p = np.poly1d(z)
     L_y_noise_fit = p(L_x_cleaned)
     L_y_cleaned = L_y[x_cut[0]:x_cut[3]]-L_y_noise_fit
-    
     if show_spectra=='all':
         plt.figure(figure_counter)
         plt.plot(L_x_cleaned, L_y[x_cut[0]:x_cut[3]], 'r*', label='total')
@@ -404,7 +406,6 @@ def remove_noise(L_x, L_y, l_cut=[380, 395, 419, 433], order_fit_noise=4, return
         plt.plot(L_x_cleaned, L_y_noise_fit, 'k--', label='polynomial fit')
         plt.legend()
         figure_counter += 1
-        
     if not return_fit_noise:
         if not return_boundary:
             return(L_x_cleaned, L_y_cleaned, figure_counter)
@@ -420,24 +421,25 @@ def remove_noise(L_x, L_y, l_cut=[380, 395, 419, 433], order_fit_noise=4, return
 
 def fit_gausse(x, intensity, lambda_0, waist):
     '''
-    Function used to define the 'gaussian shape' in Alpaga.
+    Function used to define the Gaussian shape in Alpaga.
     
-    y = intensity*np.exp(-((x-lambda_0)/waist)**2)
+    y = intensity * np.exp(-((x - lambda_0) / waist) ** 2)
     
     Parameters
     ----------
     x: list
-        The x values
+        The x values.
     intensity: float
-        The gaussian intensity, the parameter targeted by the whole procedure.
+        The Gaussian intensity, the parameter targeted by the whole procedure.
     lambda_0: float
-        The position of the gaussian maximum.
+        The position of the Gaussian maximum.
     waist: float
-        The waist of the gaussian.
+        The waist of the Gaussian.
+    
     Returns
     -------
     y: list
-        The gaussian intensity
+        The computed Gaussian values.
     '''
     y=intensity*np.exp(-((x-lambda_0)/waist)**2)
     return(y)
@@ -446,27 +448,33 @@ def fit_gausse(x, intensity, lambda_0, waist):
 
 def intensity_from_gaussian_integral(L_x_cleaned, L_y_cleaned, lambda_0, waist):
     '''
-    Extract the gaussian intensity using integration method. The integral is made using the numpy.trapz function. Then, the intensity is given by: ::
+    Extract the Gaussian intensity using the integration method. 
+    The integral is computed using the numpy.trapz function. 
+    The intensity is then given by: ::
     
-        I0 = integral_value/(waist*np.sqrt(np.pi))
+        I0 = integral_value / (waist * np.sqrt(np.pi))
     
-    Note that in this procedure there is not yet uncertitude calculations. 
+    Note that in this procedure, no uncertainty calculations are yet implemented. 
     
     Parameters
     ----------
     L_x_cleaned: list
-        The x-axis used to compute the integral. This axis should contain at least the gaussian.
+        The x-axis used to compute the integral. 
+        This axis should contain at least the Gaussian peak.
     L_y_cleaned: list
-        The y-axis used to compute the integral. Usually, this value is the output obtained by the :ref:`alpaga.remove_noise function<remove_noise_section>`. Appart from the gaussian curve, the rest of the value should be as close to zero as possible. Since the integration is made over the full list, the other values can affect the final intensity if they are not in average zero.
+        The y-axis used to compute the integral. 
+        Usually, this is the output obtained from the :ref:`alpaga.remove_noise function<remove_noise_section>`. 
+        Apart from the Gaussian curve, the other values should be as close to zero as possible. 
+        Since the integration is performed over the entire list, non-zero values may affect the final intensity if their average is not zero.
     lambda_0: float
-        Useless. This input is still in the code for coherence with the other possible method.
+        Unused. This input is kept only for consistency with other methods.
     waist: float
-        The waist of the gaussian. Used to extract the gaussian intensity from the integral value. 
+        The waist of the Gaussian, used to extract the Gaussian intensity from the integral value. 
     
     Returns
     -------
     I0: float
-        The computed gaussian intensity
+        The computed Gaussian intensity.
     '''
     integral_value = np.trapz(L_y_cleaned, L_x_cleaned)
     # int exp(-alpha x**2) = sqrt(pi/alpha)
@@ -477,89 +485,117 @@ def intensity_from_gaussian_integral(L_x_cleaned, L_y_cleaned, lambda_0, waist):
 
 ############################################################################################    
 
-def fit_gaussian_from_noise(L_x, L_y, l_cut=[380, 395, 419, 433], order_fit_noise=4, method_fit='fit_gauss', bounds_fit_gausse=([0, 395, 1], [np.inf, 410, 25]), lambda_0_ref=403, waist_ref=2, exclu_zone=False, fit_noise= False, show_spectra='all', figure_counter=1):
+def fit_gaussian_from_noise(L_x, L_y, l_cut=[380, 395, 419, 433], order_fit_noise=4, method_fit='fit_gauss',
+                            bounds_fit_gausse=([0, 395, 1], [np.inf, 410, 25]), lambda_0_ref=403, waist_ref=2,
+                            exclu_zone=False, fit_noise=False, show_spectra='all', figure_counter=1):
     '''
-    This method returns the intensity *I0*, the position of the maxima *lambda_0* and the waist *waist* for the gaussian in *L_y*. First, it removes the noise using the :ref:`alpaga.remove_noise function<remove_noise_section>`, then it extracts the intensity. Two method are available to extract the intensity:
-    
+    This function returns the intensity *I0*, the maximum position *lambda_0*, and the width *waist* 
+    of the Gaussian in *L_y*. The procedure first removes the noise using 
+    :ref:`alpaga.remove_noise function<remove_noise_section>`, and then extracts the intensity.  
+    Two methods are available to extract the intensity:
+
     1) If *method_fit* is set to 'fit_gauss':
         
-        The intensity is extracted using the *scipy.optimize.curve_fit* function: ::
+        The intensity is extracted using *scipy.optimize.curve_fit*: ::
                     
             p, q = curve_fit(fit_gausse, L_x_cleaned, L_y_cleaned, bounds=bounds_fit_gausse) 
             I0, lambda_0, waist = p[0], p[1], p[2]
                 
-        Where the function fit_gausse is defined here ADDREF, the x and y input are the output of the cleaning procedure, see the :ref:`alpaga.remove_noise function<remove_noise_section>` and the bounds are given by the optional parameter *bounds_fit_gausse*. This method returns the intensity *I0*, the position of the maxima *lambda_0* and the waist *waist*. This make this approach the more polyvalent, and should be used in the first place to caracterise your experimental laser conditions -- *i.e.* *lambda_0* and *waist*.
-        
+        Here, *fit_gausse* is defined in ADDREF. The x and y inputs are the outputs of the cleaning 
+        procedure (see :ref:`alpaga.remove_noise function<remove_noise_section>`), and the bounds 
+        are given by the *bounds_fit_gausse* parameter.  
+        This method returns the Gaussian intensity *I0*, the central wavelength *lambda_0*, and the 
+        width *waist*.  
+        This approach is the most versatile and should generally be used first to characterize your 
+        experimental laser conditions (*lambda_0* and *waist*).
+
     2) If *method_fit* is set to 'fit_gauss_w_exclu':
         
-        It is the same method as before but with an exclusion zone (for exemple if an Hyper Raman band is close to your SHG signal). You have to add the exclusion zone with the parameter exclu_zone = [ X min of zone ; X max of zone ].
+        Same method as above, but with an exclusion zone (for example, if a Hyper Raman band is close 
+        to the SHG signal).  
+        You must specify the exclusion zone with *exclu_zone = [X_min, X_max]*.
                 
     3) If *method_fit* is set to 'integral_gauss':
         
-        The intensity is extracted using the function alpaga.intensity_from_gaussian_integral ADDREF: ::
+        The intensity is extracted using *alpaga.intensity_from_gaussian_integral* (ADDREF): ::
                     
             I0 = intensity_from_gaussian_integral(L_x_cleaned, L_y_cleaned, lambda_0, waist)
                 
-        Where the *lambda_0* and *waist* are given by the optimal parameters *lambda_0_ref* and *waist_ref*. Note that the *lambda_0_ref* has no impact on the result -- I0. It is just usefull for the plots. 
-    
-    
-    
+        Here, *lambda_0* and *waist* are set by the parameters *lambda_0_ref* and *waist_ref*.  
+        Note that *lambda_0_ref* does not affect the result (*I0*); it is only used for plotting.  
+
     Parameters
     ----------
     L_x: list
-        The x axis, used for the noise removal, see the :ref:`alpaga.remove_noise function<remove_noise_section>`, and the fit parameters. 
+        The x-axis data, used for noise removal and fitting.  
     L_y: list
-        The y axis where the gaussian intensity should be extracted.
+        The y-axis data where the Gaussian intensity should be extracted.  
     l_cut: list of float
-        [Optional] Parameters used for the fit removal, see the :ref:`alpaga.remove_noise function<remove_noise_section>`.
+        [Optional] Parameters used for noise removal (see :ref:`alpaga.remove_noise function<remove_noise_section>`).  
     order_fit_noise: int
-        [Optional] Parameters used for the fit removal, see the :ref:`alpaga.remove_noise function<remove_noise_section>`.
+        [Optional] Order of the polynomial used for noise removal.  
     method_fit: str
-        [Optional] The method to use to extract the intensity once the noise has been removed. 
+        [Optional] The method used to extract the intensity once noise is removed.  
     bounds_fit_gausse: list
-        [Optional] Defines the bounds for the free parameters used in the 'fit_gauss' method -- see *method_fit* argument. You should try to narrow down the possible value of the parameters to avoid trouble if the gaussian intensity is low. Indeed, sometimes the fit will increase the waist instead of decreasing the intensity *I0*. For exemple, if you want to restrict the value of *lambda_0* within 401 and 405, and the value of the waist from 2 to 3, use: *bounds_fit_gausse* = ([0, 401, 1], [np.inf, 405, 3]). See the documentation of the *scipy.optimize.curve_fit* function for more information. 
+        [Optional] Bounds for the free parameters in the 'fit_gauss' method.  
+        Narrowing the parameter ranges avoids problems with low Gaussian intensity, where the fit 
+        may increase the width instead of decreasing *I0*.  
+        Example: to restrict *lambda_0* between 401 and 405, and *waist* between 2 and 3, use  
+        *bounds_fit_gausse = ([0, 401, 1], [np.inf, 405, 3])*.  
+        See *scipy.optimize.curve_fit* documentation for more details.  
     lambda_0_ref: float
-        [Optional] The *lambda_0* value used for the 'integral_gauss' method -- see *method_fit* argument. This parameter has no impact on the result, but on the plot that can be draw to check the procedure.
+        [Optional] Reference value of *lambda_0* for the 'integral_gauss' method.  
+        This has no impact on the result but affects plotting.  
     waist_ref: float
-        [Optional] The *waist* value used for the 'integral_gauss' method -- see *method_fit* argument. This parameter has an important influence on the *I0* value. Choose it wisely -- see :ref:`polarisation_procedure_page`. 
+        [Optional] Reference value of *waist* for the 'integral_gauss' method.  
+        This has a direct impact on *I0*. Choose carefully (see :ref:`polarisation_procedure_page`).  
     exclu_zone: list of float
-        [Optional] Couple of float defining the excluding zone during gaussian fit, if method_fit is set to 'fit_gauss_w_exclu'
+        [Optional] Pair of floats defining the exclusion zone for 'fit_gauss_w_exclu'.  
     show_spectra: str
-        [Optional] If set to 'all', prints figures to check the results. Otherwise no figure is plotted.
+        [Optional] If 'all', plots figures to check results. Otherwise, no figures are shown.  
     figure_counter: int
-        [Optional] The number of the first figure plot.
-        
+        [Optional] The number assigned to the first figure.  
+
     Returns
     -------
     L_para_gauss: list
-        The list of parameters to define the Gaussian: [I0, lambda_0, waist]. I0 is the Gaussian intensity, lambda_0 the value of the center wave-length and waist the waist of the Gaussian. 
+        Gaussian parameters [I0, lambda_0, waist].  
+        *I0*: Gaussian intensity  
+        *lambda_0*: central wavelength  
+        *waist*: Gaussian width  
     L_err: list
-        The list of associated error for the Gaussian parameters: [err_I0, err_lambda_0, err_waist]. Note that not there is no associated error defined for the integral calculation method. The error list is still retrun but with zero values.
+        Associated errors [err_I0, err_lambda_0, err_waist].  
+        No errors are defined for the 'integral_gauss' method; in this case, the error list contains zeros.  
     figure_counter: int
-         The new value for your next figure number. 
-            
+        Updated figure counter for subsequent plots.  
+
     Examples
     --------
-    See the tutorial for more examples. Here is the full procedure step by step:
-    ::
+    See the tutorial for detailed examples. A minimal workflow is: ::
     
-        # define the directory where the data are.
+        # Define the directory where the data are stored
         directory = os.path.join(WORK_DIR, 'Eau_V_Spectres') 
         
-        # Find the Alpaga friendly parameters that describe the datas
+        # Extract Alpaga parameters describing the dataset
         prefix_file, L_files_angles, N_iter, extension = alpaga.find_angle_iter_from_dir(directory)
 
-        # Update the name to treat only one acquisition. 
+        # Select one acquisition
         names = os.path.join(directory, prefix_file) + '_' + L_files_angles[0] 
         
-        # Cleans the acquisition from the spikes and averges it over the N_iter
-        L_lambda, L_spectra, _ = alpaga.averaging_and_cleaning(names, N_iter, extension='.dat', type_cleaning='mean', L_mean_cleaning_n=[1, 1, 1, 3], L_mean_cleaning_evo_max=[2, 1.5, 1.3, 1.3], show_spectra=False, figure_counter=1)
+        # Clean the acquisition from spikes and average it over N_iter
+        L_lambda, L_spectra, _ = alpaga.averaging_and_cleaning(
+            names, N_iter, extension='.dat', type_cleaning='mean',
+            L_mean_cleaning_n=[1, 1, 1, 3], L_mean_cleaning_evo_max=[2, 1.5, 1.3, 1.3],
+            show_spectra=False, figure_counter=1
+        )
         
-        # Remove the noise and return the gaussian parameters
-        intensity, lambda_0, omega, figure_counter = Alpaga.analyze_run.fit_gaussian_from_noise(L_lambda, L_spectra, l_cut=[380, 399, 414, 431], order_fit_noise=4, bounds_fit_gausse=([0, 395, 1], [np.inf, 410, 25]), show_spectra='all')
+        # Remove noise and extract Gaussian parameters
+        intensity, lambda_0, omega, figure_counter = Alpaga.analyze_run.fit_gaussian_from_noise(
+            L_lambda, L_spectra, l_cut=[380, 399, 414, 431], order_fit_noise=4,
+            bounds_fit_gausse=([0, 395, 1], [np.inf, 410, 25]), show_spectra='all'
+        )
         
         print(intensity, lambda_0, omega)
-
     '''
     if show_spectra == 'all':
         plt.figure(figure_counter)
@@ -662,9 +698,6 @@ def polarisation_intensity(directory=False,
                            name_save_result='./post_prod_results.p', 
                            waiting_time=False, 
                            show_figure=True):
-    '''
-    See the wiki for the doc  
-    '''
     L_input_list = ['directory', 'L_filename', 'prefix_file', 'L_files_angles', 'N_iter', 'extension', 'type_cleaning', 'L_mean_cleaning_n', 'L_mean_cleaning_evo_max', 'automatic_l_cut', 'l_cut', 'l_cut_n_n2', 'order_fit_noise', 'method_fit_first', 'bounds_fit_gausse', 'lambda_0_ref', 'waist_ref', 'fixed_para_gauss_fit', 'method_fit_second', 'save_result', 'name_save_result', 'waiting_time', 'show_figure']
     
     L_post_prod = {}
