@@ -551,8 +551,8 @@
 <span class="sd">            p, q = curve_fit(fit_gausse, L_x_cleaned, L_y_cleaned, bounds=bounds_fit_gausse) </span>
 <span class="sd">            I0, lambda_0, waist = p[0], p[1], p[2]</span>
 <span class="sd">                </span>
-<span class="sd">        Here, *fit_gausse* is defined in ADDREF. The x and y inputs are the outputs of the cleaning </span>
-<span class="sd">        procedure (see :ref:`alpaga.remove_noise function&lt;remove_noise_section&gt;`), and the bounds </span>
+<span class="sd">        Here, *fit_gausse* is defined in the analyze_run.fit_gausse function. The x and y inputs are the outputs of the cleaning </span>
+<span class="sd">        procedure (see :ref:`analyze_run.remove_noise function&lt;remove_noise_section&gt;`), and the bounds </span>
 <span class="sd">        are given by the *bounds_fit_gausse* parameter.  </span>
 <span class="sd">        This method returns the Gaussian intensity *I0*, the central wavelength *lambda_0*, and the </span>
 <span class="sd">        width *waist*.  </span>
@@ -567,7 +567,7 @@
 <span class="sd">                </span>
 <span class="sd">    3) If *method_fit* is set to &#39;integral_gauss&#39;:</span>
 <span class="sd">        </span>
-<span class="sd">        The intensity is extracted using *alpaga.intensity_from_gaussian_integral* (ADDREF): ::</span>
+<span class="sd">        The intensity is extracted using *analyze_run.intensity_from_gaussian_integral*: ::</span>
 <span class="sd">                    </span>
 <span class="sd">            I0 = intensity_from_gaussian_integral(L_x_cleaned, L_y_cleaned, lambda_0, waist)</span>
 <span class="sd">                </span>
