@@ -501,8 +501,8 @@ def fit_gaussian_from_noise(L_x, L_y, l_cut=[380, 395, 419, 433], order_fit_nois
             p, q = curve_fit(fit_gausse, L_x_cleaned, L_y_cleaned, bounds=bounds_fit_gausse) 
             I0, lambda_0, waist = p[0], p[1], p[2]
                 
-        Here, *fit_gausse* is defined in ADDREF. The x and y inputs are the outputs of the cleaning 
-        procedure (see :ref:`alpaga.remove_noise function<remove_noise_section>`), and the bounds 
+        Here, *fit_gausse* is defined in the analyze_run.fit_gausse function. The x and y inputs are the outputs of the cleaning 
+        procedure (see :ref:`analyze_run.remove_noise function<remove_noise_section>`), and the bounds 
         are given by the *bounds_fit_gausse* parameter.  
         This method returns the Gaussian intensity *I0*, the central wavelength *lambda_0*, and the 
         width *waist*.  
@@ -517,7 +517,7 @@ def fit_gaussian_from_noise(L_x, L_y, l_cut=[380, 395, 419, 433], order_fit_nois
                 
     3) If *method_fit* is set to 'integral_gauss':
         
-        The intensity is extracted using *alpaga.intensity_from_gaussian_integral* (ADDREF): ::
+        The intensity is extracted using *analyze_run.intensity_from_gaussian_integral*: ::
                     
             I0 = intensity_from_gaussian_integral(L_x_cleaned, L_y_cleaned, lambda_0, waist)
                 
