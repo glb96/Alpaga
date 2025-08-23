@@ -1,19 +1,17 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <title>3. Cleaning and Averaging Spectra &#8212; Alpaga 1.2 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=61243dd2"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="4. Fitting the Gaussian" href="fitting_procedure.html" />
@@ -21,8 +19,9 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -36,13 +35,14 @@
             
   <blockquote>
 <div></div></blockquote>
-<div class="section" id="cleaning-and-averaging-spectra">
-<span id="cleaning-averaging-spectra-page"></span><h1><span class="section-number">3. </span>Cleaning and Averaging Spectra<a class="headerlink" href="#cleaning-and-averaging-spectra" title="Permalink to this heading">¶</a></h1>
+<section id="cleaning-and-averaging-spectra">
+<span id="cleaning-averaging-spectra-page"></span><h1><span class="section-number">3. </span>Cleaning and Averaging Spectra<a class="headerlink" href="#cleaning-and-averaging-spectra" title="Link to this heading">¶</a></h1>
 <p>When repeating the same measurement, several spectra (<em>N_iter</em>) are acquired.
 This improves statistics and helps remove unwanted artifacts such as spikes.</p>
-<div class="section" id="why-multiple-short-acquisitions">
-<h2><span class="section-number">3.1. </span>Why multiple short acquisitions?<a class="headerlink" href="#why-multiple-short-acquisitions" title="Permalink to this heading">¶</a></h2>
-<a class="reference internal image-reference" href="_images/spikes_problem.png" id="cleaning-spectra-section"><img alt="_images/spikes_problem.png" class="align-right" id="cleaning-spectra-section" src="_images/spikes_problem.png" style="width: 350px;" /></a>
+<section id="why-multiple-short-acquisitions">
+<h2><span class="section-number">3.1. </span>Why multiple short acquisitions?<a class="headerlink" href="#why-multiple-short-acquisitions" title="Link to this heading">¶</a></h2>
+<a class="reference internal image-reference" href="_images/spikes_problem.png" id="cleaning-spectra-section"><img alt="_images/spikes_problem.png" class="align-right" id="cleaning-spectra-section" src="_images/spikes_problem.png" style="width: 350px;" />
+</a>
 <p>Individual spectra often contain sudden spikes caused by detector instabilities or electronic noise.
 These spikes are random, unwanted, and may distort the Gaussian signal.</p>
 <p>To deal with them, Alpaga provides:</p>
@@ -94,7 +94,7 @@ L_mean_cleaning_evo_max = [2, 1.5, 1.1, 1.05]</p>
 </div></blockquote>
 <p>to see the effect of overly strict parameters.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>L_y</strong> (<em>list</em>) – Data to clean.</p></li>
 <li><p><strong>L_mean_cleaning_n</strong> (<em>list</em><em> of </em><em>int</em><em>, </em><em>optional</em>) – List of neighborhood sizes for computing local averages.
@@ -104,11 +104,11 @@ Values should generally be between 1.1 and 2–3.
 A point is flagged as a spike if L_y[k] &gt; coeff × local average.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>L_population</strong> – List of the same size as <em>L_y</em>, initialized to 1.
 If a spike is detected at position k, then L_population[k] = 0.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list</p>
 </dd>
 </dl>
@@ -119,12 +119,13 @@ If a spike is detected at position k, then L_population[k] = 0.</p>
 However, for short acquisition times, it may distort the spectra.</p>
 </dd></dl>
 
-<a class="reference internal image-reference" href="_images/alpaga_5.jpg"><img alt="_images/alpaga_5.jpg" class="align-right" src="_images/alpaga_5.jpg" style="width: 250px;" /></a>
+<a class="reference internal image-reference" href="_images/alpaga_5.jpg"><img alt="_images/alpaga_5.jpg" class="align-right" src="_images/alpaga_5.jpg" style="width: 250px;" />
+</a>
 <p>The method detects points that strongly deviate from the average across iterations, and replaces them with more reliable values.
 Shorter acquisitions with more repetitions make spike detection easier.</p>
-</div>
-<div class="section" id="averaging-procedure">
-<h2><span class="section-number">3.2. </span>Averaging procedure<a class="headerlink" href="#averaging-procedure" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="averaging-procedure">
+<h2><span class="section-number">3.2. </span>Averaging procedure<a class="headerlink" href="#averaging-procedure" title="Link to this heading">¶</a></h2>
 <p id="averaging-spectra-section">Once cleaned, the spectra are averaged to obtain a stable signal:</p>
 <dl class="py function">
 <dt class="sig sig-object py">
@@ -156,7 +157,7 @@ If there are 4 acquisitions, for the k-th element (e.g., wavelength 404 nm):</p>
 </div></blockquote>
 <p>In such cases, a warning is printed, and the mean value is used for that element, but acquisition parameters should be reconsidered.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name_file</strong> (<em>str</em>) – Prefix for all acquisition filenames. Use absolute paths; see <a class="reference internal" href="file_management.html#file-management-page"><span class="std std-ref">File Management</span></a> for more details.</p></li>
 <li><p><strong>N_iter</strong> (<em>int</em><em> or </em><em>list</em><em> of </em><em>int</em>) – Number of acquisitions to average. If a list is provided, only those iterations are processed.</p></li>
@@ -170,7 +171,7 @@ If there are 4 acquisitions, for the k-th element (e.g., wavelength 404 nm):</p>
 <li><p><strong>figure_counter</strong> (<em>int</em>) – [Optional] Number of the first figure for plotting.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>L_x_axis</strong> (<em>list</em>) – X-axis values from the spectra files.</p></li>
 <li><p><strong>L_spectra_t</strong> (<em>list</em>) – Averaged and cleaned spectra.</p></li>
@@ -191,26 +192,27 @@ If there are 4 acquisitions, for the k-th element (e.g., wavelength 404 nm):</p>
 </dd></dl>
 
 <p>This function applies the cleaning step to all spectra, then returns the averaged result for each angle.</p>
-<a class="reference internal image-reference" href="_images/alpaga_16.jpg"><img alt="_images/alpaga_16.jpg" class="align-center" src="_images/alpaga_16.jpg" style="width: 400px;" /></a>
-</div>
-<div class="section" id="towards-the-gaussian-intensity">
-<h2><span class="section-number">3.3. </span>Towards the Gaussian intensity<a class="headerlink" href="#towards-the-gaussian-intensity" title="Permalink to this heading">¶</a></h2>
+<a class="reference internal image-reference" href="_images/alpaga_16.jpg"><img alt="_images/alpaga_16.jpg" class="align-center" src="_images/alpaga_16.jpg" style="width: 400px;" />
+</a>
+</section>
+<section id="towards-the-gaussian-intensity">
+<h2><span class="section-number">3.3. </span>Towards the Gaussian intensity<a class="headerlink" href="#towards-the-gaussian-intensity" title="Link to this heading">¶</a></h2>
 <p>The procedure is not very sensitive to parameter tuning.
 The key is to record many short spectra so that spikes can be removed and the average converges.</p>
 <p>The next step is to fit this averaged spectrum to extract the Gaussian intensity
 (<a class="reference internal" href="fitting_procedure.html#fitting-procedure-page"><span class="std std-ref">see fitting procedure</span></a>).</p>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
-              <img class="logo" src="_static/alpaga_logo.svg" alt="Logo"/>
+              <img class="logo" src="_static/alpaga_logo.svg" alt="Logo of Alpaga"/>
             </a></p>
 <h1 class="logo"><a href="index.html">Alpaga</a></h1>
 
@@ -244,7 +246,7 @@ The key is to record many short spectra so that spikes can be removed and the av
 </ul>
 
 
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -252,18 +254,18 @@ The key is to record many short spectra so that spikes can be removed and the av
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;L-GPL.
+      &#169;L-GPL.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
       <a href="_sources/cleaning_averaging_spectra.rst.txt"
