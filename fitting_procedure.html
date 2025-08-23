@@ -38,23 +38,43 @@
 <div></div></blockquote>
 <section id="fitting-the-gaussian">
 <span id="fitting-procedure-page"></span><h1><span class="section-number">4. </span>Fitting the Gaussian<a class="headerlink" href="#fitting-the-gaussian" title="Link to this heading">¶</a></h1>
-<p>In this page, we will see how to extract the Gaussian intensity from a spectrum. This procedure has been optimised in order to get the less possible choice to the operator, and to make this part the most reproducible as possible. Indeed, small change in this procedure parameters can lead to variation of the extracted intensity. Therefore, there are many methods available: it is up to you to choose the one you prefer, and to document which one you have picked!</p>
+<p>In this page, we explain how to extract the Gaussian intensity from a spectrum.
+This procedure has been optimized to minimize user choices and make the process as reproducible as possible.
+Small changes in the procedure’s parameters can lead to variations in the extracted intensity.
+Therefore, several methods are available: it is up to you to choose the one you prefer, and to document which one you used!</p>
+<p>This procedure is explained in Part II of the <em>tutorial_spectra_analysis</em> tutorial.</p>
 <a class="reference internal image-reference" href="_images/alpaga_2.jpg"><img alt="_images/alpaga_2.jpg" class="align-right" src="_images/alpaga_2.jpg" style="width: 350px;" />
 </a>
-<p>First, the background around your Gaussian is most probably not flat. Indeed, due to fluorescence of your sample for instance, you can have a large noise which can make the Gaussian intensity extraction more difficult. Therefore, the first thing to do is to remove this noise.</p>
-<p>Then, the extraction of the intensity can be made. Several methods, fit or integral, can be used.</p>
-<p>In this page, it is assumed that the averaged and cleaned spectrum is given (called y value) as input as well as the wave number (called x values), see <a class="reference internal" href="cleaning_averaging_spectra.html#cleaning-averaging-spectra-page"><span class="std std-ref">Cleaning and Averaging Spectra</span></a> for more information. Note that the value and the unit of the x and y list does not matter for this analysis as long as the parameters respect the same unit and range.</p>
+<p>First, note that the background around your Gaussian is most likely not flat.
+For example, due to sample fluorescence, a large noise component may appear, making Gaussian intensity extraction more difficult.
+The first step is therefore to remove this background noise.</p>
+<p>Once the background has been removed, the Gaussian intensity can be extracted using different methods: either a curve fit or an integral procedure.</p>
+<p>In this page, we assume that the averaged and cleaned spectrum is provided as input (called the <em>y values</em>), along with the wave numbers (called the <em>x values</em>).
+See <a class="reference internal" href="cleaning_averaging_spectra.html#cleaning-averaging-spectra-page"><span class="std std-ref">Cleaning and Averaging Spectra</span></a> for more details.
+Note that the units of the x and y values do not matter, as long as they are consistent and within a reasonable range.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If your curve is a Lorentzian, you can use the first step to get ride of the noise, then you will have to fit by yourself the intensity. Contact us if you want to implement this new fitting  procedure in Alpaga.</p>
+<p>If your curve is Lorentzian, you can still use the noise-removal step.
+However, you will then need to fit the intensity manually.
+Contact us if you would like to contribute a new Lorentzian fitting procedure to Alpaga.</p>
 </div>
 <section id="remove-the-noise">
 <h2><span class="section-number">4.1. </span>Remove the noise<a class="headerlink" href="#remove-the-noise" title="Link to this heading">¶</a></h2>
 <a class="reference internal image-reference" href="_images/alpaga_10.jpg" id="remove-noise-section"><img alt="_images/alpaga_10.jpg" class="align-left" id="remove-noise-section" src="_images/alpaga_10.jpg" style="width: 300px;" />
 </a>
-<p>The spectra will be cut into 3 areas using the x values. The first area and the last one will be used in order to define the noise, while the second one should contain the Gaussian. The first and last area should be large enough in order to be fitted meaningfully by a polynomial function. If this ‘noise’ area is too large, the part where the Gaussian is located may not be properly fitted and thus modify the final intensity. If this noise area is too small, the noise fit can make no sense. A simple way to check if the area is too small is to add or remove one point to the noise area: the final Gaussian intensity should not be affected.</p>
-<p>&#64;Antonin: je te laisse étoffer cette explication en rajoutant des figures?</p>
-<p>For the order of the polynomial function  used to fit the noise, we recommend to use order 2, 3, or 4. We do not recommend to use less since the noise is often not a straight line. Higher term may work, but it can lead to wiggling in the Gaussian area.</p>
+<p>The spectrum is divided into three regions using the x values.
+The first and last regions are used to define the noise, while the central region should contain the Gaussian peak.
+The first and last regions must be large enough to be meaningfully fitted with a polynomial function.</p>
+<ul class="simple">
+<li><p>If the noise regions are too large, the Gaussian area may not be properly fitted, altering the final intensity.</p></li>
+<li><p>If the noise regions are too small, the polynomial fit may be meaningless.</p></li>
+</ul>
+<p>A simple way to check this is to add or remove a point from the noise region: the final Gaussian intensity should remain unchanged.</p>
+<a class="reference internal image-reference" href="_images/l_cut_definition.png"><img alt="_images/l_cut_definition.png" class="align-center" src="_images/l_cut_definition.png" style="width: 600px;" />
+</a>
+<p>For the polynomial order used to fit the noise, we recommend 2, 3, or 4.
+Lower orders are not suitable since the noise is rarely linear.
+Higher orders may work but can introduce oscillations in the Gaussian region.</p>
 <dl class="py function">
 <dt class="sig sig-object py">
 <span class="sig-prename descclassname"><span class="pre">analyze_run.</span></span><span class="sig-name descname"><span class="pre">remove_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l_cut</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[380,</span> <span class="pre">395,</span> <span class="pre">419,</span> <span class="pre">433]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order_fit_noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_fit_noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_spectra</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figure_counter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analyze_run.html#remove_noise"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
@@ -110,36 +130,44 @@ The second returned list is  the y value where the noise has been substracted, <
 
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If the noise removal procedure has worked well, the first and last area should be flat and in average zero. The most important is that there is no curvature: otherwise the Gaussian fit below would return wrong value. If you struggle to have a flat first and last area, try to reduce them – for instance set the first and last area to 10 nm.</p>
+<p>If noise removal worked correctly, the first and last regions should be flat and close to zero on average.
+Most importantly, there should be no curvature: otherwise the Gaussian fit below will return incorrect values.
+If you cannot achieve flat first and last regions, try reducing their size (e.g., set them to 10 nm).</p>
 </div>
 <a class="reference internal image-reference" href="_images/gaussian_distribution_meme.png"><img alt="_images/gaussian_distribution_meme.png" class="align-right" src="_images/gaussian_distribution_meme.png" style="width: 200px;" />
 </a>
 </section>
 <section id="gaussian-intensity-extraction">
 <h2><span class="section-number">4.2. </span>Gaussian intensity extraction<a class="headerlink" href="#gaussian-intensity-extraction" title="Link to this heading">¶</a></h2>
-<p id="gaussian-fit-section">Now that we have removed the background, the Gaussian spectra should be much easier to fit. There are two ways to extract the Gaussian intensity: by a function fit, or by an integral procedure.</p>
+<p id="gaussian-fit-section">Once the background has been removed, the Gaussian spectrum should be much easier to fit.
+There are two ways to extract the Gaussian intensity: fitting a Gaussian function or using an integral method.</p>
+<a class="reference internal image-reference" href="_images/gaussian_fit.png"><img alt="_images/gaussian_fit.png" class="align-center" src="_images/gaussian_fit.png" style="width: 600px;" />
+</a>
 <ol class="arabic">
 <li><p>Gaussian fit</p>
 <blockquote>
-<div><p>This method will fit the curve with a Gaussian function:</p>
+<div><p>This method fits the curve with a Gaussian function:</p>
 <div class="math notranslate nohighlight">
 \[f(x) = I_0 \exp \left[ - \left( \frac{ x - \lambda_0}{w_0} \right)^2 \right]\]</div>
-<p>and return the intensity <span class="math notranslate nohighlight">\(I_0\)</span>, the position of the maximum <span class="math notranslate nohighlight">\(\lambda_0\)</span> and the waist <span class="math notranslate nohighlight">\(w_0\)</span>. This f(x) function is defined as the <em>alpaga.fit_gausse</em> function.</p>
+<p>and returns the intensity <span class="math notranslate nohighlight">\(I_0\)</span>, the peak position <span class="math notranslate nohighlight">\(\lambda_0\)</span>, and the waist <span class="math notranslate nohighlight">\(w_0\)</span>.
+This function is defined in <em>alpaga.fit_gausse</em>.</p>
 </div></blockquote>
 </li>
-<li><dl>
-<dt>Integral method</dt><dd><p>This method assumes that the position of the maximum and the waist is known, and extract the intensity using the value of the integral:</p>
+<li><p>Integral method</p>
+<blockquote>
+<div><p>This method assumes that the peak position and waist are known, and extracts the intensity using the integral:</p>
 <div class="math notranslate nohighlight">
 \[f(x) = I_0 \exp \left[ - \left( \frac{ x - \lambda_0}{w_0} \right)^2 \right]
 \int_{-\infty}^{+ \infty} f(x) dx = I_0 w_0 \sqrt \pi\]</div>
-<p>The integral is performed in the <em>alpaga.intensity_from_gaussian_integral</em> function, and return the intensity.</p>
-</dd>
-</dl>
+<p>The integral is implemented in <em>alpaga.intensity_from_gaussian_integral</em>, which returns the intensity.</p>
+</div></blockquote>
 </li>
 </ol>
 <a class="reference internal image-reference" href="_images/alpaga_3.jpg"><img alt="_images/alpaga_3.jpg" class="align-center" src="_images/alpaga_3.jpg" style="width: 300px;" />
 </a>
-<p>The function alpaga.fit_gausse defines the gaussian described in the first method. It is not the function that perform the fit, see bellow, but the one that returns a gaussian value for given x and all the other gaussian parameters. You may use this function to check how the ‘’gaussian’’ intensity is defined in Alpaga.</p>
+<p>The function <em>alpaga.fit_gausse</em> defines the Gaussian described above.
+It does not perform the fit itself (see below), but simply returns a Gaussian value for given x and parameters.
+You can use this function to verify how Gaussian intensity is defined in Alpaga.</p>
 <dl class="py function">
 <dt class="sig sig-object py">
 <span class="sig-prename descclassname"><span class="pre">analyze_run.</span></span><span class="sig-name descname"><span class="pre">fit_gausse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intensity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">waist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analyze_run.html#fit_gausse"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
@@ -163,7 +191,7 @@ The second returned list is  the y value where the noise has been substracted, <
 </dl>
 </dd></dl>
 
-<p>And here is the function used to extract the intensity from the integral method:</p>
+<p>The function used to extract the intensity with the integral method is:</p>
 <dl class="py function">
 <dt class="sig sig-object py">
 <span class="sig-prename descclassname"><span class="pre">analyze_run.</span></span><span class="sig-name descname"><span class="pre">intensity_from_gaussian_integral</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L_x_cleaned</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_y_cleaned</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">waist</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analyze_run.html#intensity_from_gaussian_integral"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
@@ -190,9 +218,13 @@ The second returned list is  the y value where the noise has been substracted, <
 </dl>
 </dd></dl>
 
-<p>The Gaussian fit is the more versatile method: it can give you the intensity, along with important information: the waist and the maximum position. However, since this method uses a fit through all the curve, it can have an error if the intensity is small.</p>
-<p>On the other hand, the integral method seems more robust to extract the intensity, but it requires to know the waist. For ‘easy-to-fit Gaussian curve’, the two method return the same result. It is not clear which method is the most precise, therefore they are both always available.</p>
-<p>The function to extract the Gaussian intensity uses the previous one, <em>alpaga.remove_noise</em>, to get ride of the noise. If you are working already with noise-free curve, this should not be a problem.</p>
+<p>The Gaussian fit method is more versatile: it provides not only the intensity but also the waist and peak position.
+However, because it relies on fitting the entire curve, it can be less accurate when the signal is weak.</p>
+<p>The integral method, on the other hand, is often more robust for intensity extraction, but it requires prior knowledge of the waist.
+For well-behaved Gaussian curves, both methods yield the same result.
+Since it is unclear which method is most precise, both are always available.</p>
+<p>The Gaussian intensity extraction function also relies on <em>alpaga.remove_noise</em> to remove the background.
+If your curve is already noise-free, this step should not be a problem.</p>
 <dl class="py function">
 <dt class="sig sig-object py">
 <span class="sig-prename descclassname"><span class="pre">analyze_run.</span></span><span class="sig-name descname"><span class="pre">fit_gaussian_from_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l_cut</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[380,</span> <span class="pre">395,</span> <span class="pre">419,</span> <span class="pre">433]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order_fit_noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method_fit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fit_gauss'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds_fit_gausse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">([0,</span> <span class="pre">395,</span> <span class="pre">1],</span> <span class="pre">[inf,</span> <span class="pre">410,</span> <span class="pre">25])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_0_ref</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">403</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">waist_ref</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclu_zone</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_spectra</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figure_counter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/analyze_run.html#fit_gaussian_from_noise"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
@@ -271,24 +303,24 @@ The second returned list is  the y value where the noise has been substracted, <
 </dd></dl>
 
 </section>
-<section id="towards-automating">
-<h2><span class="section-number">4.3. </span>Towards automating<a class="headerlink" href="#towards-automating" title="Link to this heading">¶</a></h2>
+<section id="towards-automation">
+<h2><span class="section-number">4.3. </span>Towards automation<a class="headerlink" href="#towards-automation" title="Link to this heading">¶</a></h2>
 <a class="reference internal image-reference" href="_images/alpaga_7.jpg"><img alt="_images/alpaga_7.jpg" class="align-right" src="_images/alpaga_7.jpg" style="width: 300px;" />
 </a>
-<p>The extraction of the intensity from the averaged spectra is maybe the part where the numerical parameters influence the more the result. Therefore, it is recommended to:</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>Try several parameters to see how it fits <strong>your</strong> data. Certain samples may be much easier to fit than others.</p></li>
-<li><p>Use the <strong>same parameters</strong> for all your acquisition.</p></li>
+<p>Extracting intensity from averaged spectra is perhaps the step where numerical parameters most strongly influence the results.
+Therefore, we recommend:</p>
+<ol class="arabic simple">
+<li><p>Testing several parameters to see which best fit <strong>your</strong> data (some samples are easier to fit than others).</p></li>
+<li><p>Using the <strong>same parameters</strong> consistently for all acquisitions.</p></li>
 </ol>
-</div></blockquote>
-<p>The full automatic procedure is presented in the ref:<span class="incremental">polarisation_procedure_page</span>. It combines what has been presented in <a class="reference internal" href="file_management.html#file-management-page"><span class="std std-ref">File Management</span></a> , <a class="reference internal" href="cleaning_averaging_spectra.html#cleaning-averaging-spectra-page"><span class="std std-ref">Cleaning and Averaging Spectra</span></a> and in this page.</p>
+<p>The fully automated procedure is presented in <a class="reference internal" href="polarisation_procedure.html#polarisation-procedure-page"><span class="std std-ref">Polarisation Procedure</span></a>.
+It combines the approaches described in <a class="reference internal" href="file_management.html#file-management-page"><span class="std std-ref">File Management</span></a>, <a class="reference internal" href="cleaning_averaging_spectra.html#cleaning-averaging-spectra-page"><span class="std std-ref">Cleaning and Averaging Spectra</span></a>, and this page.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Release<span class="colon">:</span></dt>
 <dd class="field-odd"><p>1.2</p>
 </dd>
 <dt class="field-even">Date<span class="colon">:</span></dt>
-<dd class="field-even"><p>Aug 22, 2025</p>
+<dd class="field-even"><p>Aug 23, 2025</p>
 </dd>
 </dl>
 </section>
@@ -321,7 +353,7 @@ The second returned list is  the y value where the noise has been substracted, <
 <li class="toctree-l1 current"><a class="current reference internal" href="#">4. Fitting the Gaussian</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#remove-the-noise">4.1. Remove the noise</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#gaussian-intensity-extraction">4.2. Gaussian intensity extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#towards-automating">4.3. Towards automating</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#towards-automation">4.3. Towards automation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="polarisation_procedure.html">5. Polarisation Procedure</a></li>

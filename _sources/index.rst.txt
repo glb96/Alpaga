@@ -2,7 +2,7 @@ Alpaga
 =======
 
 
-The Alpaga code (AnaLyse en PolArisation de la Génération de second hAmonique) aims to analyse the SHG experimental acquisitions. 
+The Alpaga code (AnaLyse en PolArisation de la Génération de second hArmonique) aims to analyse the SHG experimental acquisitions. 
 
 
 .. image:: _static/alpaga_4.jpg
