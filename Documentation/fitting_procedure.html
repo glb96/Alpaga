@@ -251,8 +251,8 @@ Two methods are available to extract the intensity:</p>
 <span class="n">I0</span><span class="p">,</span> <span class="n">lambda_0</span><span class="p">,</span> <span class="n">waist</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>Here, <em>fit_gausse</em> is defined in ADDREF. The x and y inputs are the outputs of the cleaning
-procedure (see <a class="reference internal" href="#remove-noise-section"><span class="std std-ref">alpaga.remove_noise function</span></a>), and the bounds
+<p>Here, <em>fit_gausse</em> is defined in the analyze_run.fit_gausse function. The x and y inputs are the outputs of the cleaning
+procedure (see <a class="reference internal" href="#remove-noise-section"><span class="std std-ref">analyze_run.remove_noise function</span></a>), and the bounds
 are given by the <em>bounds_fit_gausse</em> parameter.
 This method returns the Gaussian intensity <em>I0</em>, the central wavelength <em>lambda_0</em>, and the
 width <em>waist</em>.
@@ -269,7 +269,7 @@ You must specify the exclusion zone with <em>exclu_zone = [X_min, X_max]</em>.</
 </li>
 <li><p>If <em>method_fit</em> is set to ‘integral_gauss’:</p>
 <blockquote>
-<div><p>The intensity is extracted using <em>alpaga.intensity_from_gaussian_integral</em> (ADDREF):</p>
+<div><p>The intensity is extracted using <em>analyze_run.intensity_from_gaussian_integral</em>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">I0</span> <span class="o">=</span> <span class="n">intensity_from_gaussian_integral</span><span class="p">(</span><span class="n">L_x_cleaned</span><span class="p">,</span> <span class="n">L_y_cleaned</span><span class="p">,</span> <span class="n">lambda_0</span><span class="p">,</span> <span class="n">waist</span><span class="p">)</span>
 </pre></div>
 </div>
