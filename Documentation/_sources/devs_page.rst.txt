@@ -36,7 +36,7 @@ Disappointed to not be a unicorn, he will always have something on his head to c
 Eager to help and friendly with living beings like alpagas, pythons, pandas, and even Igor users as long as you don't steal those preciously collected yogurts from him.
    
 .. image:: _static/MF_alpaga.png
-   :width: 280
+   :width: 200
    :align: right
    
 **Maxime Fery:**
