@@ -3,7 +3,9 @@
 SSHG analysis
 =============
 
-Once the spectrum analysis for all the angles has been performed, see ref:`polarisation_procedure_page`, several observables can be extracted from the angle-dependent intensity data. Many possible analyses can be made depending on what you are looking for. We are detailing here the analysis commonly used in the ONLI team of ILM. 
+Once the spectrum analysis for all the angles has been performed, see ref:`polarisation_procedure_page`, several observables can be extracted from the angle-dependent intensity data. Many possible analyses can be made depending on what you are looking for. We are detailing here the analysis commonly used at ILM. 
+
+See *tutorial_SSHG* for examples. 
 
 .. image:: _static/alpaga_23.jpg
    :width: 200
