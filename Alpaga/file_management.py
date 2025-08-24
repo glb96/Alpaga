@@ -18,34 +18,37 @@ import matplotlib.pyplot as plt
 
 def standard_file_name(prefixe, angle=False, iteration=False, extension='.dat'):
     '''
-    Define how to built the file name of an acquisition. 
+    Define how to build the file name of an acquisition. 
     
-    You may define your own function if your file does not follow the same structure. However, we warmly recommend to use the same input/output for this function as follow:
+    You may define your own function if your file does not follow the same structure. 
+    However, we strongly recommend using the same input/output format as described below:
     
     Parameters
     ----------
     prefixe : str
-        The prefix 
+        The prefix of the file name. 
     angle : str or bool
-        [Optional] If not bool, update the name of the file with this 'angle' value.
+        [Optional] If not a bool, appends this 'angle' value to the file name.
     iteration : str or bool
-        [Optional] If not bool, update the name of the file with this 'iteration' value.
+        [Optional] If not a bool, appends this 'iteration' value to the file name.
     extension : str
-        [Optional] The extension of the spectra file. Default value: '.dat'    
+        [Optional] The extension of the spectra file. Default is '.dat'.    
     
     Returns
     -------
     name : str
-        the name of the file. 
+        The generated file name. 
     
     Example
     -------
     For this standard function, if the input is:
-    *prefixe* = 'polarV'
-    *angle* = '42.0'
-    *iteration* = '4'
-    *extension* = '.dat'
-    output is: 'polarV_42.0_4.dat'
+    
+        prefixe = 'polarV'
+        angle = '42.0'
+        iteration = '4'
+        extension = '.dat'
+    
+    The output will be: 'polarV_42.0_4.dat'
     '''
     if isinstance(angle, bool):
         if isinstance(iteration, bool):
@@ -82,21 +85,28 @@ def third_floor_file_name_builder(prefixe, angle=False, iteration=False, extensi
 def transform_name_file(name_t, extension, type_file='single'):
     """
     Internal function of Alpaga.
+    
     Parameters
     ----------
     directory : str
-        The directory where is stored the datas
+        The directory where the data is stored.
     extension : str
-        [Optional] The extension of the spectra file. Default value: '.dat'
+        [Optional] The extension of the spectra file. Default is '.dat'.
     
     Returns
     -------
     prefix_file : str
-    For a given input name, *name_t*, cut the name into parts to fit the two possible templates depending on the argument *type_file*. In any case, the extension of the file should match the one given in input *extension*. 
+        For a given input name (*name_t*), this function splits the name into parts 
+        to match one of the two possible templates depending on the argument *type_file*. 
+        The extension of the file must match the input *extension*. 
     
-    if *type_file* = 'single', the template is: prefix + _ + iter + extension. In this case, this function return: prefix, iter and extension.
+        If *type_file* = 'single', the template is: 
+            prefix + '_' + iter + extension  
+        In this case, the function returns: prefix, iter, extension.
     
-    if *type_file* = 'angle', the template is: prefix + _ + angle + _ + iter + extension. In this case, this function return: prefix, angle, iter and extension. 
+        If *type_file* = 'angle', the template is: 
+            prefix + '_' + angle + '_' + iter + extension  
+        In this case, the function returns: prefix, angle, iter, extension.
     """
     if type_file=='single':
         if name_t[-len(extension):] != extension: 
@@ -152,37 +162,44 @@ def transform_name_file(name_t, extension, type_file='single'):
 
 def find_file_iter_from_dir(directory, extension='.dat'):
     """
-    Return the prefix (*prefix_file*), the number of iter (*N_iter*) and the extension (*extension*) of a single acquisition located in the repertory *directory*. 
+    Return the prefix (*prefix_file*), the number of iterations (*N_iter*), 
+    and the extension (*extension*) of a single acquisition located in the directory *directory*. 
     
-    The expected name of the file is: \n
-    directory + prefix + _ + i + extension \n
-    Where i goes from 1 to *N_iter*. 
+    The expected file naming convention is:  
+        directory + prefix + '_' + i + extension  
+    where *i* ranges from 1 to *N_iter*. 
     
     Parameters
     ----------
     directory : str
-        The directory where is stored the datas
+        The directory where the data is stored.
     extension : str
-        [Optional] The extension of the spectra file. Default value: '.dat'
-    
+        [Optional] The extension of the spectra file. Default is '.dat'.
     
     Returns
     -------
     prefix_file : str
-         The prefixe shared by all the spectra iteration. 
+        The prefix shared by all the spectra iterations. 
     N_iter : int
-         The number of iter found for this prefixe. Alpaga has check that all the iter are present to avoid 'File not found' error later on. 
+        The number of iterations found for this prefix. Alpaga checks that 
+        all iterations are present to avoid 'File not found' errors later on. 
     extension : str
-        The extension of the detected spectra file. Same value as in the input
+        The extension of the detected spectra file. Same value as the input.
         
     Examples
     --------
-    Let's assume that in the directory /home/lama/Datas/Water_acquisition/Test_120sec TOCHANGE, is located the spectra: water_1.dat, water_2.dat, water_3.dat. The prefix of these file is 'water', the total number of iter is *N_iter* = 3, and the extension is .dat . In order to get automatically theses information, use: ::
+    Suppose that in the directory ``/home/lama/Datas/Water_acquisition/Test_120sec`` 
+    there are the spectra files: ``water_1.dat, water_2.dat, water_3.dat``.  
     
-       directory = '/home/lama/Datas/Water_acquisition/Test_120sec'
-       prefix, N_iter, extension = alpaga.find_file_iter_from_dir(directory)
-       print('The prefix for all the file is: "' + prefix + '" with ' + str(N_iter) + ' iter. The extension is: ' + extension)
+    The prefix of these files is ``water``, the total number of iterations is 
+    *N_iter* = 3, and the extension is ``.dat``.  
     
+    To automatically extract this information, use: ::
+    
+        directory = '/home/lama/Datas/Water_acquisition/Test_120sec'
+        prefix, N_iter, extension = alpaga.find_file_iter_from_dir(directory)
+        print('The prefix for all files is: "' + prefix + '" with ' 
+              + str(N_iter) + ' iterations. The extension is: ' + extension)
     """
     print('I will look at file with the extension ' + extension + ' in the directory ' + directory + ' for single acquisition. The type of the files should be: prefix_iter.extension')
     all_file = os.listdir(directory)
@@ -222,38 +239,51 @@ def find_file_iter_from_dir(directory, extension='.dat'):
 
 def find_angle_iter_from_dir(directory, extension='.dat'):
     """
-    Return the prefix (*prefix_file*), the list of the angle (*L_files_angles*) the number of iter (*N_iter*) and the extension (*extension*) of an acquisition located in the repertory *directory*.
+    Return the prefix (*prefix_file*), the list of angles (*L_files_angles*), 
+    the number of iterations (*N_iter*), and the extension (*extension*) of an acquisition 
+    located in the directory *directory*.
     
-    The expected name of the file is: \n
-    directory + prefix + _ + k + _ + i + extension \n
-    Where k goes within all the value of *L_files_angles*. k can be a float (please try to avoid very long decimal angle value) and where i goes from 1 to *N_iter*. 
+    The expected file naming convention is:  
+        directory + prefix + '_' + k + '_' + i + extension  
+    where *k* iterates over all values in *L_files_angles* (angles, possibly floats — 
+    avoid excessively long decimal values), and *i* ranges from 1 to *N_iter*. 
     
     Parameters
     ----------
     directory : str
-        The directory where is stored the datas
+        The directory where the data is stored.
     extension : str
-        [Optional] The extension of the spectra file. Default value: '.dat'
+        [Optional] The extension of the spectra file. Default is '.dat'.
     
     Returns
     -------
     prefix_file : str
-         The prefixe shared by all the spectra iteration. 
-    L_files_angles: list of str
-         The list of the angle found. *L_files_angles* is a list of string -- to avoid bad behavior if your angles has a name like 4.10. 
+        The prefix shared by all spectra iterations. 
+    L_files_angles : list of str
+        The list of detected angles. Returned as a list of strings 
+        (to avoid issues with filenames such as '4.10').
     N_iter : int
-         The number of iter found for this prefixe. Alpaga has check that all the iter are present for all the angle to avoid 'File not found' error later on. 
+        The number of iterations found for this prefix. Alpaga checks that all iterations 
+        are present for all angles to avoid 'File not found' errors later on. 
     extension : str
-        The extension of the detected spectra file. Same value as in the input
+        The extension of the detected spectra file. Same as the input value.
         
     Examples
     --------
-    Let's assume that in the directory /home/lama/Datas/Water_acquisition/Test_120sec TOCHANGE, is located the spectra: water_4.0_1.dat, water_4.0_2.dat, water_15.0_2.dat, water_15.0_2.dat. The prefix of these file is 'water', the total number of iter is *N_iter* = 2, the list of angle is *L_files_angles* = [4.0, 15.0] and the extension is .dat . In order to get automatically theses information, use: ::
+    Suppose that in the directory ``/home/lama/Datas/Water_acquisition/Test_120sec`` 
+    the following spectra files are located:  
+        ``water_4.0_1.dat, water_4.0_2.dat, water_15.0_1.dat, water_15.0_2.dat``.  
     
-       directory = '/home/lama/Datas/Water_acquisition/Test_120sec'
-       prefix, L_files_angles, N_iter, extension = alpaga.find_angle_iter_from_dir(directory)
-       print('The prefix for all the file is: "' + prefix + '" with ' + str(N_iter) + ' iter. The angle found are ' + str(L_files_angles) + '. The extension is: ' + extension)
-       
+    The prefix of these files is ``water``, the total number of iterations is *N_iter* = 2,  
+    the list of angles is *L_files_angles* = ['4.0', '15.0'], and the extension is ``.dat``.  
+    
+    To automatically extract this information, use: ::
+    
+        directory = '/home/lama/Datas/Water_acquisition/Test_120sec'
+        prefix, L_files_angles, N_iter, extension = alpaga.find_angle_iter_from_dir(directory)
+        print('The prefix for all files is: "' + prefix + '" with ' 
+              + str(N_iter) + ' iterations. The angles found are ' 
+              + str(L_files_angles) + '. The extension is: ' + extension)
     """
     print('I will look at file with the extension ' + extension + ' in the directory ' + directory + 'for angle dependent values. The type of the files should be: prefix_angle_iter.extension')
     all_file = os.listdir(directory)

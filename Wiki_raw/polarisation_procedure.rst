@@ -5,7 +5,10 @@ Polarisation Procedure
 
 This method regroups the different step presented in the previous part in order to automate them. The aim of this procedure is to literally ''press a button'' to analyse your results so that you can have a coffee (or a tea (or a hot chocolate)) while the code is running. However, before achieving such dream, you should try the many parameters used. Many of them can be chosen automatically, but checking the different step by yourself is always a good behaviour. 
 
-The function to use is *alpaga.polarisation_intensity*, and below is presented the different argument that can be passed, corresponding to the different procedure step.
+The function to use is *analyze_run.polarisation_intensity*, and below is presented the different argument that can be passed, corresponding to the different procedure step.
+
+This procedure is explained in Part III of the *tutorial_spectra_analysis* tutorial.
+
 
 .. autofunction:: analyze_run.polarisation_intensity
    :noindex:
