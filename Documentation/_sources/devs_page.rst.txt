@@ -35,6 +35,10 @@ One can find him in the deepest cave, or darkest lab room trying to convert red 
 Disappointed to not be a unicorn, he will always have something on his head to compensate for this injustice. 
 Eager to help and friendly with living beings like alpagas, pythons, pandas, and even Igor users as long as you don't steal those preciously collected yogurts from him.
    
+.. image:: _static/MF_alpaga.png
+   :width: 280
+   :align: right
+   
 **Maxime Fery:**
 
 PhD: 2021-2025
@@ -45,19 +49,17 @@ He is passionate about physics and, above all, loves sharing his passions with o
 
 |
 
-.. image:: _static/MF_alpaga.png
-   :width: 280
+.. image:: _static/OB_alpaga.jpg
+   :width: 350
    :align: right
-
+   
 **Oriane Bonhomme:**
 
 Seniorita Alpaga
 
 |
 
-.. image:: _static/OB_alpaga.jpg
-   :width: 350
-   :align: right
+
 
 :Release: |release|
 :Date: |today|
