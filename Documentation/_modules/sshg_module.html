@@ -44,7 +44,7 @@
 <span class="c1">############################################################################################</span>
 <span class="c1">############################################################################################</span>
 
-<span class="c1">#ai calculation (biblio these Aurelie Bruyere p70 à 81)</span>
+<span class="c1">#ai calculation (biblio these Aurelie Bruyere p70 à 81, Bruyère, A. (2016). Génération de second harmonique sur des films moléculaires chiraux (Doctoral dissertation, Université de Lyon).)</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">r_s</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span><span class="n">n2</span><span class="p">,</span><span class="n">angle_1</span><span class="p">,</span><span class="n">angle_2</span><span class="p">):</span> <span class="c1">#Fresnel coeff for a sagittal reflected wave</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">n1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle_1</span><span class="p">)</span> <span class="o">-</span> <span class="n">n2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle_2</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="n">n1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle_1</span><span class="p">)</span> <span class="o">+</span> <span class="n">n2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle_2</span><span class="p">))</span>
@@ -66,42 +66,34 @@
 <div class="viewcode-block" id="ai_coeff">
 <a class="viewcode-back" href="../analysis_SSHG.html#sshg_module.ai_coeff">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">ai_coeff</span><span class="p">(</span><span class="n">angle1</span><span class="p">,</span><span class="n">n1</span><span class="p">,</span><span class="n">n2</span><span class="p">,</span><span class="n">N1</span><span class="p">,</span><span class="n">N2</span><span class="p">):</span>
-<span class="w">    </span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    From experimental angle of incidence and refractive index values of materials for fundamental and harmonic wavelength, </span>
-<span class="sd">    this function return ai coefficients and the angle of the harmonic reflected wave. \\</span>
-<span class="sd">    You can see Aurèlie Bruyere Thesis, p70 to 81, for details of the calculation.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    From the experimental angle of incidence and the refractive index values of the materials </span>
+<span class="sd">    (for both the fundamental and harmonic wavelengths), compute the *ai* coefficients and </span>
+<span class="sd">    the reflection angle of the harmonic wave.  </span>
+
+<span class="sd">    For details of the calculation, see Aurélie Bruyère&#39;s thesis, pp. 70–81.</span>
 <span class="sd">     </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    </span>
 <span class="sd">    angle1 : float</span>
-<span class="sd">        experimental angle of incidence</span>
+<span class="sd">        Experimental angle of incidence.</span>
 <span class="sd">    n1 : float</span>
-<span class="sd">        refractive index of medium 1 for fundamental wavelength</span>
+<span class="sd">        Refractive index of medium 1 at the fundamental wavelength.</span>
 <span class="sd">    n2 : float</span>
-<span class="sd">        refractive index of medium 2 for fundamental wavelength</span>
+<span class="sd">        Refractive index of medium 2 at the fundamental wavelength.</span>
 <span class="sd">    N1 : float</span>
-<span class="sd">        refractive index of medium 1 for harmonic wavelength</span>
+<span class="sd">        Refractive index of medium 1 at the harmonic wavelength.</span>
 <span class="sd">    N2 : float</span>
-<span class="sd">        refractive index of medium 2 for harmonic wavelength</span>
+<span class="sd">        Refractive index of medium 2 at the harmonic wavelength.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    </span>
 <span class="sd">    ai : list </span>
-<span class="sd">        It contains value of ai coefficients and the angle of the harmonic reflected wave. \\</span>
-<span class="sd">        Structure of the list : \\</span>
-<span class="sd">        </span>
-<span class="sd">        [a1,</span>
-<span class="sd">        a2,</span>
-<span class="sd">        a3,</span>
-<span class="sd">        a4,</span>
-<span class="sd">        a5,</span>
-<span class="sd">        reflected angle of reflected wave]</span>
-<span class="sd">    </span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    
+<span class="sd">        A list containing the computed *ai* coefficients and the reflection angle of the harmonic wave.  </span>
+<span class="sd">        The structure of the list is:  </span>
+
+<span class="sd">        ``[a1, a2, a3, a4, a5, reflection_angle]``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nm</span><span class="o">=</span><span class="p">(</span><span class="n">n1</span><span class="o">+</span><span class="n">n2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="c1">#refractive index mean value between medium 1 and 2 for fundamental wave</span>
     <span class="n">Nm</span><span class="o">=</span><span class="p">(</span><span class="n">N1</span><span class="o">+</span><span class="n">N2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="c1">#refractive index mean value between medium 1 and 2 for harmonic wave</span>
     
@@ -157,25 +149,23 @@
 <div class="viewcode-block" id="fit_polaS">
 <a class="viewcode-back" href="../analysis_SSHG.html#sshg_module.fit_polaS">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fit_polaS</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">chi_XXZ</span><span class="p">,</span> <span class="n">ai</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    It&#39;s the function that defines the theoritical equation for S polarisation.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Defines the theoretical equation for S-polarized SHG intensity.</span>
 <span class="sd">   </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    </span>
-<span class="sd">    x: list</span>
-<span class="sd">        The polarisation angle of the fundamental in degree. The angle shall be given in degrees!</span>
-<span class="sd">    chi_XXZ: float</span>
-<span class="sd">        The value of chi_XXZ element</span>
-<span class="sd">    ai: list</span>
-<span class="sd">        List of the ai elements with the same structure as the return of *sshg_module.ai_coeff*.</span>
+<span class="sd">    x : list</span>
+<span class="sd">        The polarization angles of the fundamental wave, in degrees.</span>
+<span class="sd">    chi_XXZ : float</span>
+<span class="sd">        The value of the chi_XXZ tensor element.</span>
+<span class="sd">    ai : list</span>
+<span class="sd">        List of the ai coefficients, with the same structure as the output of *sshg_module.ai_coeff*.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    y: list</span>
-<span class="sd">        The S polarised SSHG intensity </span>
-<span class="sd">    </span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    y : list</span>
+<span class="sd">        The S-polarized SHG intensity corresponding to the input angles.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">X</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
     <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">ai</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">*</span><span class="n">chi_XXZ</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">y</span><span class="p">)</span></div>
@@ -186,32 +176,27 @@
 <div class="viewcode-block" id="fit_polaP">
 <a class="viewcode-back" href="../analysis_SSHG.html#sshg_module.fit_polaP">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fit_polaP</span><span class="p">(</span><span class="n">x</span><span class="p">,</span>  <span class="n">chi_XXZ</span><span class="p">,</span> <span class="n">chi_ZXX</span><span class="p">,</span> <span class="n">chi_ZZZ</span><span class="p">,</span> <span class="n">ai</span><span class="p">):</span>
-<span class="w">    </span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    It&#39;s the function that defines the theoritical equation for P polarisation.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Defines the theoretical equation for P-polarized SHG intensity.</span>
 <span class="sd">   </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    </span>
-<span class="sd">    x: list</span>
-<span class="sd">        The polarisation angle of the fundamental in degree. The angle shall be given in degrees!</span>
-<span class="sd">    chi_XXZ: float</span>
-<span class="sd">        The value of chi_XXZ element</span>
-<span class="sd">    chi_ZXX: float</span>
-<span class="sd">        The value of chi_ZXX element</span>
-<span class="sd">    chi_ZZZ: float</span>
-<span class="sd">        The value of chi_ZZZ element</span>
-<span class="sd">    ai: list</span>
-<span class="sd">        List of the ai elements with the same structure as the return of *sshg_module.ai_coeff*.</span>
+<span class="sd">    x : list</span>
+<span class="sd">        The polarization angles of the fundamental wave, in degrees.</span>
+<span class="sd">    chi_XXZ : float</span>
+<span class="sd">        The value of the chi_XXZ tensor element.</span>
+<span class="sd">    chi_ZXX : float</span>
+<span class="sd">        The value of the chi_ZXX tensor element.</span>
+<span class="sd">    chi_ZZZ : float</span>
+<span class="sd">        The value of the chi_ZZZ tensor element.</span>
+<span class="sd">    ai : list</span>
+<span class="sd">        List of the ai coefficients, with the same structure as the output of *sshg_module.ai_coeff*.</span>
 <span class="sd">     </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    </span>
-<span class="sd">    y: list</span>
-<span class="sd">        The P polarised SSHG intensity </span>
-<span class="sd">    </span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    
+<span class="sd">    y : list</span>
+<span class="sd">        The P-polarized SHG intensity corresponding to the input angles.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">y</span> <span class="o">=</span> <span class="p">((</span><span class="n">ai</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">chi_XXZ</span><span class="o">+</span><span class="n">ai</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">chi_ZXX</span><span class="o">+</span><span class="n">ai</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">chi_ZZZ</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">ai</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">*</span><span class="n">chi_ZXX</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">y</span><span class="p">)</span>    </div>
 
@@ -219,32 +204,27 @@
 <span class="c1">############################################################################################</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">fit_pola45</span><span class="p">(</span><span class="n">x</span><span class="p">,</span>  <span class="n">chi_XXZ</span><span class="p">,</span> <span class="n">chi_ZXX</span><span class="p">,</span> <span class="n">chi_ZZZ</span><span class="p">,</span> <span class="n">ai</span><span class="p">):</span>
-<span class="w">    </span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    It&#39;s the function that defines the theoritical equation for 45° polarisation.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Defines the theoretical equation for 45°-polarized SHG intensity.</span>
 <span class="sd">   </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    </span>
-<span class="sd">    x: list</span>
-<span class="sd">        The polarisation angle of the fundamental in degree. The angle shall be given in degrees!</span>
-<span class="sd">    chi_XXZ: float</span>
-<span class="sd">        The value of chi_XXZ element</span>
-<span class="sd">    chi_ZXX: float--upgrade pip</span>
-<span class="sd">        The value of chi_ZXX element</span>
-<span class="sd">    chi_ZZZ: float</span>
-<span class="sd">        The value of chi_ZZZ element</span>
-<span class="sd">    ai: list</span>
-<span class="sd">        List of the ai elements with the same structure as the return of *sshg_module.ai_coeff*.</span>
+<span class="sd">    x : list</span>
+<span class="sd">        The polarization angles of the fundamental wave, in degrees.</span>
+<span class="sd">    chi_XXZ : float</span>
+<span class="sd">        The value of the chi_XXZ tensor element.</span>
+<span class="sd">    chi_ZXX : float</span>
+<span class="sd">        The value of the chi_ZXX tensor element.</span>
+<span class="sd">    chi_ZZZ : float</span>
+<span class="sd">        The value of the chi_ZZZ tensor element.</span>
+<span class="sd">    ai : list</span>
+<span class="sd">        List of the ai coefficients, with the same structure as the output of *sshg_module.ai_coeff*.</span>
 <span class="sd">     </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    </span>
-<span class="sd">    y: list</span>
-<span class="sd">        The 45° polarised SSHG intensity </span>
-<span class="sd">    </span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    
+<span class="sd">    y : list</span>
+<span class="sd">        The 45°-polarized SHG intensity corresponding to the input angles.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">deuxX</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
     <span class="n">mix</span> <span class="o">=</span> <span class="n">ai</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">chi_XXZ</span><span class="o">+</span><span class="n">ai</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">chi_ZXX</span><span class="o">+</span><span class="n">ai</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">chi_ZZZ</span>
     <span class="n">y</span> <span class="o">=</span> <span class="p">((</span><span class="n">mix</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">ai</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">*</span><span class="n">chi_ZXX</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">ai</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">deuxX</span><span class="p">)</span><span class="o">*</span><span class="n">chi_XXZ</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
@@ -255,62 +235,61 @@
 <div class="viewcode-block" id="analyse_polarization_SSHG">
 <a class="viewcode-back" href="../analysis_SSHG.html#sshg_module.analyse_polarization_SSHG">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">analyse_polarization_SSHG</span><span class="p">(</span><span class="n">angle_incidence</span><span class="p">,</span> <span class="n">n1_fonda</span><span class="p">,</span> <span class="n">n2_fonda</span><span class="p">,</span> <span class="n">n1_harmo</span><span class="p">,</span> <span class="n">n2_harmo</span><span class="p">,</span> <span class="n">L_polarisation_angle</span><span class="p">,</span> <span class="n">L_intensity_S</span><span class="p">,</span> <span class="n">L_intensity_P</span><span class="p">,</span> <span class="n">XXZ</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
-<span class="w">    </span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    From experimental angle of incidence, refractive index values of materials for fundamental and harmonic wavelength, polarisation angle and the SSHG gaussian intensity, the function returns ai coefficients and chi coefficients for an isotrope achiral interface. </span>
-<span class="sd">    ref : Aurèlie Bruyere Thesis, p70 to 81</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    From the experimental angle of incidence, refractive indices of the materials </span>
+<span class="sd">    for fundamental and harmonic wavelengths, polarization angles, and the SSHG </span>
+<span class="sd">    Gaussian intensity, this function returns the ai coefficients and chi coefficients </span>
+<span class="sd">    for an isotropic, achiral interface. </span>
+<span class="sd">    Reference: Aurèlie Bruyere Thesis, pp. 70–81.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    </span>
 <span class="sd">    angle1 : float</span>
-<span class="sd">        experimental angle of incidence</span>
+<span class="sd">        Experimental angle of incidence.</span>
 <span class="sd">    n1 : float</span>
-<span class="sd">        refractive index of medium 1 for fundamntal wavelength</span>
+<span class="sd">        Refractive index of medium 1 for the fundamental wavelength.</span>
 <span class="sd">    n2 : float</span>
-<span class="sd">        refractive index of medium 2 for fundamntal wavelength</span>
+<span class="sd">        Refractive index of medium 2 for the fundamental wavelength.</span>
 <span class="sd">    N1 : float</span>
-<span class="sd">        refractive index of medium 1 for harmonic wavelength</span>
+<span class="sd">        Refractive index of medium 1 for the harmonic wavelength.</span>
 <span class="sd">    N2 : float</span>
-<span class="sd">        refractive index of medium 2 for harmonic wavelength</span>
-<span class="sd">    L_polarisation_angle: list</span>
-<span class="sd">        The polarisation angle of the fundamental in degree.</span>
-<span class="sd">    L_intensity_S: list</span>
-<span class="sd">        The SSHG intensity for S polarized analyser. The size of *L_angle* and *L_intensity_S* shall match. </span>
-<span class="sd">    L_intensity_P: list</span>
-<span class="sd">        The SSHG intensity for P polarized analyser. The size of *L_angle* and *L_intensity_P* shall match.</span>
-<span class="sd">    XXZ: float</span>
-<span class="sd">        This parameter allows you to fix the value of chi_xxz if, for exemple, your S polarisation is flat. It avoid fitting the noise and recover a non physical value for this element. By default, the value is set to &#39;False&#39; : in this case chi_xxz is extracted by the fitting of S polarisation.</span>
+<span class="sd">        Refractive index of medium 2 for the harmonic wavelength.</span>
+<span class="sd">    L_polarisation_angle : list</span>
+<span class="sd">        The polarization angles of the fundamental in degrees.</span>
+<span class="sd">    L_intensity_S : list</span>
+<span class="sd">        The SSHG intensity for S-polarized analyzer. The sizes of *L_polarisation_angle* </span>
+<span class="sd">        and *L_intensity_S* must match.</span>
+<span class="sd">    L_intensity_P : list</span>
+<span class="sd">        The SSHG intensity for P-polarized analyzer. The sizes of *L_polarisation_angle* </span>
+<span class="sd">        and *L_intensity_P* must match.</span>
+<span class="sd">    XXZ : float or bool</span>
+<span class="sd">        Optional parameter to fix the value of chi_XXZ. If, for example, the S polarization </span>
+<span class="sd">        is flat, this avoids fitting the noise and recovering a non-physical value. </span>
+<span class="sd">        By default, this is set to False, in which case chi_XXZ is extracted by fitting </span>
+<span class="sd">        the S polarization.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    </span>
 <span class="sd">    ai : list</span>
-<span class="sd">        It contains value of ai coefficients and the angle of the harmonic reflected wave. \\</span>
-<span class="sd">        Structure of the list : \\</span>
-<span class="sd">        </span>
+<span class="sd">        Contains the ai coefficients and the angle of the harmonic reflected wave.</span>
+<span class="sd">        Structure:</span>
 <span class="sd">        [a1,</span>
-<span class="sd">        a2,</span>
-<span class="sd">        a3,</span>
-<span class="sd">        a4,</span>
-<span class="sd">        a5,</span>
-<span class="sd">        reflected angle of reflected wave]</span>
+<span class="sd">         a2,</span>
+<span class="sd">         a3,</span>
+<span class="sd">         a4,</span>
+<span class="sd">         a5,</span>
+<span class="sd">         reflected angle of reflected wave]</span>
 <span class="sd">    </span>
 <span class="sd">    list_chi : list</span>
-<span class="sd">        It contains two mathematical solutions for coefficient chi. \\</span>
-<span class="sd">        Structure of the list : \\</span>
-<span class="sd">        </span>
+<span class="sd">        Contains two mathematical solutions for the chi coefficients.</span>
+<span class="sd">        Structure:</span>
 <span class="sd">        [chi_XXZ,</span>
-<span class="sd">        chi_ZXX,</span>
-<span class="sd">        chi_ZZZ,</span>
-<span class="sd">        </span>
-<span class="sd">        chi_XXZset2,</span>
-<span class="sd">        chi_ZXXset2,</span>
-<span class="sd">        chi_ZZset2]</span>
-<span class="sd">    </span>
-<span class="sd">    </span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    
+<span class="sd">         chi_ZXX,</span>
+<span class="sd">         chi_ZZZ,</span>
+<span class="sd">         chi_XXZset2,</span>
+<span class="sd">         chi_ZXXset2,</span>
+<span class="sd">         chi_ZZZset2]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ai</span><span class="o">=</span><span class="n">ai_coeff</span><span class="p">(</span><span class="n">angle_incidence</span><span class="p">,</span><span class="n">n1_fonda</span><span class="p">,</span><span class="n">n2_fonda</span><span class="p">,</span><span class="n">n1_harmo</span><span class="p">,</span><span class="n">n2_harmo</span><span class="p">)</span>
     
     <span class="n">L_angle_rad</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">180</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">L_polarisation_angle</span><span class="p">]</span>
@@ -340,7 +319,6 @@
     
     <span class="k">return</span> <span class="p">(</span> <span class="n">ai</span><span class="p">,</span> <span class="n">list_chi</span><span class="p">)</span></div>
 
-    
     
 <span class="c1">############################################################################################ </span>
 </pre></div>
