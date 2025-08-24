@@ -39,42 +39,38 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span> 
-<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">curve_fit</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.cm</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cm</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-
 
 <span class="c1">############################################################################################     </span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">fct_polar_abc</span><span class="p">(</span><span class="n">L_x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">alpha_0</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Define the function using the a, b and c coefficient to describe the SHS intensity: ::</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Define the SHS intensity function using the coefficients *a*, *b*, and *c*: ::</span>
 <span class="sd">    </span>
-<span class="sd">        x = (L_x-alpha_0)*np.pi/180</span>
-<span class="sd">        L_y = a*(np.cos(x)**4) + b*((np.cos(x)**2)*(np.sin(x)**2)) + c*(np.sin(x)**4)</span>
+<span class="sd">        x = (L_x - alpha_0) * np.pi / 180</span>
+<span class="sd">        L_y = a * (np.cos(x) ** 4) \</span>
+<span class="sd">              + b * ((np.cos(x) ** 2) * (np.sin(x) ** 2)) \</span>
+<span class="sd">              + c * (np.sin(x) ** 4)</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    L_x: list</span>
-<span class="sd">        The polarisation angle of the fundamental in degree. The angle shall be given in degrees!</span>
-<span class="sd">    a: float</span>
-<span class="sd">        The a parameter</span>
-<span class="sd">    b: float</span>
-<span class="sd">        The b parameter</span>
-<span class="sd">    c: float</span>
-<span class="sd">        The c parameter</span>
-<span class="sd">    alpha_0:</span>
-<span class="sd">        The polarization angle representing the real &#39;zero&#39;. </span>
+<span class="sd">    L_x : list</span>
+<span class="sd">        The polarization angle of the fundamental in degrees. </span>
+<span class="sd">        Input values must be given in degrees.</span>
+<span class="sd">    a : float</span>
+<span class="sd">        The coefficient *a*.</span>
+<span class="sd">    b : float</span>
+<span class="sd">        The coefficient *b*.</span>
+<span class="sd">    c : float</span>
+<span class="sd">        The coefficient *c*.</span>
+<span class="sd">    alpha_0 : float</span>
+<span class="sd">        The polarization angle representing the reference &#39;zero&#39;.</span>
+<span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    L_y: list</span>
-<span class="sd">        The SHS intensity    </span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    L_y : list</span>
+<span class="sd">        The SHS intensity values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">L_x</span><span class="o">-</span><span class="n">alpha_0</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">180</span>
     <span class="n">L_y</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span><span class="o">*</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="n">c</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span>
     <span class="k">return</span><span class="p">(</span><span class="n">L_y</span><span class="p">)</span>
@@ -82,65 +78,72 @@
 <span class="c1">############################################################################################ </span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">calc_i</span><span class="p">(</span><span class="n">L_x</span><span class="p">,</span> <span class="n">L_y</span><span class="p">,</span> <span class="n">alpha0</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Compute the i0, i2 and i4 parameters: ::</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the *i0*, *i2*, and *i4* parameters: ::</span>
 <span class="sd">    </span>
 <span class="sd">        i0 = np.mean(L_y)</span>
-<span class="sd">        i2 = 2*np.mean(L_y*np.cos(2*(np.pi/180)*(L_x-alpha0)))</span>
-<span class="sd">        i4 = 2*np.mean(L_y*np.cos(4*(np.pi/180)*(L_x-alpha0)))</span>
+<span class="sd">        i2 = 2 * np.mean(L_y * np.cos(2 * (np.pi / 180) * (L_x - alpha0)))</span>
+<span class="sd">        i4 = 2 * np.mean(L_y * np.cos(4 * (np.pi / 180) * (L_x - alpha0)))</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    L_x: list</span>
-<span class="sd">        The polarisation angle of the fundamental in degree. The angle shall be given in degrees!</span>
-<span class="sd">    L_y: list</span>
-<span class="sd">        The V (or P) polarization SHS intensity</span>
-<span class="sd">    alpha0: float</span>
-<span class="sd">        The polarization angle representing the real &#39;zero&#39;. </span>
+<span class="sd">    L_x : list</span>
+<span class="sd">        The polarization angle of the fundamental in degrees. </span>
+<span class="sd">        Input values must be given in degrees.</span>
+<span class="sd">    L_y : list</span>
+<span class="sd">        The SHS intensity (V or P polarization).</span>
+<span class="sd">    alpha0 : float</span>
+<span class="sd">        The polarization angle representing the reference &#39;zero&#39;.</span>
+<span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    i0: float</span>
-<span class="sd">        The i0 value    </span>
-<span class="sd">    i2: float</span>
-<span class="sd">        The i2 value</span>
-<span class="sd">    i4: float</span>
-<span class="sd">        The i4 value</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    i0 : float</span>
+<span class="sd">        The *i0* value.</span>
+<span class="sd">    i2 : float</span>
+<span class="sd">        The *i2* value.</span>
+<span class="sd">    i4 : float</span>
+<span class="sd">        The *i4* value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">i0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">L_y</span><span class="p">)</span>
     <span class="n">i2</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">L_y</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">180</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">L_x</span><span class="o">-</span><span class="n">alpha0</span><span class="p">)))</span>
     <span class="n">i4</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">L_y</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">180</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">L_x</span><span class="o">-</span><span class="n">alpha0</span><span class="p">)))</span>
     <span class="k">return</span><span class="p">(</span><span class="n">i0</span><span class="p">,</span> <span class="n">i2</span><span class="p">,</span> <span class="n">i4</span><span class="p">)</span>
 
-
+<span class="c1">############################################################################################</span>
+<span class="c1">############################################################################################</span>
 <span class="c1">############################################################################################ </span>
 
 <div class="viewcode-block" id="analyse_polarization_SHS_V">
 <a class="viewcode-back" href="../analysis_SHS.html#shs_module.analyse_polarization_SHS_V">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">analyse_polarization_SHS_V</span><span class="p">(</span><span class="n">L_angle</span><span class="p">,</span> <span class="n">L_intensity</span><span class="p">,</span> <span class="n">alpha_0</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">L_intensity_error</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    From the polarisation angle and the SHS gaussian intensity, return many properties. </span>
-<span class="sd">         </span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    From the polarization angle and the SHS Gaussian intensity, compute and return several properties.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    L_angle: list</span>
-<span class="sd">        The polarisation angle of the fundamental in degree.</span>
-<span class="sd">    L_intensity: list</span>
-<span class="sd">        The HRS intensity. The size of *L_angle* and *L_intensity* shall match. </span>
-<span class="sd">    alpha_0: bool or float</span>
-<span class="sd">        [Optional] If set to False, then the alph_0 is a fit parameter. If set to a float, the alpha_0 is not a free parameter, an is fixed to the given value. Note that this angle should be given in degree.</span>
-<span class="sd">    L_intensity_error: bool or float</span>
-<span class="sd">        [Optional] If set to False, then the uncertanty are not computed. If set to a list, the L_intensity_error is the list of the associated ABSOLUTE error relative to the intensity.</span>
+<span class="sd">    L_angle : list</span>
+<span class="sd">        The polarization angle of the fundamental in degrees.</span>
+<span class="sd">    L_intensity : list</span>
+<span class="sd">        The HRS intensity. The size of *L_angle* and *L_intensity* must match.</span>
+<span class="sd">    alpha_0 : bool or float, optional</span>
+<span class="sd">        If set to ``False``, *alpha_0* is treated as a fit parameter.  </span>
+<span class="sd">        If set to a float, *alpha_0* is fixed to the given value (not a free parameter).  </span>
+<span class="sd">        The angle must be given in degrees.</span>
+<span class="sd">    L_intensity_error : bool or list, optional</span>
+<span class="sd">        If set to ``False``, uncertainties are not computed.  </span>
+<span class="sd">        If set to a list, *L_intensity_error* provides the absolute error associated with each intensity value.</span>
+<span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    L_SHS_prop: list</span>
-<span class="sd">        The list of the computed properties. L_SHS_prop = [a, b, c, Zeta, Depol, i0, i2, i4, alpha_0]</span>
-<span class="sd">    L_SHS_prop_error: list</span>
-<span class="sd">        The list of the error relative to the computed properties. L_SHS_prop_error = [a_verr, b_verr, c_verr, Zeta_serr, i0_serr, i2_serr, i4_serr]</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    L_SHS_prop : list</span>
+<span class="sd">        The list of computed properties:  </span>
+<span class="sd">        ``[a, b, c, Zeta, Depol, i0, i2, i4, alpha_0]``.</span>
+<span class="sd">    L_SHS_prop_error : list</span>
+<span class="sd">        The list of uncertainties associated with the computed properties:  </span>
+<span class="sd">        ``[a_verr, b_verr, c_verr, Zeta_serr, i0_serr, i2_serr, i4_serr]``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">################################################ Compute the values ############################################</span>
     <span class="c1"># Compute a, b, c</span>
-    
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">L_intensity_error</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">alpha_0</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
             <span class="n">p</span><span class="p">,</span> <span class="n">q</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">fct_polar_abc</span><span class="p">,</span> <span class="n">L_angle</span><span class="p">,</span> <span class="n">L_intensity</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">180</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">L_intensity</span><span class="p">),</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">L_intensity</span><span class="p">),</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">L_intensity</span><span class="p">),</span> <span class="mi">180</span><span class="p">]))</span>
@@ -157,13 +160,8 @@
     <span class="n">a_verr</span><span class="p">,</span> <span class="n">b_verr</span><span class="p">,</span> <span class="n">c_verr</span><span class="p">,</span> <span class="n">alpha_0_verr</span> <span class="o">=</span> <span class="n">perr</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">perr</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">perr</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">perr</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
     
     <span class="c1"># Compute zeta and Depol</span>
-    
     <span class="n">Zeta</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span><span class="o">-</span><span class="n">a</span><span class="o">-</span><span class="n">c</span><span class="p">)</span><span class="o">/</span><span class="n">b</span>
     <span class="n">Depol</span> <span class="o">=</span> <span class="n">c</span><span class="o">/</span><span class="n">a</span>
-    
-    
-  
-    
     <span class="c1"># i0, i2, i4 calculs with Fourier series</span>
     <span class="n">trotter</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
     <span class="k">while</span> <span class="n">L_angle</span><span class="p">[</span><span class="n">trotter</span><span class="p">]</span><span class="o">-</span><span class="n">L_angle</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">360</span><span class="p">:</span> <span class="c1"># to compute the parameter only in 1 frequency</span>
@@ -178,12 +176,10 @@
         <span class="n">L_SHS_prop</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">Zeta</span><span class="p">,</span> <span class="n">Depol</span><span class="p">,</span> <span class="n">i0</span><span class="p">,</span> <span class="n">i2</span><span class="p">,</span> <span class="n">i4</span><span class="p">,</span> <span class="n">alpha_0</span><span class="p">]</span>
         <span class="n">L_SHS_prop_error</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span><span class="p">(</span><span class="n">L_SHS_prop</span><span class="p">,</span> <span class="n">L_SHS_prop_error</span><span class="p">)</span>
-    
     <span class="c1">#####################################################################################################################</span>
     <span class="c1">#i0 , i2, i4 calcul with a,b,c coefficients but prefer Fourrier series.</span>
     
-    
-        <span class="c1"># i0, i2, i4 calculs with a, b, c</span>
+    <span class="c1"># i0, i2, i4 calculs with a, b, c</span>
     <span class="c1">#i0_abc = ( 3*a + b + 3*c )/8</span>
     <span class="c1">#i2_abc = ( a - c )/2</span>
     <span class="c1">#i4_abc = ( a - b + c )/8</span>
@@ -198,30 +194,13 @@
     <span class="c1">#                 )</span>
     <span class="c1">#print(&#39;I4_abc: &#39;, I4_abc, &#39;+-&#39;, I4_abs_serr)</span>
     <span class="c1">#####################################################################################################################</span>
-    
-    
-    
-    
-    
-    
-    
-    
-    
     <span class="c1">################################################ Compute the uncertanties ############################################</span>
     
-    
     <span class="c1">#standart deviation of Depol</span>
-    
     <span class="n">Depol_serr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="p">(</span><span class="n">c</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">a</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span><span class="o">*</span><span class="n">a_verr</span> <span class="o">+</span> <span class="n">c_verr</span><span class="o">/</span><span class="n">a</span><span class="o">**</span><span class="mi">2</span> <span class="p">)</span>
-    
-    
-    
     <span class="c1">#standart deviation of Zeta</span>
     <span class="n">Zeta_serr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>   <span class="p">(</span><span class="n">a_verr</span> <span class="o">+</span> <span class="n">c_verr</span><span class="p">)</span><span class="o">/</span><span class="n">b</span><span class="o">**</span><span class="mi">2</span>  <span class="o">+</span> <span class="p">((</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span><span class="o">/</span><span class="n">b</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">b_verr</span> <span class="p">)</span>
     <span class="n">ZetaH_serr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="p">(</span> <span class="mi">4</span><span class="o">/</span><span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">c</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="p">)</span><span class="o">*</span><span class="n">c_verr</span> <span class="p">)</span>   
-    
-    
-    
     <span class="c1">#Incertitude i0, i2, i4 using Intensity Residu</span>
     <span class="n">L_res</span> <span class="o">=</span> <span class="n">L_intensity</span> <span class="o">-</span> <span class="p">(</span><span class="n">i0</span> <span class="o">+</span> <span class="n">i2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">180</span><span class="o">*</span><span class="p">(</span><span class="n">L_angle</span><span class="o">-</span><span class="n">alpha_0</span><span class="p">))</span> <span class="o">+</span> <span class="n">i4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">180</span><span class="o">*</span><span class="p">(</span><span class="n">L_angle</span><span class="o">-</span><span class="n">alpha_0</span><span class="p">)))</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">L_res</span><span class="p">)</span>
@@ -230,39 +209,43 @@
     <span class="n">i2_serr</span> <span class="o">=</span> <span class="n">s</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">L_res</span><span class="p">)))</span>
     <span class="n">i4_serr</span> <span class="o">=</span> <span class="n">s</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">L_res</span><span class="p">)))</span>
     
-    
     <span class="n">L_SHS_prop</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">Zeta</span><span class="p">,</span> <span class="n">Depol</span><span class="p">,</span> <span class="n">i0</span><span class="p">,</span> <span class="n">i2</span><span class="p">,</span> <span class="n">i4</span><span class="p">,</span> <span class="n">alpha_0</span><span class="p">]</span>
     <span class="n">L_SHS_prop_error</span> <span class="o">=</span> <span class="p">[</span><span class="n">a_verr</span><span class="p">,</span> <span class="n">b_verr</span><span class="p">,</span> <span class="n">c_verr</span><span class="p">,</span> <span class="n">Zeta_serr</span><span class="p">,</span> <span class="n">Depol_serr</span><span class="p">,</span> <span class="n">i0_serr</span><span class="p">,</span> <span class="n">i2_serr</span><span class="p">,</span> <span class="n">i4_serr</span><span class="p">]</span>
     <span class="k">return</span><span class="p">(</span><span class="n">L_SHS_prop</span><span class="p">,</span> <span class="n">L_SHS_prop_error</span><span class="p">)</span></div>
 
 
 
-
+<span class="c1">############################################################################################</span>
 
 <div class="viewcode-block" id="analyse_polarization_SHS_H">
 <a class="viewcode-back" href="../analysis_SHS.html#shs_module.analyse_polarization_SHS_H">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">analyse_polarization_SHS_H</span><span class="p">(</span><span class="n">L_angle</span><span class="p">,</span> <span class="n">L_intensity</span><span class="p">,</span> <span class="n">alpha_0</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">L_intensity_error</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    From the polarisation angle and the SHS gaussian intensity, return many properties. </span>
-<span class="sd">    </span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    From the polarization angle and the SHS Gaussian intensity, compute and return several properties.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    L_angle: list</span>
-<span class="sd">        The polarisation angle of the fundamental in degree.</span>
-<span class="sd">    L_intensity: list</span>
-<span class="sd">        The HRS intensity. The size of *L_angle* and *L_intensity* shall match. </span>
-<span class="sd">    alpha_0: bool or float</span>
-<span class="sd">        [Optional] If set to False, then the alph_0 is a fit parameter. If set to a float, the alpha_0 is not a free parameter, an is fixed to the given value. Note that this angle should be given in degree.</span>
-<span class="sd">    L_intensity_error: bool or float</span>
-<span class="sd">        [Optional] If set to False, then the uncertanty are not computed. If set to a list, the L_intensity_error is the list of the associated ABSOLUTE error relative to the intensity.</span>
+<span class="sd">    L_angle : list</span>
+<span class="sd">        The polarization angle of the fundamental in degrees.</span>
+<span class="sd">    L_intensity : list</span>
+<span class="sd">        The HRS intensity. The size of *L_angle* and *L_intensity* must match.</span>
+<span class="sd">    alpha_0 : bool or float, optional</span>
+<span class="sd">        If set to ``False``, *alpha_0* is treated as a fit parameter.  </span>
+<span class="sd">        If set to a float, *alpha_0* is fixed to the given value (not a free parameter).  </span>
+<span class="sd">        The angle must be given in degrees.</span>
+<span class="sd">    L_intensity_error : bool or list, optional</span>
+<span class="sd">        If set to ``False``, uncertainties are not computed.  </span>
+<span class="sd">        If set to a list, *L_intensity_error* provides the absolute error associated with each intensity value.</span>
+<span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    L_SHS_prop: list</span>
-<span class="sd">        The list of the computed properties. L_SHS_prop = [a, b, c, alpha_0, Zeta, Depol, i0, i2, i4]</span>
-<span class="sd">    L_SHS_prop_error: list</span>
-<span class="sd">        The list of the error relative to the computed properties. L_SHS_prop_error = [a_verr, b_verr, c_verr, Zeta_serr, i0_serr, i2_serr, i4_serr]</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    L_SHS_prop : list</span>
+<span class="sd">        The list of computed properties:  </span>
+<span class="sd">        ``[a, b, c, alpha_0, Zeta, Depol, i0, i2, i4]``.</span>
+<span class="sd">    L_SHS_prop_error : list</span>
+<span class="sd">        The list of uncertainties associated with the computed properties:  </span>
+<span class="sd">        ``[a_verr, b_verr, c_verr, Zeta_serr, i0_serr, i2_serr, i4_serr]``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">################################################ Compute the values ############################################</span>
     <span class="c1"># Compute a, b, c</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">L_intensity_error</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
@@ -281,24 +264,10 @@
     <span class="n">a_verr</span><span class="p">,</span> <span class="n">b_verr</span><span class="p">,</span> <span class="n">c_verr</span><span class="p">,</span> <span class="n">alpha_0_verr</span> <span class="o">=</span> <span class="n">perr</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">perr</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">perr</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">perr</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
     
     <span class="c1"># Compute zeta</span>
-   
-   
     <span class="n">Zeta</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">c</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">c</span><span class="p">)</span>
-
-
-    
-    
-       
-    
     <span class="c1">################################################ Compute the uncertanties ############################################</span>
-    
-
     <span class="c1">#standart deviation of Zeta</span>
-    
     <span class="n">Zeta_serr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="p">(</span> <span class="mi">4</span><span class="o">/</span><span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">c</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="p">)</span><span class="o">*</span><span class="n">c_verr</span> <span class="p">)</span>   
-    
-    
-   
     
     <span class="n">L_SHS_prop</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">Zeta</span><span class="p">,</span>  <span class="n">alpha_0</span><span class="p">]</span>
     <span class="n">L_SHS_prop_error</span> <span class="o">=</span> <span class="p">[</span><span class="n">a_verr</span><span class="p">,</span> <span class="n">b_verr</span><span class="p">,</span> <span class="n">c_verr</span><span class="p">,</span> <span class="n">Zeta_serr</span><span class="p">]</span>

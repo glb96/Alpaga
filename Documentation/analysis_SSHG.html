@@ -55,26 +55,24 @@ I_{S}(\gamma) &amp;\propto \lvert a_1 \chi_{xxz} sin(2\gamma)  \rvert ^2\end{spl
 <dl class="py function">
 <dt class="sig sig-object py">
 <span class="sig-prename descclassname"><span class="pre">sshg_module.</span></span><span class="sig-name descname"><span class="pre">ai_coeff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sshg_module.html#ai_coeff"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>From experimental angle of incidence and refractive index values of materials for fundamental and harmonic wavelength,
-this function return ai coefficients and the angle of the harmonic reflected wave. You can see Aurèlie Bruyere Thesis, p70 to 81, for details of the calculation.</p>
+<dd><p>From the experimental angle of incidence and the refractive index values of the materials
+(for both the fundamental and harmonic wavelengths), compute the <em>ai</em> coefficients and
+the reflection angle of the harmonic wave.</p>
+<p>For details of the calculation, see Aurélie Bruyère’s thesis, pp. 70–81.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>angle1</strong> (<em>float</em>) – experimental angle of incidence</p></li>
-<li><p><strong>n1</strong> (<em>float</em>) – refractive index of medium 1 for fundamental wavelength</p></li>
-<li><p><strong>n2</strong> (<em>float</em>) – refractive index of medium 2 for fundamental wavelength</p></li>
-<li><p><strong>N1</strong> (<em>float</em>) – refractive index of medium 1 for harmonic wavelength</p></li>
-<li><p><strong>N2</strong> (<em>float</em>) – refractive index of medium 2 for harmonic wavelength</p></li>
+<li><p><strong>angle1</strong> (<em>float</em>) – Experimental angle of incidence.</p></li>
+<li><p><strong>n1</strong> (<em>float</em>) – Refractive index of medium 1 at the fundamental wavelength.</p></li>
+<li><p><strong>n2</strong> (<em>float</em>) – Refractive index of medium 2 at the fundamental wavelength.</p></li>
+<li><p><strong>N1</strong> (<em>float</em>) – Refractive index of medium 1 at the harmonic wavelength.</p></li>
+<li><p><strong>N2</strong> (<em>float</em>) – Refractive index of medium 2 at the harmonic wavelength.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p><strong>ai</strong> – It contains value of ai coefficients and the angle of the harmonic reflected wave. Structure of the list : </p>
-<p>[a1,
-a2,
-a3,
-a4,
-a5,
-reflected angle of reflected wave]</p>
+<dd class="field-even"><p><p><strong>ai</strong> – A list containing the computed <em>ai</em> coefficients and the reflection angle of the harmonic wave.
+The structure of the list is:</p>
+<p><code class="docutils literal notranslate"><span class="pre">[a1,</span> <span class="pre">a2,</span> <span class="pre">a3,</span> <span class="pre">a4,</span> <span class="pre">a5,</span> <span class="pre">reflection_angle]</span></code>.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -90,17 +88,17 @@ reflected angle of reflected wave]</p>
 <dl class="py function">
 <dt class="sig sig-object py">
 <span class="sig-prename descclassname"><span class="pre">sshg_module.</span></span><span class="sig-name descname"><span class="pre">fit_polaS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chi_XXZ</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ai</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sshg_module.html#fit_polaS"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>It’s the function that defines the theoritical equation for S polarisation.</p>
+<dd><p>Defines the theoretical equation for S-polarized SHG intensity.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>list</em>) – The polarisation angle of the fundamental in degree. The angle shall be given in degrees!</p></li>
-<li><p><strong>chi_XXZ</strong> (<em>float</em>) – The value of chi_XXZ element</p></li>
-<li><p><strong>ai</strong> (<em>list</em>) – List of the ai elements with the same structure as the return of <em>sshg_module.ai_coeff</em>.</p></li>
+<li><p><strong>x</strong> (<em>list</em>) – The polarization angles of the fundamental wave, in degrees.</p></li>
+<li><p><strong>chi_XXZ</strong> (<em>float</em>) – The value of the chi_XXZ tensor element.</p></li>
+<li><p><strong>ai</strong> (<em>list</em>) – List of the ai coefficients, with the same structure as the output of <em>sshg_module.ai_coeff</em>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>y</strong> – The S polarised SSHG intensity</p>
+<dd class="field-even"><p><strong>y</strong> – The S-polarized SHG intensity corresponding to the input angles.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list</p>
@@ -112,19 +110,19 @@ reflected angle of reflected wave]</p>
 <dl class="py function">
 <dt class="sig sig-object py">
 <span class="sig-prename descclassname"><span class="pre">sshg_module.</span></span><span class="sig-name descname"><span class="pre">fit_polaP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chi_XXZ</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chi_ZXX</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chi_ZZZ</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ai</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sshg_module.html#fit_polaP"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>It’s the function that defines the theoritical equation for P polarisation.</p>
+<dd><p>Defines the theoretical equation for P-polarized SHG intensity.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>list</em>) – The polarisation angle of the fundamental in degree. The angle shall be given in degrees!</p></li>
-<li><p><strong>chi_XXZ</strong> (<em>float</em>) – The value of chi_XXZ element</p></li>
-<li><p><strong>chi_ZXX</strong> (<em>float</em>) – The value of chi_ZXX element</p></li>
-<li><p><strong>chi_ZZZ</strong> (<em>float</em>) – The value of chi_ZZZ element</p></li>
-<li><p><strong>ai</strong> (<em>list</em>) – List of the ai elements with the same structure as the return of <em>sshg_module.ai_coeff</em>.</p></li>
+<li><p><strong>x</strong> (<em>list</em>) – The polarization angles of the fundamental wave, in degrees.</p></li>
+<li><p><strong>chi_XXZ</strong> (<em>float</em>) – The value of the chi_XXZ tensor element.</p></li>
+<li><p><strong>chi_ZXX</strong> (<em>float</em>) – The value of the chi_ZXX tensor element.</p></li>
+<li><p><strong>chi_ZZZ</strong> (<em>float</em>) – The value of the chi_ZZZ tensor element.</p></li>
+<li><p><strong>ai</strong> (<em>list</em>) – List of the ai coefficients, with the same structure as the output of <em>sshg_module.ai_coeff</em>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>y</strong> – The P polarised SSHG intensity</p>
+<dd class="field-even"><p><strong>y</strong> – The P-polarized SHG intensity corresponding to the input angles.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list</p>
@@ -145,39 +143,53 @@ This function uses the datas and experimental parameters (such as medium refract
 <dl class="py function">
 <dt class="sig sig-object py">
 <span class="sig-prename descclassname"><span class="pre">sshg_module.</span></span><span class="sig-name descname"><span class="pre">analyse_polarization_SSHG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle_incidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n1_fonda</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n2_fonda</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n1_harmo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n2_harmo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_polarisation_angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_intensity_S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_intensity_P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">XXZ</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sshg_module.html#analyse_polarization_SSHG"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>From experimental angle of incidence, refractive index values of materials for fundamental and harmonic wavelength, polarisation angle and the SSHG gaussian intensity, the function returns ai coefficients and chi coefficients for an isotrope achiral interface.
-ref : Aurèlie Bruyere Thesis, p70 to 81</p>
+<dd><p>From the experimental angle of incidence, refractive indices of the materials
+for fundamental and harmonic wavelengths, polarization angles, and the SSHG
+Gaussian intensity, this function returns the ai coefficients and chi coefficients
+for an isotropic, achiral interface.
+Reference: Aurèlie Bruyere Thesis, pp. 70–81.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>angle1</strong> (<em>float</em>) – experimental angle of incidence</p></li>
-<li><p><strong>n1</strong> (<em>float</em>) – refractive index of medium 1 for fundamntal wavelength</p></li>
-<li><p><strong>n2</strong> (<em>float</em>) – refractive index of medium 2 for fundamntal wavelength</p></li>
-<li><p><strong>N1</strong> (<em>float</em>) – refractive index of medium 1 for harmonic wavelength</p></li>
-<li><p><strong>N2</strong> (<em>float</em>) – refractive index of medium 2 for harmonic wavelength</p></li>
-<li><p><strong>L_polarisation_angle</strong> (<em>list</em>) – The polarisation angle of the fundamental in degree.</p></li>
-<li><p><strong>L_intensity_S</strong> (<em>list</em>) – The SSHG intensity for S polarized analyser. The size of <em>L_angle</em> and <em>L_intensity_S</em> shall match.</p></li>
-<li><p><strong>L_intensity_P</strong> (<em>list</em>) – The SSHG intensity for P polarized analyser. The size of <em>L_angle</em> and <em>L_intensity_P</em> shall match.</p></li>
-<li><p><strong>XXZ</strong> (<em>float</em>) – This parameter allows you to fix the value of chi_xxz if, for exemple, your S polarisation is flat. It avoid fitting the noise and recover a non physical value for this element. By default, the value is set to ‘False’ : in this case chi_xxz is extracted by the fitting of S polarisation.</p></li>
+<li><p><strong>angle1</strong> (<em>float</em>) – Experimental angle of incidence.</p></li>
+<li><p><strong>n1</strong> (<em>float</em>) – Refractive index of medium 1 for the fundamental wavelength.</p></li>
+<li><p><strong>n2</strong> (<em>float</em>) – Refractive index of medium 2 for the fundamental wavelength.</p></li>
+<li><p><strong>N1</strong> (<em>float</em>) – Refractive index of medium 1 for the harmonic wavelength.</p></li>
+<li><p><strong>N2</strong> (<em>float</em>) – Refractive index of medium 2 for the harmonic wavelength.</p></li>
+<li><p><strong>L_polarisation_angle</strong> (<em>list</em>) – The polarization angles of the fundamental in degrees.</p></li>
+<li><p><strong>L_intensity_S</strong> (<em>list</em>) – The SSHG intensity for S-polarized analyzer. The sizes of <em>L_polarisation_angle</em>
+and <em>L_intensity_S</em> must match.</p></li>
+<li><p><strong>L_intensity_P</strong> (<em>list</em>) – The SSHG intensity for P-polarized analyzer. The sizes of <em>L_polarisation_angle</em>
+and <em>L_intensity_P</em> must match.</p></li>
+<li><p><strong>XXZ</strong> (<em>float</em><em> or </em><em>bool</em>) – Optional parameter to fix the value of chi_XXZ. If, for example, the S polarization
+is flat, this avoids fitting the noise and recovering a non-physical value.
+By default, this is set to False, in which case chi_XXZ is extracted by fitting
+the S polarization.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul>
-<li><p><strong>ai</strong> (<em>list</em>) – It contains value of ai coefficients and the angle of the harmonic reflected wave. Structure of the list : </p>
-<p>[a1,
-a2,
+<li><p><strong>ai</strong> (<em>list</em>) – Contains the ai coefficients and the angle of the harmonic reflected wave.
+Structure:
+[a1,</p>
+<blockquote>
+<div><p>a2,
 a3,
 a4,
 a5,
 reflected angle of reflected wave]</p>
+</div></blockquote>
 </li>
-<li><p><strong>list_chi</strong> (<em>list</em>) – It contains two mathematical solutions for coefficient chi. Structure of the list : </p>
-<p>[chi_XXZ,
-chi_ZXX,
-chi_ZZZ,</p>
-<p>chi_XXZset2,
+<li><p><strong>list_chi</strong> (<em>list</em>) – Contains two mathematical solutions for the chi coefficients.
+Structure:
+[chi_XXZ,</p>
+<blockquote>
+<div><p>chi_ZXX,
+chi_ZZZ,
+chi_XXZset2,
 chi_ZXXset2,
-chi_ZZset2]</p>
+chi_ZZZset2]</p>
+</div></blockquote>
 </li>
 </ul>
 </p>
@@ -191,7 +203,7 @@ chi_ZZset2]</p>
 <dd class="field-odd"><p>1.2</p>
 </dd>
 <dt class="field-even">Date<span class="colon">:</span></dt>
-<dd class="field-even"><p>Aug 23, 2025</p>
+<dd class="field-even"><p>Aug 24, 2025</p>
 </dd>
 </dl>
 </section>
