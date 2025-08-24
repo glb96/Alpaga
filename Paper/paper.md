@@ -57,7 +57,7 @@ Second Harmonic Generation experiments generate large volumes of spectroscopic d
 
 # Related Work
 
-While several general-purpose spectroscopic analysis packages exist, such as `scikit-spectra` and `rampy` [@rampy], `Alpaga` fills a specific niche in the SHG community by providing specialized tools tailored to the unique requirements of polarization-dependent SHG measurements. Unlike general spectroscopy packages, `Alpaga` incorporates domain knowledge about SHG experiments, including understanding of typical artifact patterns, polarization conventions, and the specific mathematical frameworks used in SSHG and SHS analysis [@rondepierre2025correlations; @fery2025sonder; le2022second].
+While several general-purpose spectroscopic analysis packages exist, such as `scikit-spectra` and `rampy` [@rampy], `Alpaga` fills a specific niche in the SHG community by providing specialized tools tailored to the unique requirements of polarization-dependent SHG measurements. Unlike general spectroscopy packages, `Alpaga` incorporates domain knowledge about SHG experiments, including understanding of typical artifact patterns, polarization conventions, and the specific mathematical frameworks used in SSHG and SHS analysis [:cite:p:`rondepierre2025correlations`; @fery2025sonder; le2022second].
 
 The automated nature of `Alpaga`'s workflow distinguishes it from manual analysis approaches commonly used in the field, providing both consistency and efficiency improvements for SHG research groups.
 
