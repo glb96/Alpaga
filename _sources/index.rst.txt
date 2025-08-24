@@ -72,7 +72,6 @@ The references are shown in the :ref:`reference` page.
    ./python_advice
    ./experimental_advice
    ./for_developpers
-   ./alpaga
    ./devs_page
    ./reference
    
