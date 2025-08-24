@@ -53,34 +53,37 @@
 <a class="viewcode-back" href="../file_management.html#file_management.standard_file_name">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">standard_file_name</span><span class="p">(</span><span class="n">prefixe</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">iteration</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;.dat&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Define how to built the file name of an acquisition. </span>
+<span class="sd">    Define how to build the file name of an acquisition. </span>
 <span class="sd">    </span>
-<span class="sd">    You may define your own function if your file does not follow the same structure. However, we warmly recommend to use the same input/output for this function as follow:</span>
+<span class="sd">    You may define your own function if your file does not follow the same structure. </span>
+<span class="sd">    However, we strongly recommend using the same input/output format as described below:</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    prefixe : str</span>
-<span class="sd">        The prefix </span>
+<span class="sd">        The prefix of the file name. </span>
 <span class="sd">    angle : str or bool</span>
-<span class="sd">        [Optional] If not bool, update the name of the file with this &#39;angle&#39; value.</span>
+<span class="sd">        [Optional] If not a bool, appends this &#39;angle&#39; value to the file name.</span>
 <span class="sd">    iteration : str or bool</span>
-<span class="sd">        [Optional] If not bool, update the name of the file with this &#39;iteration&#39; value.</span>
+<span class="sd">        [Optional] If not a bool, appends this &#39;iteration&#39; value to the file name.</span>
 <span class="sd">    extension : str</span>
-<span class="sd">        [Optional] The extension of the spectra file. Default value: &#39;.dat&#39;    </span>
+<span class="sd">        [Optional] The extension of the spectra file. Default is &#39;.dat&#39;.    </span>
 <span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    name : str</span>
-<span class="sd">        the name of the file. </span>
+<span class="sd">        The generated file name. </span>
 <span class="sd">    </span>
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
 <span class="sd">    For this standard function, if the input is:</span>
-<span class="sd">    *prefixe* = &#39;polarV&#39;</span>
-<span class="sd">    *angle* = &#39;42.0&#39;</span>
-<span class="sd">    *iteration* = &#39;4&#39;</span>
-<span class="sd">    *extension* = &#39;.dat&#39;</span>
-<span class="sd">    output is: &#39;polarV_42.0_4.dat&#39;</span>
+<span class="sd">    </span>
+<span class="sd">        prefixe = &#39;polarV&#39;</span>
+<span class="sd">        angle = &#39;42.0&#39;</span>
+<span class="sd">        iteration = &#39;4&#39;</span>
+<span class="sd">        extension = &#39;.dat&#39;</span>
+<span class="sd">    </span>
+<span class="sd">    The output will be: &#39;polarV_42.0_4.dat&#39;</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
@@ -118,21 +121,28 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">transform_name_file</span><span class="p">(</span><span class="n">name_t</span><span class="p">,</span> <span class="n">extension</span><span class="p">,</span> <span class="n">type_file</span><span class="o">=</span><span class="s1">&#39;single&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Internal function of Alpaga.</span>
+<span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    directory : str</span>
-<span class="sd">        The directory where is stored the datas</span>
+<span class="sd">        The directory where the data is stored.</span>
 <span class="sd">    extension : str</span>
-<span class="sd">        [Optional] The extension of the spectra file. Default value: &#39;.dat&#39;</span>
+<span class="sd">        [Optional] The extension of the spectra file. Default is &#39;.dat&#39;.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    prefix_file : str</span>
-<span class="sd">    For a given input name, *name_t*, cut the name into parts to fit the two possible templates depending on the argument *type_file*. In any case, the extension of the file should match the one given in input *extension*. </span>
+<span class="sd">        For a given input name (*name_t*), this function splits the name into parts </span>
+<span class="sd">        to match one of the two possible templates depending on the argument *type_file*. </span>
+<span class="sd">        The extension of the file must match the input *extension*. </span>
 <span class="sd">    </span>
-<span class="sd">    if *type_file* = &#39;single&#39;, the template is: prefix + _ + iter + extension. In this case, this function return: prefix, iter and extension.</span>
+<span class="sd">        If *type_file* = &#39;single&#39;, the template is: </span>
+<span class="sd">            prefix + &#39;_&#39; + iter + extension  </span>
+<span class="sd">        In this case, the function returns: prefix, iter, extension.</span>
 <span class="sd">    </span>
-<span class="sd">    if *type_file* = &#39;angle&#39;, the template is: prefix + _ + angle + _ + iter + extension. In this case, this function return: prefix, angle, iter and extension. </span>
+<span class="sd">        If *type_file* = &#39;angle&#39;, the template is: </span>
+<span class="sd">            prefix + &#39;_&#39; + angle + &#39;_&#39; + iter + extension  </span>
+<span class="sd">        In this case, the function returns: prefix, angle, iter, extension.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">type_file</span><span class="o">==</span><span class="s1">&#39;single&#39;</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">name_t</span><span class="p">[</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">extension</span><span class="p">):]</span> <span class="o">!=</span> <span class="n">extension</span><span class="p">:</span> 
@@ -190,37 +200,44 @@
 <a class="viewcode-back" href="../file_management.html#file_management.find_file_iter_from_dir">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">find_file_iter_from_dir</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;.dat&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return the prefix (*prefix_file*), the number of iter (*N_iter*) and the extension (*extension*) of a single acquisition located in the repertory *directory*. </span>
+<span class="sd">    Return the prefix (*prefix_file*), the number of iterations (*N_iter*), </span>
+<span class="sd">    and the extension (*extension*) of a single acquisition located in the directory *directory*. </span>
 <span class="sd">    </span>
-<span class="sd">    The expected name of the file is: \n</span>
-<span class="sd">    directory + prefix + _ + i + extension \n</span>
-<span class="sd">    Where i goes from 1 to *N_iter*. </span>
+<span class="sd">    The expected file naming convention is:  </span>
+<span class="sd">        directory + prefix + &#39;_&#39; + i + extension  </span>
+<span class="sd">    where *i* ranges from 1 to *N_iter*. </span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    directory : str</span>
-<span class="sd">        The directory where is stored the datas</span>
+<span class="sd">        The directory where the data is stored.</span>
 <span class="sd">    extension : str</span>
-<span class="sd">        [Optional] The extension of the spectra file. Default value: &#39;.dat&#39;</span>
-<span class="sd">    </span>
+<span class="sd">        [Optional] The extension of the spectra file. Default is &#39;.dat&#39;.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    prefix_file : str</span>
-<span class="sd">         The prefixe shared by all the spectra iteration. </span>
+<span class="sd">        The prefix shared by all the spectra iterations. </span>
 <span class="sd">    N_iter : int</span>
-<span class="sd">         The number of iter found for this prefixe. Alpaga has check that all the iter are present to avoid &#39;File not found&#39; error later on. </span>
+<span class="sd">        The number of iterations found for this prefix. Alpaga checks that </span>
+<span class="sd">        all iterations are present to avoid &#39;File not found&#39; errors later on. </span>
 <span class="sd">    extension : str</span>
-<span class="sd">        The extension of the detected spectra file. Same value as in the input</span>
+<span class="sd">        The extension of the detected spectra file. Same value as the input.</span>
 <span class="sd">        </span>
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    Let&#39;s assume that in the directory /home/lama/Datas/Water_acquisition/Test_120sec TOCHANGE, is located the spectra: water_1.dat, water_2.dat, water_3.dat. The prefix of these file is &#39;water&#39;, the total number of iter is *N_iter* = 3, and the extension is .dat . In order to get automatically theses information, use: ::</span>
+<span class="sd">    Suppose that in the directory ``/home/lama/Datas/Water_acquisition/Test_120sec`` </span>
+<span class="sd">    there are the spectra files: ``water_1.dat, water_2.dat, water_3.dat``.  </span>
 <span class="sd">    </span>
-<span class="sd">       directory = &#39;/home/lama/Datas/Water_acquisition/Test_120sec&#39;</span>
-<span class="sd">       prefix, N_iter, extension = alpaga.find_file_iter_from_dir(directory)</span>
-<span class="sd">       print(&#39;The prefix for all the file is: &quot;&#39; + prefix + &#39;&quot; with &#39; + str(N_iter) + &#39; iter. The extension is: &#39; + extension)</span>
+<span class="sd">    The prefix of these files is ``water``, the total number of iterations is </span>
+<span class="sd">    *N_iter* = 3, and the extension is ``.dat``.  </span>
 <span class="sd">    </span>
+<span class="sd">    To automatically extract this information, use: ::</span>
+<span class="sd">    </span>
+<span class="sd">        directory = &#39;/home/lama/Datas/Water_acquisition/Test_120sec&#39;</span>
+<span class="sd">        prefix, N_iter, extension = alpaga.find_file_iter_from_dir(directory)</span>
+<span class="sd">        print(&#39;The prefix for all files is: &quot;&#39; + prefix + &#39;&quot; with &#39; </span>
+<span class="sd">              + str(N_iter) + &#39; iterations. The extension is: &#39; + extension)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;I will look at file with the extension &#39;</span> <span class="o">+</span> <span class="n">extension</span> <span class="o">+</span> <span class="s1">&#39; in the directory &#39;</span> <span class="o">+</span> <span class="n">directory</span> <span class="o">+</span> <span class="s1">&#39; for single acquisition. The type of the files should be: prefix_iter.extension&#39;</span><span class="p">)</span>
     <span class="n">all_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
@@ -263,38 +280,51 @@
 <a class="viewcode-back" href="../file_management.html#file_management.find_angle_iter_from_dir">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">find_angle_iter_from_dir</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="s1">&#39;.dat&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return the prefix (*prefix_file*), the list of the angle (*L_files_angles*) the number of iter (*N_iter*) and the extension (*extension*) of an acquisition located in the repertory *directory*.</span>
+<span class="sd">    Return the prefix (*prefix_file*), the list of angles (*L_files_angles*), </span>
+<span class="sd">    the number of iterations (*N_iter*), and the extension (*extension*) of an acquisition </span>
+<span class="sd">    located in the directory *directory*.</span>
 <span class="sd">    </span>
-<span class="sd">    The expected name of the file is: \n</span>
-<span class="sd">    directory + prefix + _ + k + _ + i + extension \n</span>
-<span class="sd">    Where k goes within all the value of *L_files_angles*. k can be a float (please try to avoid very long decimal angle value) and where i goes from 1 to *N_iter*. </span>
+<span class="sd">    The expected file naming convention is:  </span>
+<span class="sd">        directory + prefix + &#39;_&#39; + k + &#39;_&#39; + i + extension  </span>
+<span class="sd">    where *k* iterates over all values in *L_files_angles* (angles, possibly floats — </span>
+<span class="sd">    avoid excessively long decimal values), and *i* ranges from 1 to *N_iter*. </span>
 <span class="sd">    </span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    directory : str</span>
-<span class="sd">        The directory where is stored the datas</span>
+<span class="sd">        The directory where the data is stored.</span>
 <span class="sd">    extension : str</span>
-<span class="sd">        [Optional] The extension of the spectra file. Default value: &#39;.dat&#39;</span>
+<span class="sd">        [Optional] The extension of the spectra file. Default is &#39;.dat&#39;.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    prefix_file : str</span>
-<span class="sd">         The prefixe shared by all the spectra iteration. </span>
-<span class="sd">    L_files_angles: list of str</span>
-<span class="sd">         The list of the angle found. *L_files_angles* is a list of string -- to avoid bad behavior if your angles has a name like 4.10. </span>
+<span class="sd">        The prefix shared by all spectra iterations. </span>
+<span class="sd">    L_files_angles : list of str</span>
+<span class="sd">        The list of detected angles. Returned as a list of strings </span>
+<span class="sd">        (to avoid issues with filenames such as &#39;4.10&#39;).</span>
 <span class="sd">    N_iter : int</span>
-<span class="sd">         The number of iter found for this prefixe. Alpaga has check that all the iter are present for all the angle to avoid &#39;File not found&#39; error later on. </span>
+<span class="sd">        The number of iterations found for this prefix. Alpaga checks that all iterations </span>
+<span class="sd">        are present for all angles to avoid &#39;File not found&#39; errors later on. </span>
 <span class="sd">    extension : str</span>
-<span class="sd">        The extension of the detected spectra file. Same value as in the input</span>
+<span class="sd">        The extension of the detected spectra file. Same as the input value.</span>
 <span class="sd">        </span>
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    Let&#39;s assume that in the directory /home/lama/Datas/Water_acquisition/Test_120sec TOCHANGE, is located the spectra: water_4.0_1.dat, water_4.0_2.dat, water_15.0_2.dat, water_15.0_2.dat. The prefix of these file is &#39;water&#39;, the total number of iter is *N_iter* = 2, the list of angle is *L_files_angles* = [4.0, 15.0] and the extension is .dat . In order to get automatically theses information, use: ::</span>
+<span class="sd">    Suppose that in the directory ``/home/lama/Datas/Water_acquisition/Test_120sec`` </span>
+<span class="sd">    the following spectra files are located:  </span>
+<span class="sd">        ``water_4.0_1.dat, water_4.0_2.dat, water_15.0_1.dat, water_15.0_2.dat``.  </span>
 <span class="sd">    </span>
-<span class="sd">       directory = &#39;/home/lama/Datas/Water_acquisition/Test_120sec&#39;</span>
-<span class="sd">       prefix, L_files_angles, N_iter, extension = alpaga.find_angle_iter_from_dir(directory)</span>
-<span class="sd">       print(&#39;The prefix for all the file is: &quot;&#39; + prefix + &#39;&quot; with &#39; + str(N_iter) + &#39; iter. The angle found are &#39; + str(L_files_angles) + &#39;. The extension is: &#39; + extension)</span>
-<span class="sd">       </span>
+<span class="sd">    The prefix of these files is ``water``, the total number of iterations is *N_iter* = 2,  </span>
+<span class="sd">    the list of angles is *L_files_angles* = [&#39;4.0&#39;, &#39;15.0&#39;], and the extension is ``.dat``.  </span>
+<span class="sd">    </span>
+<span class="sd">    To automatically extract this information, use: ::</span>
+<span class="sd">    </span>
+<span class="sd">        directory = &#39;/home/lama/Datas/Water_acquisition/Test_120sec&#39;</span>
+<span class="sd">        prefix, L_files_angles, N_iter, extension = alpaga.find_angle_iter_from_dir(directory)</span>
+<span class="sd">        print(&#39;The prefix for all files is: &quot;&#39; + prefix + &#39;&quot; with &#39; </span>
+<span class="sd">              + str(N_iter) + &#39; iterations. The angles found are &#39; </span>
+<span class="sd">              + str(L_files_angles) + &#39;. The extension is: &#39; + extension)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;I will look at file with the extension &#39;</span> <span class="o">+</span> <span class="n">extension</span> <span class="o">+</span> <span class="s1">&#39; in the directory &#39;</span> <span class="o">+</span> <span class="n">directory</span> <span class="o">+</span> <span class="s1">&#39;for angle dependent values. The type of the files should be: prefix_angle_iter.extension&#39;</span><span class="p">)</span>
     <span class="n">all_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>

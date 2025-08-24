@@ -137,20 +137,25 @@
 <dl class="py function">
 <dt class="sig sig-object py">
 <span class="sig-prename descclassname"><span class="pre">shs_module.</span></span><span class="sig-name descname"><span class="pre">analyse_polarization_SHS_V</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L_angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_intensity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_intensity_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shs_module.html#analyse_polarization_SHS_V"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>From the polarisation angle and the SHS gaussian intensity, return many properties.</p>
+<dd><p>From the polarization angle and the SHS Gaussian intensity, compute and return several properties.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>L_angle</strong> (<em>list</em>) – The polarisation angle of the fundamental in degree.</p></li>
-<li><p><strong>L_intensity</strong> (<em>list</em>) – The HRS intensity. The size of <em>L_angle</em> and <em>L_intensity</em> shall match.</p></li>
-<li><p><strong>alpha_0</strong> (<em>bool</em><em> or </em><em>float</em>) – [Optional] If set to False, then the alph_0 is a fit parameter. If set to a float, the alpha_0 is not a free parameter, an is fixed to the given value. Note that this angle should be given in degree.</p></li>
-<li><p><strong>L_intensity_error</strong> (<em>bool</em><em> or </em><em>float</em>) – [Optional] If set to False, then the uncertanty are not computed. If set to a list, the L_intensity_error is the list of the associated ABSOLUTE error relative to the intensity.</p></li>
+<li><p><strong>L_angle</strong> (<em>list</em>) – The polarization angle of the fundamental in degrees.</p></li>
+<li><p><strong>L_intensity</strong> (<em>list</em>) – The HRS intensity. The size of <em>L_angle</em> and <em>L_intensity</em> must match.</p></li>
+<li><p><strong>alpha_0</strong> (<em>bool</em><em> or </em><em>float</em><em>, </em><em>optional</em>) – If set to <code class="docutils literal notranslate"><span class="pre">False</span></code>, <em>alpha_0</em> is treated as a fit parameter.
+If set to a float, <em>alpha_0</em> is fixed to the given value (not a free parameter).
+The angle must be given in degrees.</p></li>
+<li><p><strong>L_intensity_error</strong> (<em>bool</em><em> or </em><em>list</em><em>, </em><em>optional</em>) – If set to <code class="docutils literal notranslate"><span class="pre">False</span></code>, uncertainties are not computed.
+If set to a list, <em>L_intensity_error</em> provides the absolute error associated with each intensity value.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>L_SHS_prop</strong> (<em>list</em>) – The list of the computed properties. L_SHS_prop = [a, b, c, Zeta, Depol, i0, i2, i4, alpha_0]</p></li>
-<li><p><strong>L_SHS_prop_error</strong> (<em>list</em>) – The list of the error relative to the computed properties. L_SHS_prop_error = [a_verr, b_verr, c_verr, Zeta_serr, i0_serr, i2_serr, i4_serr]</p></li>
+<li><p><strong>L_SHS_prop</strong> (<em>list</em>) – The list of computed properties:
+<code class="docutils literal notranslate"><span class="pre">[a,</span> <span class="pre">b,</span> <span class="pre">c,</span> <span class="pre">Zeta,</span> <span class="pre">Depol,</span> <span class="pre">i0,</span> <span class="pre">i2,</span> <span class="pre">i4,</span> <span class="pre">alpha_0]</span></code>.</p></li>
+<li><p><strong>L_SHS_prop_error</strong> (<em>list</em>) – The list of uncertainties associated with the computed properties:
+<code class="docutils literal notranslate"><span class="pre">[a_verr,</span> <span class="pre">b_verr,</span> <span class="pre">c_verr,</span> <span class="pre">Zeta_serr,</span> <span class="pre">i0_serr,</span> <span class="pre">i2_serr,</span> <span class="pre">i4_serr]</span></code>.</p></li>
 </ul>
 </p>
 </dd>
@@ -163,20 +168,25 @@
 <dl class="py function">
 <dt class="sig sig-object py">
 <span class="sig-prename descclassname"><span class="pre">shs_module.</span></span><span class="sig-name descname"><span class="pre">analyse_polarization_SHS_H</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L_angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_intensity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_intensity_error</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/shs_module.html#analyse_polarization_SHS_H"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>From the polarisation angle and the SHS gaussian intensity, return many properties.</p>
+<dd><p>From the polarization angle and the SHS Gaussian intensity, compute and return several properties.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>L_angle</strong> (<em>list</em>) – The polarisation angle of the fundamental in degree.</p></li>
-<li><p><strong>L_intensity</strong> (<em>list</em>) – The HRS intensity. The size of <em>L_angle</em> and <em>L_intensity</em> shall match.</p></li>
-<li><p><strong>alpha_0</strong> (<em>bool</em><em> or </em><em>float</em>) – [Optional] If set to False, then the alph_0 is a fit parameter. If set to a float, the alpha_0 is not a free parameter, an is fixed to the given value. Note that this angle should be given in degree.</p></li>
-<li><p><strong>L_intensity_error</strong> (<em>bool</em><em> or </em><em>float</em>) – [Optional] If set to False, then the uncertanty are not computed. If set to a list, the L_intensity_error is the list of the associated ABSOLUTE error relative to the intensity.</p></li>
+<li><p><strong>L_angle</strong> (<em>list</em>) – The polarization angle of the fundamental in degrees.</p></li>
+<li><p><strong>L_intensity</strong> (<em>list</em>) – The HRS intensity. The size of <em>L_angle</em> and <em>L_intensity</em> must match.</p></li>
+<li><p><strong>alpha_0</strong> (<em>bool</em><em> or </em><em>float</em><em>, </em><em>optional</em>) – If set to <code class="docutils literal notranslate"><span class="pre">False</span></code>, <em>alpha_0</em> is treated as a fit parameter.
+If set to a float, <em>alpha_0</em> is fixed to the given value (not a free parameter).
+The angle must be given in degrees.</p></li>
+<li><p><strong>L_intensity_error</strong> (<em>bool</em><em> or </em><em>list</em><em>, </em><em>optional</em>) – If set to <code class="docutils literal notranslate"><span class="pre">False</span></code>, uncertainties are not computed.
+If set to a list, <em>L_intensity_error</em> provides the absolute error associated with each intensity value.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>L_SHS_prop</strong> (<em>list</em>) – The list of the computed properties. L_SHS_prop = [a, b, c, alpha_0, Zeta, Depol, i0, i2, i4]</p></li>
-<li><p><strong>L_SHS_prop_error</strong> (<em>list</em>) – The list of the error relative to the computed properties. L_SHS_prop_error = [a_verr, b_verr, c_verr, Zeta_serr, i0_serr, i2_serr, i4_serr]</p></li>
+<li><p><strong>L_SHS_prop</strong> (<em>list</em>) – The list of computed properties:
+<code class="docutils literal notranslate"><span class="pre">[a,</span> <span class="pre">b,</span> <span class="pre">c,</span> <span class="pre">alpha_0,</span> <span class="pre">Zeta,</span> <span class="pre">Depol,</span> <span class="pre">i0,</span> <span class="pre">i2,</span> <span class="pre">i4]</span></code>.</p></li>
+<li><p><strong>L_SHS_prop_error</strong> (<em>list</em>) – The list of uncertainties associated with the computed properties:
+<code class="docutils literal notranslate"><span class="pre">[a_verr,</span> <span class="pre">b_verr,</span> <span class="pre">c_verr,</span> <span class="pre">Zeta_serr,</span> <span class="pre">i0_serr,</span> <span class="pre">i2_serr,</span> <span class="pre">i4_serr]</span></code>.</p></li>
 </ul>
 </p>
 </dd>
@@ -188,7 +198,7 @@
 <dd class="field-odd"><p>1.2</p>
 </dd>
 <dt class="field-even">Date<span class="colon">:</span></dt>
-<dd class="field-even"><p>Aug 23, 2025</p>
+<dd class="field-even"><p>Aug 24, 2025</p>
 </dd>
 </dl>
 </section>
