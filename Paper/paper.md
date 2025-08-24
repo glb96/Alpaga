@@ -2,11 +2,11 @@
 title: 'Alpaga: A Python package for automated analysis of Second Harmonic Generation polarization experiments'
 tags:
   - Python
-  - second harmonic generation
-  - spectroscopy
-  - polarization analysis
-  - surface science
-  - nonlinear optics
+  - Nonlinear optics
+  - Second Harmonic Generation
+  - Polarization analysis
+  - Surface spectroscopy
+  - Bulk spectroscopy
 authors:
   - name: Guillaume Le Breton
     orcid: 0000-0002-2019-6106
@@ -22,19 +22,11 @@ authors:
   - names: Oriane Bonhomme
     orcid: 0000-0001-6009-2240
     affiliation: 1
-0000-0001-6009-2240
-
-    
 affiliations:
- - name: Lyman Spitzer, Jr. Fellow, Princeton University, United States
+ - name: Institut Lumière Matière, UMR5306, Villeurbanne, France
    index: 1
-   ror: 00hx57361
- - name: Institution Name, Country
-   index: 2
- - name: Independent Researcher, Country
-   index: 3
-date: 13 August 2017
-bibliography: paper.bib
+date: 1 September 2025
+bibliography: biblio.bib
 ---
 
 # Summary
@@ -80,3 +72,4 @@ The package includes comprehensive documentation with detailed examples and para
 We acknowledge the Institut Lumière Matière (ILM) for supporting the development of this software and the broader SHG research community for valuable feedback and testing. We also thank the contributors who have helped improve the software through bug reports and feature suggestions.
 
 # References
+
