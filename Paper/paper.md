@@ -55,6 +55,8 @@ Second Harmonic Generation experiments generate large volumes of spectroscopic d
 
 **Domain-Specific Analysis Tools**: Dedicated modules for SSHG and SHS analysis provide specialized functionality for extracting physical parameters relevant to surface science applications, including polarization-dependent analysis and orientation parameter extraction.
 
+![Caption for example figure.](fig1.pdf){ width=20% }
+
 # Related Work
 
 While several general-purpose spectroscopic analysis packages exist, such as `scikit-spectra` and `rampy` [@rampy], `Alpaga` fills a specific niche in the SHG community by providing specialized tools tailored to the unique requirements of polarization-dependent SHG measurements. Unlike general spectroscopy packages, `Alpaga` incorporates domain knowledge about SHG experiments, including understanding of typical artifact patterns, polarization conventions, and the specific mathematical frameworks used in SSHG and SHS analysis .
