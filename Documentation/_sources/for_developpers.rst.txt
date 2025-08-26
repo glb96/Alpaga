@@ -1,48 +1,70 @@
 .. _for_developpers_page:
 
-For Developpers
-================
+For Developers
+==============
 
-In this section, we provide some guidance to help developers comtributing to this project. 
-In particular, this code is developed using git because of these multiple contributors. Using the github page, one can proposes update of the code, tutorial or wiki using directly the webpage. However, to modify the package (alpaga.tar.gz) or the online wiki (you are currently reading), compilation must be performed. 
+In this section, we provide some guidance to help developers contributing to this project. 
 
-Either the github workflow works and you have nothing to do in order to update the package/wiki once you have push something in the master branch, or it fails and you have to perform these part on your computer until you fix the issue. 
+This code is developed using Git to facilitate collaboration between multiple contributors. 
+Using the :alpaga_github:`GitHub page<>`, one can propose updates to the code, tutorials, or the wiki directly from the webpage. 
+Modify the function in the ``Alpaga`` directory to modify the code, or the .rst files in ``Wiki_raw`` for the the online wiki (the page you are currently reading).
+However, to actually modify the package (*alpaga.tar.gz*) or the online wiki, compilation must be performed. 
+
+If the GitHub workflow succeeds, you don’t need to do anything — the package and wiki will be updated automatically when you push to the master branch thanks to ``.github/workflows/build.yml``.  
+If the workflow fails, you will need to perform these steps locally until the issue is fixed (see below).  
+
+You can also run tests to ensure your version is working.  
+To do so, either run ``pytest`` in the ``tests`` directory, or check the output of the ``build.yml`` action on GitHub after a push.  
 
 
-How to : compile a new homemade Alpaga version:
------------------------------------------------
+How to: Compile a New Alpaga Version
+------------------------------------
 
-If you want to develop new functions or modules in Alpaga module, make sure to compile your code into *.tar.gz* file. To do so, one can use the bash script *to_creat_package.sh*.
+If you want to develop new functions or modules in Alpaga, make sure to compile your code into a ``*.tar.gz`` file.  
+To do so, use the bash script ``to_create_package.sh``.
 
-For windows users, if you have access to a bash terminal, go to the folder where *to_creat_package.sh* is and execute it like that : ::
+For Windows users:  
+If you have access to a bash terminal, navigate to the folder where ``to_create_package.sh`` is located and execute it as follows: ::
 
-    C:\your_path_to_alpaga_folder\Alpaga> .\to_creat_package.sh
+    C:\your_path_to_alpaga_folder\Alpaga> .\to_create_package.sh
 
-If not, you can use functions writen inside the .sh file (open it with notepad) directly in a command terminal.
+If you do not have a bash terminal, you can copy the commands written inside the ``.sh`` file (open it with Notepad) and execute them directly in a command terminal.  
+Note that you may need to modify the script to match your version of Python. 
 
-When it's done, your code is compiled and compressed into a *.tar.gz* file. The bash script will also do a clean install of the new Alpaga module.
+Once completed, your code will be compiled and compressed into a ``*.tar.gz`` file.  
+The bash script will also perform a clean installation of the new Alpaga module in your Python environment.  
 
-How to : compile the online wiki:
----------------------------------------
 
-After changing *.rst* file to add the information you want in the wiki, make sure to compile your changes to make it appears in HTML files. To do so, there are some python packages to add before compilation : Sphinx - Sphinxcontrib-bibtex - Recommonmark.
+How to: Compile the Online Wiki
+-------------------------------
 
-For windows users, you can use : ::
+After modifying any ``*.rst`` file or the docstring documentation of the Alpaga core files (the .py files), you must compile your changes so they appear in the HTML files.  
+
+First, install the necessary Python packages before compilation:  
+- Sphinx  
+- sphinxcontrib-bibtex  
+- recommonmark  
+
+Install them manually: ::
 
     python -m pip install sphinx
     python -m pip install sphinxcontrib-bibtex
     python -m pip install recommonmark
    
-You can then compile your wiki with : ::
+Or use the ``requirements_wiki.txt`` file: ::
 
-    C:\your_path_to_alpaga_folder\Alpaga\Doc\Rst> python -m sphinx -b html . ../Html/.
+    python -m pip install -r requirements_wiki.txt
 
-Your changes should now appear in HTML files.
+You can then compile your wiki with: ::
+
+    C:\your_path_to_alpaga_folder\Alpaga\Doc\Rst> python -m sphinx -b html Wiki_raw Documentation
+
+Your changes should now appear in the generated HTML files in ``Documentation``.
 
 Scratch git guide:
 ---------------------------------------
 
-In this section, we will see how we can use git to implement new functions, fix some bugs or edit wiki.
+In this section, we will see how we can use git to implement new functions, fix some bugs or edit wiki. Note that this version is still under development. 
 
 **Installation :**
 
