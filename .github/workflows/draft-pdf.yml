@@ -1,41 +1,51 @@
 name: Draft PDF
-on: [push]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+permissions:
+  contents: write
 
 jobs:
-  paper:
+  build:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    name: Paper Draft
     steps:
-      - name: Checkout
+      # 1) Checkout the repository
+      - name: Checkout repository
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 2) Build draft PDF
       - name: Build draft PDF
         uses: openjournals/openjournals-draft-action@master
         with:
           journal: joss
-          # This should be the path to the paper within your repo.
           paper-path: Paper/paper.md
-      - name: Upload
+
+      # 3) Optional: Upload PDF artifact for preview
+      - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
           name: paper
-          # This is the output path where Pandoc will write the compiled
-          # PDF. Note, this should be the same directory as the input
-          # paper.md
           path: Paper/paper.pdf
-      # Update the github directory (the copy/rm/mv is because of ownership issues
-      - name: Update the package and the wiki
+
+      # 4) Update the GitHub repository with the PDF
+      - name: Update PDF in repo
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          # ownership dance
           cp Paper/paper.pdf Paper/mypaper.pdf
           rm Paper/paper.pdf
           mv Paper/mypaper.pdf Paper/paper.pdf
-          ls -l Paper/* 
+          ls -l Paper/*
           git add Paper/paper.pdf
-          git commit -m "Update papier.pdf" || echo "No changes to commit"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD
-          
+          git commit -m "Update paper.pdf" || echo "No changes to commit"
+          git push origin master
 
