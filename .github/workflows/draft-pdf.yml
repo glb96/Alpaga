@@ -15,13 +15,10 @@ jobs:
           journal: joss
           # This should be the path to the paper within your repo.
           paper-path: Paper/paper.md
-      - name: Copy PDF to Paper folder
+      - name: Fix PDF permissions
         run: |
-          ls -l *
-          ls -l .*
-          ls -l _*
-          ls Papier/*
-          cp _draft/paper.pdf Paper/paper.pdf
+          chown $USER:$USER Paper/paper.pdf || true
+          chmod 644 Paper/paper.pdf 
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
