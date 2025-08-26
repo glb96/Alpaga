@@ -22,3 +22,12 @@ jobs:
           # PDF. Note, this should be the same directory as the input
           # paper.md
           path: Paper/paper.pdf
+      # Update the github directory 
+      - name: Update the package and the wiki
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Paper/paper.pdf
+          git commit -m "Update papier.pdf" || echo "No changes to commit"
+          git push origin master
+
