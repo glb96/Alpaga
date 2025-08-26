@@ -67,7 +67,7 @@ The automated nature of `Alpaga`'s workflow distinguishes it from manual analysi
 # Usage and Impact
 The `Alpaga` project started in 2022 at the Institut Lumière Matière laboratory (ILM), France, to merge all the different analysis tools already established in our experimental group. The four authors of this publication participated on the code development and usage. 
 Up-to-date, about a dozen scientists have used `Alpaga` to treat experimental data. The code have been successfully used in multiple scientific communications and publications already [@le2022second, @le2023liquid, @le2024microscopic, @rondepierre2025correlations, @fery2025sonder, @rf1, @rf2 ]. 
-The software has already enabled more efficient and consistent data analysis workflows for research groups working with SSHG and SHS experiments (at ILM or maybe in other labs thanks to the automated file management procedure), and contributes to improved reproducibility in SHG research.
+The software has already enabled more efficient and consistent data analysis workflows for research groups working with SSHG and SHS experiments (at ILM or other labs thanks to the automated file management procedure), and contributes to improved reproducibility in SHG research.
 
 The package includes comprehensive documentation with detailed examples and parameter explanations, making it accessible to both experienced researchers and newcomers to SHG analysis. Installation is straightforward through standard Python package management tools, and the software is distributed under the LGPL v2.1 license to ensure broad accessibility.
 
