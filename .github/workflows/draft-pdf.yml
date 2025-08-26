@@ -15,10 +15,6 @@ jobs:
           journal: joss
           # This should be the path to the paper within your repo.
           paper-path: Paper/paper.md
-      - name: Fix PDF permissions
-        run: |
-          chown $USER:$USER Paper/paper.pdf || true
-          chmod 644 Paper/paper.pdf 
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
@@ -32,7 +28,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add Paper/paper.pdf
+          cp Paper/paper.pdf Paper/mypaper.pdf
+          git add Paper/mypaper.pdf
           git commit -m "Update papier.pdf" || echo "No changes to commit"
           git push origin master
 
