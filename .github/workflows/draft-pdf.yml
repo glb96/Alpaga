@@ -15,6 +15,11 @@ jobs:
           journal: joss
           # This should be the path to the paper within your repo.
           paper-path: Paper/paper.md
+      - name: Copy PDF to Paper folder
+        run: |
+          ls 
+          ls _draft
+          cp _draft/paper.pdf Paper/paper.pdf
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
@@ -25,7 +30,6 @@ jobs:
           path: Paper/paper.pdf
       # Update the github directory 
       - name: Update the package and the wiki
-        uses: peaceiris/actions-gh-pages@v3
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
