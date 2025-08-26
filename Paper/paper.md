@@ -69,14 +69,8 @@ The `Alpaga` project started in 2022 at the Institut Lumière Matière (France) 
 Up-to-date, about a dozen scientists have used `Alpaga` to treat experimental data. The code have been successfully used in multiple scientific communications and publications already [@le2022second, @le2023liquid, @le2024microscopic, @rondepierre2025correlations; @fery2025sonder]. 
 The software has already enabled more efficient and consistent data analysis workflows for research groups working with SSHG and SHS experiments (at ILM or maybe in other labs thanks to the automated file management procedure), and contributes to improved reproducibility in SHG research.
 
-
 The package includes comprehensive documentation with detailed examples and parameter explanations, making it accessible to both experienced researchers and newcomers to SHG analysis. Installation is straightforward through standard Python package management tools, and the software is distributed under the LGPL v2.1 license to ensure broad accessibility.
 
-# TOADD? 
-Age of the software (started in 2021)
-Nbr of user? let us say 10. 
-This software is especially designed for Python newbees: it is suposed to be easy and accessible. Therefore, the wiki is large and we provide many tutorials. 
-Can be used for different cameras / experimental setup (for the file management), not only our lab
 
 # Acknowledgements
 
