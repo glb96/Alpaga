@@ -2,11 +2,12 @@
 title: 'Alpaga: A Python package for automated analysis of Second Harmonic Generation polarization experiments'
 tags:
   - Python
+  - Experimental Results Analysis 
   - Nonlinear optics
-  - Second Harmonic Generation
-  - Polarization analysis
-  - Surface spectroscopy
-  - Bulk spectroscopy
+  - Surface Second Harmonic Generation
+  - Second Harmonic Scattering
+  - Hyper Rayleigh Scattering
+  - Polarization Analysis
 authors:
   - name: Fabien Rondepierre
     orcid: 0000-0003-4721-4690
