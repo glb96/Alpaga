@@ -26,7 +26,7 @@ affiliations:
  - name: Institut Lumière Matière, UMR5306, Villeurbanne, France
    index: 1
 date: 1 September 2025
-bibliography: biblio.bib
+bibliography: paper.bib
 ---
 
 # Summary
