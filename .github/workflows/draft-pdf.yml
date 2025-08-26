@@ -9,6 +9,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Build draft PDF
         uses: openjournals/openjournals-draft-action@master
         with:
@@ -23,12 +25,14 @@ jobs:
           # PDF. Note, this should be the same directory as the input
           # paper.md
           path: Paper/paper.pdf
-      # Update the github directory 
+      # Update the github directory (the copy/rm/mv is because of ownership issues
       - name: Update the package and the wiki
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           cp Paper/paper.pdf Paper/mypaper.pdf
+          rm Paper/paper.pdf
+          mv Paper/mypaper.pdf Paper/paper.pdf
           ls -l Paper/* 
           git add Paper/mypaper.pdf
           git commit -m "Update papier.pdf" || echo "No changes to commit"
