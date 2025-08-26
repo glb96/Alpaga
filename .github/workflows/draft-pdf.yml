@@ -3,6 +3,7 @@ on: [push]
 
 jobs:
   paper:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     name: Paper Draft
     steps:
@@ -24,6 +25,7 @@ jobs:
           path: Paper/paper.pdf
       # Update the github directory 
       - name: Update the package and the wiki
+        uses: peaceiris/actions-gh-pages@v3
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
