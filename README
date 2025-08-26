@@ -33,9 +33,8 @@ Are there tutorials?
 Yes. Tutorials are provided in the `Tutorials` directory as Jupyter notebook files (for use in any Python environment).  
 You do not need to worry about the data, as it is already included. 
 
-
-I still need help...
-====================
+I am lost and need help
+=======================
 
 If you encounter any problems, please open an Issue in this GitHub project.  
 This is free of charge, and we will do our best to assist you. 
@@ -47,3 +46,10 @@ How to cite this code?
 At the moment, no article has yet been published describing Alpaga in detail.  
 Please contact us if you need specific citation guidance.  
 In the meantime, you can use the DOI provided on Zenodo: https://doi.org/10.5281/zenodo.5639392
+
+I want to contribute!
+=====================
+
+If you want to add more features or you have found a problem with Alpaga, your help is more than welcome! 
+You can have a look at the designed page in the wiki, https://glb96.github.io/Alpaga/for_developpers.html , open an issue in this github, or contact us directly by email -- see the wiki. 
+
