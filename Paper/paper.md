@@ -14,7 +14,7 @@ authors:
     affiliation: 1
   - name: Maxime Fery 
     affiliation: 1
-  - names: Oriane Bonhomme
+  - name: Oriane Bonhomme
     orcid: 0000-0001-6009-2240
     affiliation: 1
   - name: Guillaume Le Breton
