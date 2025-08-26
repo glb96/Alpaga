@@ -55,7 +55,7 @@ Second Harmonic Generation experiments generate large volumes of spectroscopic d
 
 **Domain-Specific Analysis Tools**: Dedicated modules for SSHG and SHS analysis provide specialized functionality for extracting physical parameters relevant to surface science applications, including polarization-dependent analysis and orientation parameter extraction.
 
-![Caption for example figure.](fig1.pdf){ width=20% }
+![Caption for example figure.](fig1.pdf){ width=50% }
 
 # Related Work
 
