@@ -50,9 +50,9 @@ Second Harmonic Generation experiments generate large volumes of spectroscopic d
 
 **Automated File Management**: The software automatically identifies and organizes spectroscopic data files based on experimental parameters, streamlining the analysis workflow for large datasets with consistent naming conventions.
 
-**Spectral Cleaning and Averaging**: Advanced algorithms detect and remove cosmic ray artifacts and other non-physical spikes from spectra. The cleaning procedure includes configurable parameters for spike detection sensitivity and handles the averaging of multiple acquisitions with identical experimental parameters to improve signal-to-noise ratios.
+**Spectral Cleaning and Averaging**: Detection and removal of electronic noise and other non-physical spikes from spectra. The cleaning procedure includes configurable parameters for spike detection sensitivity and handles the averaging of multiple acquisitions with identical experimental parameters to improve signal-to-noise ratios.
 
-**Gaussian Fitting with Multiple Options**: The package offers various fitting approaches for extracting peak intensities from Gaussian profiles. Users can select from different fitting algorithms and configure parameters such as baseline handling and peak identification criteria to optimize results based on their specific experimental conditions.
+**Gaussian Fitting with Multiple Options**: The package offers various fitting approaches for extracting peak intensities from Gaussian profiles. Users can select from different fitting algorithms and configure parameters such as baseline handling (fluorescence backround) to optimize results based on their specific experimental conditions.
 
 **Domain-Specific Analysis Tools**: Dedicated modules for SSHG and SHS analysis provide specialized functionality for extracting physical parameters relevant to surface science applications, including polarization-dependent analysis and orientation parameter extraction.
 
