@@ -38,11 +38,11 @@ The package implements a robust automated procedure that extracts Gaussian peak 
 
 # Statement of need
 
-Second Harmonic Generation experiments involve long acquisition times, which generate large volumes of spectroscopic data often affected by significant noise, requiring careful processing to extract meaningful physical parameters. Researchers typically face several challenges when analyzing SHG data: (1) handling numerous acquisition files with varying experimental parameters, (2) removing non-physical artifacts such as cosmic ray spikes, (3) averaging multiple acquisitions to improve signal-to-noise ratios, and (4) consistently fitting Gaussian profiles to extract peak intensities. These tasks are often performed manually or with custom scripts, leading to inconsistencies between research groups and potential analysis errors.
+SHG experiments involve long acquisition times, which generate large volumes of spectroscopic data often affected by significant noise, requiring careful processing to extract meaningful physical parameters. Researchers typically face several challenges when analyzing SHG data: (1) handling numerous acquisition files with varying experimental parameters, (2) removing non-physical artifacts, (3) averaging multiple acquisitions to improve signal-to-noise ratios, and (4) consistently fitting Gaussian profiles to extract peak intensities. These tasks are often performed manually or with custom scripts, leading to inconsistencies between research groups and potential analysis errors.
 
 `Alpaga` addresses these challenges by providing a standardized, automated workflow specifically designed for SHG polarization analysis. The software is particularly valuable for research groups working with SSHG and SHS experiments, where systematic analysis of polarization-dependent measurements is essential for understanding surface properties and molecular orientation. Python enables `Alpaga` to provide a user-friendly interface while leveraging efficient numerical libraries for computationally intensive operations.
 
-`Alpaga` was designed to be used by both experienced researchers in nonlinear optics and students learning SHG analysis techniques. The automated nature of the workflow makes it accessible to newcomers while providing the reliability and consistency required for research applications.
+`Alpaga` was designed to be used by both experienced researchers in nonlinear optics and students learning SHG analysis techniques. The automated nature, supported by comprehensive documentation (wiki) and tutorials, make the workflow accessible to newcomers while providing the reliability and consistency required for research applications.
 
 # Key Features and Implementation
 
