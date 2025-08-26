@@ -2,10 +2,7 @@ name: Draft PDF
 on:
   push:
     branches:
-      - master
-  pull_request:
-    branches:
-      - master
+      - none # master
 
 permissions:
   contents: write
