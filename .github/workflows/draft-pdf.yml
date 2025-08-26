@@ -29,6 +29,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           cp Paper/paper.pdf Paper/mypaper.pdf
+          ls -l Paper/* 
           git add Paper/mypaper.pdf
           git commit -m "Update papier.pdf" || echo "No changes to commit"
           git push origin master
