@@ -8,11 +8,6 @@ tags:
   - Surface spectroscopy
   - Bulk spectroscopy
 authors:
-  - name: Guillaume Le Breton
-    orcid: 0000-0002-2019-6106
-    corresponding: true
-    equal-contrib: true
-    affiliation: "1" # (Multiple affiliations must be quoted)
   - name: Fabien Rondepierre
     orcid: 0000-0003-4721-4690
     equal-contrib: true # (This is how you can denote equal contributions between multiple authors)
@@ -22,6 +17,11 @@ authors:
   - names: Oriane Bonhomme
     orcid: 0000-0001-6009-2240
     affiliation: 1
+  - name: Guillaume Le Breton
+    orcid: 0000-0002-2019-6106
+    corresponding: true
+    equal-contrib: true
+    affiliation: 1 
 affiliations:
  - name: Institut Lumière Matière, UMR5306, Villeurbanne, France
    index: 1
