@@ -2,7 +2,7 @@ name: Draft PDF
 on:
   push:
     branches:
-      - master
+      - master # or none to disable it
 
 permissions:
   contents: write
