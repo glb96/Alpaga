@@ -65,8 +65,10 @@ While several general-purpose spectroscopic analysis packages exist, such as `sc
 The automated nature of `Alpaga`'s workflow distinguishes it from manual analysis approaches commonly used in the field, providing both consistency and efficiency improvements for SHG research groups.
 
 # Usage and Impact
+The `Alpaga` project started in 2022 at the Institut Lumière Matière (France) laboratory to merge all the different analysis tools already established in our experimental group. The four authors of this publication participated on the code development and usage. 
+Up-to-date, about a dozen scientists have used `Alpaga` to treat experimental data. The code have been successfully used in multiple scientific communications and publications already [@le2022second, @le2023liquid, @le2024microscopic, @rondepierre2025correlations; @fery2025sonder]. 
+The software has already enabled more efficient and consistent data analysis workflows for research groups working with SSHG and SHS experiments (at ILM or maybe in other labs thanks to the automated file management procedure), and contributes to improved reproducibility in SHG research.
 
-`Alpaga` has been successfully used in multiple scientific communications and publications, demonstrating its practical value in the SHG research community [@rondepierre2025correlations; @fery2025sonder; @le2022second]. The software has enabled more efficient and consistent data analysis workflows for research groups working with SSHG and SHS experiments, contributing to improved reproducibility in SHG research.
 
 The package includes comprehensive documentation with detailed examples and parameter explanations, making it accessible to both experienced researchers and newcomers to SHG analysis. Installation is straightforward through standard Python package management tools, and the software is distributed under the LGPL v2.1 license to ensure broad accessibility.
 
