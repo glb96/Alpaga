@@ -57,15 +57,21 @@ Second Harmonic Generation experiments generate large volumes of spectroscopic d
 
 # Related Work
 
-While several general-purpose spectroscopic analysis packages exist, such as `scikit-spectra` and `rampy` [@rampy], `Alpaga` fills a specific niche in the SHG community by providing specialized tools tailored to the unique requirements of polarization-dependent SHG measurements. Unlike general spectroscopy packages, `Alpaga` incorporates domain knowledge about SHG experiments, including understanding of typical artifact patterns, polarization conventions, and the specific mathematical frameworks used in SSHG and SHS analysis [@rondepierre2025correlations; @fery2025sonder; le2022second].
+While several general-purpose spectroscopic analysis packages exist, such as `scikit-spectra` and `rampy` [@rampy], `Alpaga` fills a specific niche in the SHG community by providing specialized tools tailored to the unique requirements of polarization-dependent SHG measurements. Unlike general spectroscopy packages, `Alpaga` incorporates domain knowledge about SHG experiments, including understanding of typical artifact patterns, polarization conventions, and the specific mathematical frameworks used in SSHG and SHS analysis .
 
 The automated nature of `Alpaga`'s workflow distinguishes it from manual analysis approaches commonly used in the field, providing both consistency and efficiency improvements for SHG research groups.
 
 # Usage and Impact
 
-`Alpaga` has been successfully used in multiple scientific communications and publications, demonstrating its practical value in the SHG research community [@ref1; @ref2; @ref3; @ref4]. The software has enabled more efficient and consistent data analysis workflows for research groups working with SSHG and SHS experiments, contributing to improved reproducibility in SHG research.
+`Alpaga` has been successfully used in multiple scientific communications and publications, demonstrating its practical value in the SHG research community [@rondepierre2025correlations; @fery2025sonder; le2022second]. The software has enabled more efficient and consistent data analysis workflows for research groups working with SSHG and SHS experiments, contributing to improved reproducibility in SHG research.
 
 The package includes comprehensive documentation with detailed examples and parameter explanations, making it accessible to both experienced researchers and newcomers to SHG analysis. Installation is straightforward through standard Python package management tools, and the software is distributed under the LGPL v2.1 license to ensure broad accessibility.
+
+# TOADD? 
+Age of the software (started in 2021)
+Nbr of user? let us say 10. 
+This software is especially designed for Python newbees: it is suposed to be easy and accessible. Therefore, the wiki is large and we provide many tutorials. 
+Can be used for different cameras / experimental setup (for the file management), not only our lab
 
 # Acknowledgements
 
