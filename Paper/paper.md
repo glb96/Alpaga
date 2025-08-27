@@ -28,6 +28,7 @@ affiliations:
    index: 1
 date: 1 September 2025
 bibliography: paper.bib
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/ieee.csl
 ---
 
 # Summary
