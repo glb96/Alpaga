@@ -33,7 +33,7 @@ csl: https://raw.githubusercontent.com/citation-style-language/styles/master/iee
 
 # Summary
 
-Alpaga (AnaLyse en PolArisation de la Génération de second hArmonique) is a Python package designed for the automated analysis of Second Harmonic Generation (SHG) experimental acquisitions. The software provides a comprehensive workflow for processing spectroscopic measurements from Surface Second Harmonic Generation (SSHG) [@shen1989surface ; @tran2017applications] and Second Harmonic Scattering (SHS) experiments, which are crucial techniques in surface science and nonlinear optics research.
+`Alpaga` (AnaLyse en PolArisation de la Génération de second hArmonique) is a Python package designed for the automated analysis of Second Harmonic Generation (SHG) experimental acquisitions. The software provides a comprehensive workflow for processing spectroscopic measurements from Surface Second Harmonic Generation (SSHG) [@shen1989surface ; @tran2017applications] and Second Harmonic Scattering (SHS) experiments, which are crucial techniques in surface science and nonlinear optics research.
 
 The package implements a robust automated procedure that extracts Gaussian peak intensities from spectral measurements through three main steps: automatic file detection and organization, spectral cleaning and averaging with  removing non-physical artifacts, and Gaussian fitting for intensity extraction. This automated approach significantly reduces the time and potential human error associated with manual data processing while providing consistent and reproducible analysis results.
 
@@ -49,7 +49,7 @@ SHG experiments involve long acquisition times, which generate large volumes of 
 
 # Key Features and Implementation
 
-`Alpaga` is built on established Python scientific libraries including NumPy, SciPy, and Matplotlib, providing reliable numerical operations and visualization capabilities. The software architecture follows a modular design with several key components:
+`Alpaga` is built on established Python scientific libraries, including NumPy, SciPy, and Matplotlib, providing reliable numerical operations and visualization capabilities. The software architecture follows a modular design with several key components:
 
 **Automated File Management**: The software automatically identifies and organizes spectroscopic data files based on experimental parameters, streamlining the analysis workflow for large datasets with consistent naming conventions.
 
@@ -60,22 +60,21 @@ SHG experiments involve long acquisition times, which generate large volumes of 
 **Domain-Specific Analysis Tools**: Dedicated modules for SSHG and SHS analysis provide specialized functionality for extracting physical parameters relevant to surface science applications, including polarization-dependent analysis and orientation parameter extraction.
 
 # Related Work
-
-While several general-purpose spectroscopic analysis packages exist, such as `scikit-spectra` and `rampy` [@rampy], `Alpaga` fills a specific niche in the SHG community by providing specialized tools tailored to the unique requirements of polarization-dependent SHG measurements. Unlike general spectroscopy packages, `Alpaga` incorporates domain knowledge about SHG experiments, including an understanding of typical artifact patterns, polarization conventions, and the specific mathematical frameworks used in SSHG and SHS analysis.
-
-The automated nature of `Alpaga`'s workflow distinguishes it from manual analysis approaches commonly used in the field, providing both consistency and efficiency improvements for SHG research groups.
+The automated workflow of `Alpaga` sets it apart from the manual analysis methods often used in the field, offering greater consistency and efficiency for SHG research groups.
+In contrast to general-purpose spectroscopic packages such as rampy [@rampy], `Alpaga` addresses the specific needs of the SHG community by providing dedicated tools for polarization-dependent measurements.
+It embeds domain knowledge of SHG experiments, including typical artifact patterns, polarization conventions, and the mathematical frameworks required for SSHG and SHS analysis.
+In addition, `Alpaga` features a file management system designed for handling multiple spectra per acquisition, a capability particularly relevant for polarization-based studies.
 
 # Usage and Impact
-The `Alpaga` project started in 2022 at the Institut Lumière Matière laboratory (ILM), France, to merge all the different analysis tools already established in our experimental group. The four authors of this publication participated in the code development and usage. 
-To date, about a dozen scientists have used `Alpaga` to treat experimental data. The code has been successfully used in multiple scientific communications and publications already [@le2022second ; @le2023liquid ; @le2024microscopic ; @fery2025sonder ; @rondepierre2025correlations ; @rf1 ; @rf2 ]. 
+The `Alpaga` project started in 2022 at the Institut Lumière Matière laboratory (ILM), France, to merge all the different analysis tools established in our experimental group. The four authors of this publication participated in the code development and usage. 
+To date, about a dozen scientists have used `Alpaga` to treat experimental data. 
 The software has already enabled more efficient and consistent data analysis workflows for research groups working with SSHG and SHS experiments (at ILM or other labs, thanks to the automated file management procedure), and contributes to improved reproducibility in SHG research.
+This procedure has been used in multiple scientific communications and publications [@le2022second ; @le2023liquid ; @le2024microscopic ; @fery2025sonder ; @rondepierre2025correlations ; @rf1 ; @rf2 ], while not always being directly mentioned. 
 
 The package includes comprehensive documentation with detailed examples and parameter explanations, making it accessible to both experienced researchers and newcomers to SHG analysis. Installation is straightforward through standard Python package management tools, and the software is distributed under the LGPL v2.1 license to ensure broad accessibility.
 
-
 # Acknowledgements
-
-We are grateful to Estelle Salmon, Emmanuel Benichou, and Pierre-François Brevet for their valuable help, insightful guidance, and for generously sharing their previous implementation, which has significantly shaped Alpaga's current workflow.
+We are grateful to Estelle Salmon, Emmanuel Benichou, and Pierre-François Brevet for their valuable help, insightful guidance, and for generously sharing their previous implementation, which has significantly shaped `Alpaga` current workflow.
 We also warmly acknowledge the former members of the ONLI group, Aurélie Bruyère, Lucile Sanchez, and Antonin Pardon ADD MORE?, whose pioneering contributions laid the foundation for the present development of the experimental workflow.
 This work was conducted at the Institut Lumière Matière (ILM).
 
