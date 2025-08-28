@@ -41,9 +41,11 @@ The package implements a robust automated procedure that extracts Gaussian peak 
 
 SHG experiments involve long acquisition times, which generate large volumes of spectroscopic data often affected by significant noise, requiring careful processing to extract meaningful physical parameters. Researchers typically face several challenges when analyzing SHG data: (1) handling numerous acquisition files with varying experimental parameters, (2) removing non-physical artifacts, (3) averaging multiple acquisitions to improve signal-to-noise ratios, and (4) consistently fitting Gaussian profiles to extract peak intensities. These tasks are often performed manually or with custom scripts, leading to inconsistencies between research groups and potential analysis errors.
 
-`Alpaga` addresses these challenges by providing a standardized, automated workflow specifically designed for SHG polarization analysis. The software is particularly valuable for research groups working with SSHG and SHS experiments, where systematic analysis of polarization-dependent measurements is essential for understanding surface properties and molecular orientation. Python enables `Alpaga` to provide a user-friendly interface while leveraging efficient numerical libraries for computationally intensive operations.
+![Caption for example figure.](fig1.pdf){ width=85% }
 
-`Alpaga` was designed to be used by both experienced researchers in nonlinear optics and students learning SHG analysis techniques. The automated nature, supported by comprehensive documentation (wiki) and tutorials, make the workflow accessible to newcomers while providing the reliability and consistency required for research applications.
+`Alpaga` addresses these challenges by providing a standardized, automated workflow specifically designed for SHG polarization analysis. The Figure presents this robust data processing: going from experimental raw results to a research-oriented analysis thanks to noise cleaning and peak intensity extraction. The software is particularly valuable for research groups working with SSHG and SHS experiments, where systematic analysis of polarization-dependent measurements is essential for understanding surface properties and molecular orientation. Python enables `Alpaga` to provide a user-friendly interface while leveraging efficient numerical libraries for computationally intensive operations.
+
+`Alpaga` was designed to be used by both experienced researchers in nonlinear optics and students learning SHG analysis techniques. The automated nature, supported by comprehensive documentation (wiki) and tutorials, makes the workflow accessible to newcomers while providing the reliability and consistency required for research applications.
 
 # Key Features and Implementation
 
@@ -53,22 +55,20 @@ SHG experiments involve long acquisition times, which generate large volumes of 
 
 **Spectral Cleaning and Averaging**: Detection and removal of electronic noise and other non-physical spikes from spectra. The cleaning procedure includes configurable parameters for spike detection sensitivity and handles the averaging of multiple acquisitions with identical experimental parameters to improve signal-to-noise ratios.
 
-**Gaussian Fitting with Multiple Options**: The package offers various fitting approaches for extracting peak intensities from Gaussian profiles. Users can select from different fitting algorithms and configure parameters such as baseline handling (fluorescence backround) to optimize results based on their specific experimental conditions.
+**Gaussian Fitting with Multiple Options**: The package offers various fitting approaches for extracting peak intensities from Gaussian profiles. Users can select from different fitting algorithms and configure parameters such as baseline handling (fluorescence background) to optimize results based on their specific experimental conditions.
 
 **Domain-Specific Analysis Tools**: Dedicated modules for SSHG and SHS analysis provide specialized functionality for extracting physical parameters relevant to surface science applications, including polarization-dependent analysis and orientation parameter extraction.
 
-![Caption for example figure.](fig1.pdf){ width=85% }
-
 # Related Work
 
-While several general-purpose spectroscopic analysis packages exist, such as `scikit-spectra` and `rampy` [@rampy], `Alpaga` fills a specific niche in the SHG community by providing specialized tools tailored to the unique requirements of polarization-dependent SHG measurements. Unlike general spectroscopy packages, `Alpaga` incorporates domain knowledge about SHG experiments, including understanding of typical artifact patterns, polarization conventions, and the specific mathematical frameworks used in SSHG and SHS analysis .
+While several general-purpose spectroscopic analysis packages exist, such as `scikit-spectra` and `rampy` [@rampy], `Alpaga` fills a specific niche in the SHG community by providing specialized tools tailored to the unique requirements of polarization-dependent SHG measurements. Unlike general spectroscopy packages, `Alpaga` incorporates domain knowledge about SHG experiments, including an understanding of typical artifact patterns, polarization conventions, and the specific mathematical frameworks used in SSHG and SHS analysis.
 
 The automated nature of `Alpaga`'s workflow distinguishes it from manual analysis approaches commonly used in the field, providing both consistency and efficiency improvements for SHG research groups.
 
 # Usage and Impact
 The `Alpaga` project started in 2022 at the Institut Lumière Matière laboratory (ILM), France, to merge all the different analysis tools already established in our experimental group. The four authors of this publication participated on the code development and usage. 
-Up-to-date, about a dozen scientists have used `Alpaga` to treat experimental data. The code have been successfully used in multiple scientific communications and publications already [@le2022second ; @le2023liquid ; @le2024microscopic ; @rondepierre2025correlations ; @fery2025sonder ; @rf1 ; @rf2 ]. 
-The software has already enabled more efficient and consistent data analysis workflows for research groups working with SSHG and SHS experiments (at ILM or other labs thanks to the automated file management procedure), and contributes to improved reproducibility in SHG research.
+To date, about a dozen scientists have used `Alpaga` to treat experimental data. The code has been successfully used in multiple scientific communications and publications already [@le2022second ; @le2023liquid ; @le2024microscopic ; @fery2025sonder ; @rondepierre2025correlations ; @rf1 ; @rf2 ]. 
+The software has already enabled more efficient and consistent data analysis workflows for research groups working with SSHG and SHS experiments (at ILM or other labs, thanks to the automated file management procedure), and contributes to improved reproducibility in SHG research.
 
 The package includes comprehensive documentation with detailed examples and parameter explanations, making it accessible to both experienced researchers and newcomers to SHG analysis. Installation is straightforward through standard Python package management tools, and the software is distributed under the LGPL v2.1 license to ensure broad accessibility.
 
