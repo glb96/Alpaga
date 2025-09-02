@@ -76,7 +76,7 @@ The package includes comprehensive documentation with detailed examples and para
 
 # Acknowledgements
 We are grateful to Estelle Salmon, Emmanuel Benichou, and Pierre-François Brevet for their valuable help, insightful guidance, and for generously sharing their previous implementation, which has significantly shaped `Alpaga` current workflow.
-We also warmly acknowledge the former members of the ONLI group, Aurélie Bruyère, Lucile Sanchez, and Antonin Pardon ADD MORE?, whose pioneering contributions laid the foundation for the present development of the experimental workflow.
+We also warmly acknowledge the former members of the ONLI group, Aurélie Bruyère, Lucile Sanchez, Zacharie Behel, and, Antonin Pardon, whose pioneering contributions laid the foundation for the present development of the experimental workflow.
 This work was conducted at the Institut Lumière Matière (ILM).
 
 # References
