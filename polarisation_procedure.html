@@ -115,28 +115,28 @@ See <a class="reference internal" href="file_management.html#file-management-pag
 <section id="input-parameters">
 <h3><span class="section-number">5.4.2. </span>Input parameters<a class="headerlink" href="#input-parameters" title="Link to this heading">¶</a></h3>
 <ul class="simple">
-<li><p><strong>l_cut</strong>: list of 4 numbers
+<li><p><strong>l_cut</strong>: list of 4 numbers.
 Defines the initial noise and signal regions. See <a class="reference internal" href="fitting_procedure.html#remove-noise-section"><span class="std std-ref">alpaga.remove_noise function</span></a>.</p></li>
-<li><p><strong>order_fit_noise</strong>: int
+<li><p><strong>order_fit_noise</strong>: int.
 Polynomial order for fitting the noise in the spectra.</p></li>
-<li><p><strong>bounds_fit_gausse</strong>: list or tuple
+<li><p><strong>bounds_fit_gausse</strong>: list or tuple.
 Bounds for Gaussian curve fitting. See <a class="reference internal" href="fitting_procedure.html#gaussian-fit-section"><span class="std std-ref">alpaga.fit_gaussian_from_noise function</span></a>.</p></li>
-<li><p><strong>lambda_0_ref</strong>: float
+<li><p><strong>lambda_0_ref</strong>: float.
 Reference lambda_0 used in the integral method.</p></li>
-<li><p><strong>waist_ref</strong>: float
+<li><p><strong>waist_ref</strong>: float.
 Reference waist used in the integral method.</p></li>
-<li><p><strong>method_fit_first</strong>: str (<span class="incremental">‘fit_gauss’</span> or <span class="incremental">‘integral_gauss’</span>)
+<li><p><strong>method_fit_first</strong>: str (<span class="incremental">‘fit_gauss’</span>, <span class="incremental">‘fit_gauss_w_exclu’</span> or <span class="incremental">‘integral_gauss’</span>).
 Controls the method for the first run to extract Gaussian parameters.</p></li>
-<li><p><strong>automatic_l_cut</strong>: bool
+<li><p><strong>automatic_l_cut</strong>: bool.
 If True, a second analysis for each angle is performed using lambda_0 and waist from the first run.</p></li>
-<li><p><strong>l_cut_n_n2</strong>: list <span class="incremental">[n, n2]</span>
+<li><p><strong>l_cut_n_n2</strong>: list <span class="incremental">[n, n2]</span>.
 Parameters defining the Gaussian-based regions for automatic <em>l_cut</em>.</p></li>
-<li><p><strong>fixed_para_gauss_fit</strong>: bool
+<li><p><strong>fixed_para_gauss_fit</strong>: bool.
 If True, a second run is performed with lambda_0 and waist fixed to mean values.</p></li>
-<li><p><strong>method_fit_second</strong>: str (<span class="incremental">‘fit_gauss’</span>, <span class="incremental">‘integral_gauss’</span> or <span class="incremental">‘both’</span>)
+<li><p><strong>method_fit_second</strong>: str (<span class="incremental">‘fit_gauss’</span>, <span class="incremental">‘integral_gauss’</span> or <span class="incremental">‘both’</span>).
 Method for the second run where lambda_0 and waist are fixed.</p></li>
-<li><p><strong>exclu_zone</strong>: &#64;MAXIME
-EXCLUZONE TODO</p></li>
+<li><p><strong>exclu_zone</strong>: list of 2 numbers.
+Define borders of exclusion zone if ‘fit_gauss_w_exclu’ is used for ‘method_fit_first’.</p></li>
 <li><p><strong>show_figure</strong>: bool
 If True, figures are shown. Controls <span class="incremental">show_figure_fit_gauss</span> internally.</p></li>
 </ul>
@@ -245,7 +245,7 @@ If False, the code runs without intentional pauses.</p></li>
 <dd class="field-odd"><p>1.2</p>
 </dd>
 <dt class="field-even">Date<span class="colon">:</span></dt>
-<dd class="field-even"><p>Aug 26, 2025</p>
+<dd class="field-even"><p>Sep 06, 2025</p>
 </dd>
 </dl>
 </section>
