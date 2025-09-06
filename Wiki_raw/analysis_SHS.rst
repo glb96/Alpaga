@@ -3,7 +3,7 @@
 SHS analysis
 =============
 
-Once the spectrum analysis for all the angles has been performed, see ref:`polarisation_procedure_page`, several observables can be extracted from the angle-dependent intensity data. Many possible analyses can be made depending on what you are looking for. We are detailling the two that are commonly used at your lab, ILM.
+Once the spectrum analysis for all the angles has been performed, see :ref:`polarisation_procedure_page`, several observables can be extracted from the angle-dependent intensity data. Many possible analyses can be made depending on what you are looking for. We are detailling the two that are commonly used at your lab, ILM.
 
 See *tutorial_SHS* for examples. 
 
