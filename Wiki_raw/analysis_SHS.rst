@@ -31,7 +31,7 @@ One can show that the expression of the Second Harmonic Scattering (SHS) intensi
     I^{\Gamma}_{SHS}(\gamma) = a^{\Gamma}cos^4(\gamma) + b^{\Gamma} cos^2(\gamma)sin^2(\gamma) + c^{\Gamma}sin^4(\gamma)
     
     
-with a, b ,c coefficients depending of hyperpolarizabylity (ref papier), :math:`\gamma` the polarization's state of the incomming light and :math:`\Gamma` the  polarization's state of the scattered light ( Vertical or Horizontal ).
+with a, b ,c coefficients depending of hyperpolarizabylity, :math:`\gamma` the polarization's state of the incomming light and :math:`\Gamma` the  polarization's state of the scattered light ( Vertical or Horizontal ).
 
 From this formula and the a, b ,c parameters, we can calculate three experimental observables, see :cite:p:`cyvin1965theory` or :cite:p:`brasselet1998multipolar` :
 
