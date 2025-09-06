@@ -3,7 +3,7 @@ name: Build Alpaga Package and Wiki
 on:
   push:
     branches:
-      - None # master
+      - master # master
 
 permissions:
   contents: write
