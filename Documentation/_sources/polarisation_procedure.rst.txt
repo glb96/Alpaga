@@ -99,38 +99,38 @@ This section describes the **noise management and Gaussian extraction**. These n
 Input parameters
 ----------------
 
-- **l_cut**: list of 4 numbers  
+- **l_cut**: list of 4 numbers.  
   Defines the initial noise and signal regions. See :ref:`alpaga.remove_noise function<remove_noise_section>`.  
 
-- **order_fit_noise**: int  
+- **order_fit_noise**: int.  
   Polynomial order for fitting the noise in the spectra.  
 
-- **bounds_fit_gausse**: list or tuple  
+- **bounds_fit_gausse**: list or tuple.  
   Bounds for Gaussian curve fitting. See :ref:`alpaga.fit_gaussian_from_noise function<gaussian_fit_section>`.  
 
-- **lambda_0_ref**: float  
+- **lambda_0_ref**: float.  
   Reference lambda_0 used in the integral method.  
 
-- **waist_ref**: float  
+- **waist_ref**: float.  
   Reference waist used in the integral method.  
 
-- **method_fit_first**: str (`'fit_gauss'` or `'integral_gauss'`)  
+- **method_fit_first**: str (`'fit_gauss'`, `'fit_gauss_w_exclu'` or `'integral_gauss'`).  
   Controls the method for the first run to extract Gaussian parameters.  
 
-- **automatic_l_cut**: bool  
+- **automatic_l_cut**: bool.  
   If True, a second analysis for each angle is performed using lambda_0 and waist from the first run.  
 
-- **l_cut_n_n2**: list `[n, n2]`  
+- **l_cut_n_n2**: list `[n, n2]`.  
   Parameters defining the Gaussian-based regions for automatic *l_cut*.  
 
-- **fixed_para_gauss_fit**: bool  
+- **fixed_para_gauss_fit**: bool.  
   If True, a second run is performed with lambda_0 and waist fixed to mean values.  
 
-- **method_fit_second**: str (`'fit_gauss'`, `'integral_gauss'` or `'both'`)  
+- **method_fit_second**: str (`'fit_gauss'`, `'integral_gauss'` or `'both'`).  
   Method for the second run where lambda_0 and waist are fixed.  
 
-- **exclu_zone**: @MAXIME  
-  EXCLUZONE TODO  
+- **exclu_zone**: list of 2 numbers.  
+  Define borders of exclusion zone if 'fit_gauss_w_exclu' is used for 'method_fit_first'.
 
 - **show_figure**: bool  
   If True, figures are shown. Controls `show_figure_fit_gauss` internally.
