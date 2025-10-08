@@ -17,8 +17,8 @@ pip install alpaga.tar.gz
 This will install the package with your default Python version.  
 For more details, see the installation page in the wiki.
 
-How to test my installation
-===========================
+How to test my installation?
+============================
 
 In the "tests" directory, you will find integration tests for most of Alpaga’s code.
 To run them, go to the Alpaga home directory and use pytest with the Python version (mypython) on which Alpaga is installed:
