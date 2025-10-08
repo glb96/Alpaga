@@ -4,7 +4,6 @@ The analysis then continues depending on the type of experiment performed: Surfa
 
 The software is written in Python and should be used within Python environments.
 
-
 How to install?
 ===============
 
@@ -21,12 +20,10 @@ For more details, see the installation page in the wiki.
 How to test my installation
 ===========================
 
-In the *test* directory, you will find some integration tests for most of Alpaga code. 
-To run them, go in the home Alpaga directory and use *pytest* with your python version (mypython) on which Alpaga is install:
+In the "tests" directory, you will find integration tests for most of Alpaga’s code.
+To run them, go to the Alpaga home directory and use pytest with the Python version (mypython) on which Alpaga is installed:
 
 mypython -m pytest tests
-
-
 
 Where is the Wiki?
 ==================
@@ -34,7 +31,6 @@ Where is the Wiki?
 The wiki is available here: https://glb96.github.io/Alpaga  
 It is also included in the Documentation directory of this GitHub repository.  
 To browse the wiki locally, open the index.html page in your preferred web browser. 
-
 
 Are there tutorials?
 ====================
